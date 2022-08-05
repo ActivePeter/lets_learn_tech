@@ -1,2 +1,2 @@
-# DoSthTogether
-以一个核心事物展开提问，实践和讨论的社区
+# LearnTechTogether
+use rust and vue3 to build a tech community
