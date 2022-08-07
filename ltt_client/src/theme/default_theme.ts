@@ -21,9 +21,9 @@ export const default_global_style={
         _4_s:"#ff6837",
         _5_s:"#ff2f78",
         _6_s:"#3ce9ff",
-        main_s:"#44b65e",
-        main_sx:"#2fa44a",
-        main_sxx:"#20993b",
+        main_s:"#e06434",
+        main_sx:"#ea4c15",
+        main_sxx:"#b23a10",
         gray_common:"#f5f5f8",
     },
     gap:{

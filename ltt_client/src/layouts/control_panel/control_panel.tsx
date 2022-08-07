@@ -8,7 +8,11 @@ import {curstyle} from "@/theme/curtheme";
 export default function ControlPanel() {
 
     return (
-        <div className={reuse.col_flex2side_container + " "
+        <Box
+            sx={{
+                marginTop:curstyle().gap.common
+            }}
+            className={reuse.col_flex2side_container + " "
             + cp.cpcont
         }>
             {/*up*/}
@@ -22,14 +26,6 @@ export default function ControlPanel() {
                     // justifyContent: 'space-between',
                 }}
             >
-                <Typography className={cp.listitem} level="h5"
-                            sx={{
-                                marginLeft: curstyle().gap.common,
-                                marginRight: curstyle().gap.common
-                            }}
-                >
-                    课题
-                </Typography>
                 <Button
                     sx={{
                         marginLeft: curstyle().gap.common,
@@ -37,7 +33,7 @@ export default function ControlPanel() {
                     }}
                     className={cp.listitem}
                     variant="solid" color="primary">
-                    新建帖子
+                    说点什么？
                 </Button>
                 <Box className={
                     cp.listitem}
@@ -57,6 +53,6 @@ export default function ControlPanel() {
                     </div>
                 </div>
             </div>
-        </div>
+        </Box>
     );
 }

@@ -37,9 +37,6 @@ export default function HomePage() {
                     {/*<div className={index_styles.sidebar}>*/}
                     {/*    <ClassList></ClassList>*/}
                     {/*</div>*/}
-                    <div className={index_styles.sidebar}>
-                        <CourseList/>
-                    </div>
                     <div className={index_styles.control_panel}>
                         <ControlPanel></ControlPanel>
                     </div>
