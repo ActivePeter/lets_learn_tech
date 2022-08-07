@@ -30,6 +30,9 @@ export const default_global_style={
         common:"12px !important",
         l:"16px !important",
         m:"8px !important",
+    },
+    radius:{
+        common:"5px"
     }
 }
 export type MyGlobalStyle = typeof default_global_style
