@@ -1,2 +1,2 @@
 # LearnTechTogether
-use rust and vue3 to build a tech community
+use rust and react to build a tech community
