@@ -1,5 +1,6 @@
-mod apis;
-mod sql;
+pub mod apis;
+pub mod sql;
+pub mod readconfig;
 
 use axum::{
     routing::{get, post},
@@ -10,13 +11,16 @@ use axum::{
 use serde::{Deserialize, Serialize};
 use std::net::SocketAddr;
 use axum::error_handling::HandleErrorLayer;
-use tower::{BoxError, ServiceBuilder};
 
 #[tokio::main]
 async fn main() {
     // initialize tracing
     // tracing_subscriber::fmt::init();
-
+    env_logger::init();
+    let config=readconfig::ServerConfig::read_from_file().await;
+    log::debug!("{}",config.sqladdr);
+    sql::sqlstart(&config.sqladdr,&"postgres".to_string()).await.unwrap();
+    
     // build our application with a route
     let app = Router::new()
         // `GET /` goes to `root`
