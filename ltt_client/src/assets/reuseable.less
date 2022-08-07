@@ -1,0 +1,53 @@
+
+// 外部 Flexbox 容器
+.col_flexcontainer {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  align-content: stretch;
+  flex-wrap: wrap;
+  //height: 100%;
+}
+
+.row_flexcontainer {
+  display: flex;
+  //background-color: gray;
+  flex-direction: row;
+  align-items: stretch;
+  align-content: stretch;
+  flex-wrap: wrap;
+  //width: 300px;
+  //height: 100px;
+}
+.col_flex2side_container{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.row_flex2side_container{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+}
+.col_flexcenter_container{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.row_flex2center_container{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+// 占满剩余高度的容器
+.fillleft_flex {
+  flex: 1 1 auto;
+  // 很重要
+  flex-basis: 0;
+  //background: aquamarine;
+}
+.alpha_50{
+  opacity: 50%;
+}
