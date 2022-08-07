@@ -9,6 +9,8 @@ use axum::{
 };
 use serde::{Deserialize, Serialize};
 use std::net::SocketAddr;
+use axum::error_handling::HandleErrorLayer;
+use tower::{BoxError, ServiceBuilder};
 
 #[tokio::main]
 async fn main() {
@@ -21,12 +23,26 @@ async fn main() {
         .route("/", get(root))
         // `POST /users` goes to `create_user`
         .route("/user_create", post(apis::user_create::create_user))
-        .route("/user_login",post())
-        .route("/tags_fetch",post())
-        .route("/article_new",post())
-        .route("/article_del",post())
-        .route("/articles_getwithtag",post)
-        .route("/comment",post);
+        // Add middleware to all routes
+        // .layer(
+        //     ServiceBuilder::new()
+        //         // Handle errors from middleware
+        //         .layer(HandleErrorLayer::new(handle_error))
+        //         // .load_shed()
+        //         // .concurrency_limit(1024)
+        //         // .timeout(Duration::from_secs(10))
+        //         // .layer(TraceLayer::new_for_http())
+        //         // .layer(Extension(SharedState::default()))
+        //         .into_inner(),
+        // )
+        ;
+
+        // .route("/user_login",post())
+        // .route("/tags_fetch",post())
+        // .route("/article_new",post())
+        // .route("/article_del",post())
+        // .route("/articles_getwithtag",post)
+        // .route("/comment",post);
 
     // run our app with hyper
     // `axum::Server` is a re-export of `hyper::Server`
