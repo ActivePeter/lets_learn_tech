@@ -18,9 +18,10 @@ async fn main() {
     // tracing_subscriber::fmt::init();
     env_logger::init();
     let config=readconfig::ServerConfig::read_from_file().await;
-    log::debug!("{}",config.sqladdr);
-    sql::sqlstart(&config.sqladdr,&"postgres".to_string()).await.unwrap();
-    
+    log::debug!("The addr read from config.json : {}",config.sqladdr);
+    //sql::sqlstart(&config.sqladdr,&"postgres".to_string()).await.unwrap();
+
+    //LetTeachSome1@#
     // build our application with a route
     let app = Router::new()
         // `GET /` goes to `root`

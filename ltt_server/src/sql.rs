@@ -2,8 +2,9 @@ use tokio_postgres::{NoTls, Error};
 
 // #[tokio::main] // By default, tokio_postgres uses the tokio crate as its runtime.
 pub async fn sqlstart(addr:&String,usr:&String) -> Result<(), Error> {
-    let connto=!format!("host={} user=postgres",addr);
+    let connto=format!("host=h9.maxlink.top port=4890 dbname=hanbaoaaatest password=postgres user=postgres ");
     // Connect to the database.
+    println!("The config info : {connto}");
     let (client, connection) =
         tokio_postgres::connect(&*connto, NoTls).await?;
 
