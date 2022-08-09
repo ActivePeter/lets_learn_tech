@@ -1,4 +1,4 @@
-use tokio::sync::RwLock;
+
 use lazy_static::*;
 use tokio::sync::mpsc::{Sender, Receiver};
 use std::io::Write;
@@ -42,7 +42,7 @@ impl MemStateHandler{
         let res=r.await;
     }
 }
-
+#[derive(Debug)]
 pub enum MemStateRequest{
     DelA,
     SetA(u64),

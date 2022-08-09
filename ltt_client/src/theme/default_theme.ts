@@ -10,10 +10,10 @@ export const default_global_style={
         _1_l:"#FCDD96",
         _2_l:"#B7CBFF",
         _3_l:"#D2C8F2",
-        _4_l:"#FABEAB",
+        _4_l:"#d9f0de",
         _5_l:"#FBC0D5",
         _6_l:"#BEEDF3",
-        main_l:"#d9f0de",
+        main_l:"#FABEAB",
         //_s solid
         _1_s:"#ffbe33",
         _2_s:"#326bff",
@@ -25,15 +25,33 @@ export const default_global_style={
         main_sx:"#ea4c15",
         main_sxx:"#b23a10",
         gray_common:"#f5f5f8",
+        gray_d:"#e0e0e0",
+        gray_dd:"#BDBDBD",
+        font_second:"#BDBDBD",
+        splitline_common:"#e0e0e0",
     },
     gap:{
         common:"12px !important",
         l:"16px !important",
+        xl:"20px !important",
+        xxl:"24px !important",
         m:"8px !important",
+        mm:"4px !important",
+        mmm:"2px !important",
     },
     radius:{
         common:"5px"
-    }
+    },
+    fontweight:{
+        common:500,
+        bold:550,
+    },
+    fontsize:{
+        common:"16px",
+        s:"14px",
+        ss:"12px"
+    },
+    headheight:"60px",
 }
 export type MyGlobalStyle = typeof default_global_style
 
@@ -84,7 +102,7 @@ export function get_default_theme(){
                         transition: '80ms cubic-bezier(0.33, 1, 0.68, 1)',
                         transitionProperty: 'color,background-color,box-shadow,border-color',
                         ...(ownerState.size === 'md' && {
-                            fontWeight: 600,
+                            fontWeight: curstyle().fontweight.common,
                             minHeight: '32px',
                             fontSize: '14px',
                             '--Button-paddingInline': '1rem',

@@ -3,6 +3,11 @@ pub mod user;
 pub mod sql;
 pub mod readconfig;
 mod memstate_lock;
+// <<<<<<< HEAD
+mod memstate_nolock;
+mod model;
+// =======
+// >>>>>>> af4c70b49831f559438f519f7fd9c6ce40425809
 
 use axum::{
     routing::{get, post},
