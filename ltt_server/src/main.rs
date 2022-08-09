@@ -1,6 +1,8 @@
 pub mod apis;
 pub mod sql;
 pub mod readconfig;
+mod memstate_lock;
+mod memstate_nolock;
 
 use axum::{
     routing::{get, post},
