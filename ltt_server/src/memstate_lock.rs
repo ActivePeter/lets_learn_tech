@@ -1,17 +1,21 @@
 use std::cmp::Ordering;
 use tokio::sync::RwLock;
 use lazy_static::*;
+use tokio_postgres::Client;
 use tokio_postgres::error::Severity::Panic;
+use crate::sql::db_create_user;
 use crate::user::User;
 ////有锁
 pub struct MemStateWithLock{
-    pub g_users : Vec<User>
+    pub g_users : Vec<User>,
+    pub db_client : Vec<Client>
 }
 impl MemStateWithLock{//如果数据相关性不大，就把大锁拆开
     pub fn new() -> RwLock<MemStateWithLock> {
         //tokio的读写锁有运行时优化
         RwLock::new(MemStateWithLock{
-                g_users : Vec::new()
+                g_users : Vec::new(),
+                db_client : Vec::new(),
         })
     }
 }
@@ -60,5 +64,6 @@ pub async fn email_query(query_email : &String) -> bool {
 pub async fn add_user(new_user : User) {
     let mut users = MEM_STATE_WITH_LOCK.write().await;
     println!("Add new user !");
-    users.g_users.push(new_user)
+    db_create_user(&new_user,&users.db_client[0]).await;
+    users.g_users.push(new_user);
 }
