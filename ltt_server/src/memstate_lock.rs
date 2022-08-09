@@ -1,7 +1,6 @@
 use std::cmp::Ordering;
 use tokio::sync::RwLock;
 use lazy_static::*;
-use tokio_postgres::error::Severity::Panic;
 use crate::user::User;
 ////有锁
 pub struct MemStateWithLock{

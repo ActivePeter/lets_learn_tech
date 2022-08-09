@@ -2,10 +2,9 @@ use axum::Json;
 use axum::response::IntoResponse;
 use axum::http::StatusCode;
 use serde::{Deserialize, Serialize};
-use std::io;
 use crate::memstate_lock;
 use crate::memstate_lock::{add_user, email_query, user_query};
-use crate::user;
+
 use crate::user::User;
 
 pub async fn create_user(
@@ -22,7 +21,7 @@ pub async fn create_user(
     if check == false {
         let new_user = User{ id: -1, email:payload.email.clone(),
             username:payload.username.clone(),password:payload.password.clone()};
-        add_user(new_user);
+        add_user(new_user).await;
         // todo : 异步写入数据库
         // todo : id
         return (StatusCode::CREATED, Json(payload))
