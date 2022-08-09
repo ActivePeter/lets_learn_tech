@@ -33,6 +33,7 @@ impl MemStateHandler{
     pub async fn dela(&self){
         self.sender.send(MemStateRequest::DelA).await.unwrap();
     }
+    //通过oneshot获取返回信息
     pub async fn geta(&self){
         let (t,mut r)=tokio::sync::oneshot::channel();
         self.sender.send(MemStateRequest::GetA {
