@@ -4,55 +4,52 @@ import cp from './control_panel.less'
 import Button from '@mui/joy/Button';
 import {Box, Typography} from "@mui/joy";
 import {curstyle} from "@/theme/curtheme";
+import {TagSetsComp} from "@/layouts/tag/tagsets_in_controlpanel";
+import {Component} from "react";
 
-export default function ControlPanel() {
+export default class ControlPanel extends Component<any, any>{
+    render() {
 
-    return (
-        <Box
-            sx={{
-                marginTop:curstyle().gap.common
-            }}
-            className={reuse.col_flex2side_container + " "
-            + cp.cpcont
-        }>
-            {/*up*/}
+        return (
             <Box
                 sx={{
-
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: curstyle().gap.common,
-                    // alignItems: 'center',
-                    // justifyContent: 'space-between',
+                    marginTop:curstyle().gap.common,
+                    height:"100%",
                 }}
-            >
-                <Button
+                className={reuse.col_flex2side_container
+                }>
+                {/*up*/}
+                <Box
                     sx={{
-                        marginLeft: curstyle().gap.common,
-                        marginRight: curstyle().gap.common
-                    }}
-                    className={cp.listitem}
-                    variant="solid" color="primary">
-                    说点什么？
-                </Button>
-                <Box className={
-                    cp.listitem}
-                     sx={{
-                         marginLeft: curstyle().gap.common,
-                         marginRight: curstyle().gap.common
-                     }}
-                >列表
-                </Box>
-            </Box>
 
-            {/*down*/}
-            <div>
-                <div>
-                    <div className={
-                        cp.item_pad}>成员
-                    </div>
-                </div>
-            </div>
-        </Box>
-    );
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: curstyle().gap.common,
+                        // alignItems: 'center',
+                        // justifyContent: 'space-between',
+                    }}
+                >
+                    <Button
+                        sx={{
+                            marginLeft: curstyle().gap.common,
+                            marginRight: curstyle().gap.common
+                        }}
+                        className={cp.listitem}
+                        variant="solid" color="primary">
+                        说点什么？
+                    </Button>
+                    <Box className={
+                        cp.listitem}
+                         sx={{
+                             marginLeft: curstyle().gap.common,
+                             marginRight: curstyle().gap.common
+                         }}
+                    >
+                        <TagSetsComp/>
+                    </Box>
+                </Box>
+
+            </Box>
+        );
+    }
 }

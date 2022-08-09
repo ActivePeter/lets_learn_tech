@@ -4,7 +4,12 @@ import {Box} from "@mui/joy";
 import {curstyle} from "@/theme/curtheme";
 export default function Headline() {
     return (
-        <div className={reuse.row_flex2side_container}>
+        <Box className={reuse.row_flex2side_container}
+            sx={{
+                height:curstyle().headheight,
+                borderBottom:"1px solid "+curstyle().colors.gray_d
+            }}
+        >
             <Box
                 sx={{
                     paddingTop:curstyle().gap.common,
@@ -25,6 +30,6 @@ export default function Headline() {
             </Box>
             {/*<div className={headline.title}>localpiazza</div>*/}
             <div className={headline.square}>user</div>
-        </div>
+        </Box>
     );
 }
