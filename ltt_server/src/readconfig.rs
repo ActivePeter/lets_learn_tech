@@ -5,7 +5,11 @@ use tokio::io::AsyncReadExt;
 //用于读取服务端配置
 #[derive(Deserialize,Serialize)]
 pub struct ServerConfig{
-    pub sqladdr:String
+    pub addr:String,
+    pub port:String,
+    pub dbname:String,
+    pub username:String,
+    pub password:String
 }
 impl ServerConfig{
     pub async fn read_from_file()->ServerConfig{

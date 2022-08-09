@@ -1,9 +1,13 @@
 pub mod apis;
+pub mod user;
 pub mod sql;
 pub mod readconfig;
 mod memstate_lock;
+<<<<<<< HEAD
 mod memstate_nolock;
 mod model;
+=======
+>>>>>>> af4c70b49831f559438f519f7fd9c6ce40425809
 
 use axum::{
     routing::{get, post},
@@ -14,6 +18,7 @@ use axum::{
 use serde::{Deserialize, Serialize};
 use std::net::SocketAddr;
 use axum::error_handling::HandleErrorLayer;
+use crate::memstate_lock::MemStateWithLock;
 
 #[tokio::main]
 async fn main() {
@@ -21,8 +26,8 @@ async fn main() {
     // tracing_subscriber::fmt::init();
     env_logger::init();
     let config=readconfig::ServerConfig::read_from_file().await;
-    log::debug!("The addr read from config.json : {}",config.sqladdr);
-    //sql::sqlstart(&config.sqladdr,&"postgres".to_string()).await.unwrap();
+    log::debug!("The addr read from config.json : {}",config.addr);
+    sql::sqlstart(&config).await.unwrap();
 
     //LetTeachSome1@#
     // build our application with a route
