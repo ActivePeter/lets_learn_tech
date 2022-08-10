@@ -1,33 +1,9 @@
-// use axum::Json;
-// use axum::response::IntoResponse;
-// use axum::http::StatusCode;
-//
-// pub async fn create_user(
-//     // this argument tells axum to parse the request body
-//     // as JSON into a `CreateUser` type
-//     Json(payload): Json<CreateUser>,
-// ) -> impl IntoResponse {
-//     // insert your application logic here
-//     let user = User {
-//         id: 1337,
-//         username: payload.username,
-//     };
-//
-//     // this will be converted into a JSON response
-//     // with a status code of `201 Created`
-//     (StatusCode::CREATED, Json(user))
-// }
-//
-// // the input to our `create_user` handler
-// #[derive(Deserialize)]
-// pub struct CreateUser {
-//     email: String,
-//     pw:String,
-//     verify:String
-// }
-// // the output to our `create_user` handler
-// #[derive(Serialize)]
-// pub struct User {
-//     id: u64,
-//     username: String,
-// }
+use axum::Json;
+
+// 验证码是发到邮箱里的，根据随机函数随机生成一个六位整数
+// 然后将这样一个pair加入到一个哈希表中
+// 最后就是定时功能，超过一定时间这个验证码就失效。
+struct EmailHash {
+    email : String,
+    verify_code : i32
+}
