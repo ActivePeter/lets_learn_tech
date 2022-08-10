@@ -1,6 +1,6 @@
 import {Component, Fragment, PureComponent} from "react";
 import {Box} from "@mui/joy";
-import {TagInfo, TagSet} from "@/store/tag";
+import {TagInfo, TagSet} from "@/store/models/tag";
 import {TagSetComp} from "@/layouts/tag/tag_set";
 import {curstyle} from "@/theme/curtheme";
 

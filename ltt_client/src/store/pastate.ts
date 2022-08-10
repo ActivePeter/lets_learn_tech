@@ -1,6 +1,6 @@
 // import {CourceStoreProxy, Course} from "@/store/course_list";
 
-import {AllTags} from "@/store/tag";
+import {AllTags} from "@/store/models/tag";
 import {LogProxy} from "@/store/log";
 
 export class PaStateProxy{
@@ -25,7 +25,7 @@ export class PaState{
     tags=AllTags.pre()
 
     //log
-    log_gui_show=true;
+    log_gui_show=false;
     log_gui_log_or_regi=true;
 
     constructor() {

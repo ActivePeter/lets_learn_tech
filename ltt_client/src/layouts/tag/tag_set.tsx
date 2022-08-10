@@ -3,7 +3,7 @@ import {Box, Typography} from "@mui/joy";
 import {TagComp} from "@/layouts/tag/tag";
 import reuse from "@/assets/reuseable.less"
 import {curstyle} from "@/theme/curtheme";
-import {TagInfo, TagSet} from "@/store/tag";
+import {TagInfo, TagSet} from "@/store/models/tag"
 
 type Props = {
     // using `interface` is also ok

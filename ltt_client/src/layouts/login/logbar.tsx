@@ -12,6 +12,7 @@ import {TextBtn} from "@/layouts/reusable/textbtn";
 import {LogBarRegi} from "@/layouts/login/logbar_regi";
 import {PaState} from "@/store/pastate";
 import {PaStateMan} from "@/util/pa_state_man";
+import {LogBarLog} from "@/layouts/login/logbar_log";
 
 type Props = {
 };
@@ -58,7 +59,7 @@ export class LogBar extends PureComponent<Props> {
                             gap:curstyle().gap.l
                         }}
                     >
-                        {logp.get_log_or_regi()?undefined:<LogBarRegi/>}
+                        {logp.get_log_or_regi()?<LogBarLog/>:<LogBarRegi/>}
                         <Box
                             sx={{
                                 gap:curstyle().gap.common

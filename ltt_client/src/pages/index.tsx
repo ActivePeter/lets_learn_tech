@@ -8,8 +8,6 @@ import {GlobalStyles} from '@mui/system';
 import type {Theme} from '@mui/joy/styles';
 // import  from "@mui/joy/styles/defaultTheme";
 import {get_default_theme,bind_style_2_window} from "@/theme/default_theme";
-import ClassList from "@/layouts/class_list/class_list";
-import CourseList from "@/layouts/course_list/course_list";
 import {curstyle} from "@/theme/curtheme";
 import {Fragment} from "react";
 import {LogFloat} from "@/layouts/login/logfloat";

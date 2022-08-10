@@ -1,3 +1,10 @@
 export default {
-  npmClient: 'yarn'
+  npmClient: 'yarn',
+  proxy: {
+    '/api': {
+      'target': 'http://127.0.0.1:3000/',
+      'changeOrigin': true,
+      'pathRewrite': { '^/api' : '' },
+    },
+  },
 };

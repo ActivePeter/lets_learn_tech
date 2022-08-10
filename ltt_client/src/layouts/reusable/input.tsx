@@ -30,20 +30,15 @@ import {Box} from "@mui/joy";
 //   }
 // `,
 // );
-interface Props {
-    bg: string,
-    focusbg: string,
-    hoverbg: string,
-    padding: string,
-    radius: string,
-}
 
-export function Input1(className: any) {
+
+export function Input1(props:{placeholder: string}) {
     return (<Input
         bg={curstyle().colors.gray_common}
         focusbg={curstyle().colors.main_lll}
         hoverbg={curstyle().colors.main_ll}
         padding={curstyle().gap.common} radius={curstyle().radius.common}
+        placeholder={props.placeholder}
     />)
 }
 
@@ -52,7 +47,8 @@ interface State {
 }
 
 interface InnerProp {
-    focus: (focus: boolean) => void
+    focus: (focus: boolean) => void,
+    placeholder?:string,
 }
 
 export class InputInner extends Component<Props & InnerProp> {
@@ -83,6 +79,7 @@ export class InputInner extends Component<Props & InnerProp> {
           }
         `
         return <Input
+            placeholder={this.props.placeholder}
             onFocus={
                 () => {
                     this.props.focus(true)
@@ -98,6 +95,15 @@ export class InputInner extends Component<Props & InnerProp> {
     }
 }
 
+
+interface Props {
+    bg: string,
+    focusbg: string,
+    hoverbg: string,
+    padding: string,
+    radius: string,
+    placeholder?:string,
+}
 export class Input extends PureComponent<Props, State> {
     constructor(props: Props) {
         super(props)
@@ -138,7 +144,9 @@ export class Input extends PureComponent<Props, State> {
                             },()=>{}
                         )
                         // this.state.focused = focused
-                    }}/>
+                    }}
+                    placeholder={this.props.placeholder}
+                />
             </Box>
         )
     }

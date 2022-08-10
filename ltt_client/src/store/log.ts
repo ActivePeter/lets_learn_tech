@@ -1,6 +1,11 @@
 import {PaState} from "@/store/pastate";
+import {CreateUserRequest} from "@/store/models/user";
+import {api_user_create} from "@/store/net/api_user_create";
 
 export class LogProxy{
+    net_regist(req:CreateUserRequest){
+        api_user_create(req)
+    }
     show_log_gui(show:boolean,log_or_regi?:boolean){
         if(show&&log_or_regi!=undefined){
             this.state.log_gui_log_or_regi=log_or_regi;
