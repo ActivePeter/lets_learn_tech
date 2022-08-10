@@ -361,7 +361,7 @@
 
 "@emotion/babel-plugin@^11.10.0":
   version "11.10.0"
-  resolved "https://registry.npmmirror.com/@emotion/babel-plugin/-/babel-plugin-11.10.0.tgz"
+  resolved "https://registry.npmmirror.com/@emotion/babel-plugin/-/babel-plugin-11.10.0.tgz#ae545b8faa6b42d3a50ec86b70b758296f3c4467"
   integrity sha512-xVnpDAAbtxL1dsuSelU5A7BnY/lftws0wUexNJZTPsvX/1tM4GZJbclgODhvW4E+NH7E5VFcH0bBn30NvniPJA==
   dependencies:
     "@babel/helper-module-imports" "^7.16.7"
@@ -407,7 +407,7 @@
 
 "@emotion/react@^11.10.0":
   version "11.10.0"
-  resolved "https://registry.npmmirror.com/@emotion/react/-/react-11.10.0.tgz"
+  resolved "https://registry.npmmirror.com/@emotion/react/-/react-11.10.0.tgz#53c577f063f26493f68a05188fb87528d912ff2e"
   integrity sha512-K6z9zlHxxBXwN8TcpwBKcEsBsOw4JWCCmR+BeeOWgqp8GIU1yA2Odd41bwdAAr0ssbQrbJbVnndvv7oiv1bZeQ==
   dependencies:
     "@babel/runtime" "^7.18.3"
@@ -436,7 +436,7 @@
 
 "@emotion/styled@^11.10.0":
   version "11.10.0"
-  resolved "https://registry.npmmirror.com/@emotion/styled/-/styled-11.10.0.tgz"
+  resolved "https://registry.npmmirror.com/@emotion/styled/-/styled-11.10.0.tgz#c19484dab4206ae46727c07efb4316423dd21312"
   integrity sha512-V9oaEH6V4KePeQpgUE83i8ht+4Ri3E8Djp/ZPJ4DQlqWhSKITvgzlR3/YQE2hdfP4Jw3qVRkANJz01LLqK9/TA==
   dependencies:
     "@babel/runtime" "^7.18.3"
