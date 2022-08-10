@@ -37,6 +37,17 @@
 数据库，数据模型的确定（用户怎么存，文章怎么存，怎么检索）。
 后端和数据库的交互，还有验证码和cookie模块（todo:axum示例也许有）。
 
+### 后端api
+
+- create_user
+  - 回应
+    - wronglength
+    - space in values
+    - user exist
+    - email exist
+    - user create success
+  - 
+
 ## 前端开发
 
 ### 前端规范

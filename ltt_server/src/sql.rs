@@ -5,7 +5,7 @@ use log::log;
 use tokio_postgres::{NoTls, Error, Client};
 use crate::memstate_lock::{add_user, MEM_STATE_WITH_LOCK};
 use crate::readconfig::ServerConfig;
-use crate::user::User;
+use crate::models::user::User;
 
 // #[tokio::main] // By default, tokio_postgres uses the tokio crate as its runtime.
 pub async fn sqlstart(config : &ServerConfig) -> Result<(), Error> {

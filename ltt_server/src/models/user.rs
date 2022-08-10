@@ -19,18 +19,19 @@ fn check_content(check_value : &String) -> bool {
 }
 
 impl User {
-    pub(crate) fn check(&self) -> bool {
+    pub(crate) fn check(&self) -> Option<&'static str> {
         if self.email.len() >= 30 ||
             self.password.len() >= 20 || self.username.len() >= 20{
-            return false
+            return Option::Some("wronglength")
         }
         println!("#{}# #{}# #{}#",self.email,self.username,self.password);
+
         if check_content(&self.email)
             && check_content(&self.username)
             && check_content(&self.password)
         {
-            return true
+            return Option::Some("space in values")
         }
-        false
+        None
     }
 }

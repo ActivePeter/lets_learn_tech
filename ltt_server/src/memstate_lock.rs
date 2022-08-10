@@ -4,7 +4,8 @@ use lazy_static::*;
 use tokio_postgres::Client;
 use tokio_postgres::error::Severity::Panic;
 use crate::sql::db_create_user;
-use crate::user::User;
+use crate::models::user::User;
+
 ////有锁
 pub struct MemStateWithLock{
     pub g_users : Vec<User>,
