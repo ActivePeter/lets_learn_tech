@@ -18,7 +18,6 @@ export default function HomePage() {
     const headheight=curstyle().headheight
     return (
         <Fragment>
-            <LogFloat></LogFloat>
             <Box className={
                 reuse_styles.col_flexcontainer}
 

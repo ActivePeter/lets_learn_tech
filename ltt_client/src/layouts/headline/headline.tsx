@@ -2,6 +2,7 @@ import reuse from '@/assets/reuseable.less'
 import headline from './headline.less'
 import {Box} from "@mui/joy";
 import {curstyle} from "@/theme/curtheme";
+import {HeadLineLogPart} from "@/layouts/headline/log";
 export default function Headline() {
     return (
         <Box className={reuse.row_flex2side_container}
@@ -29,7 +30,9 @@ export default function Headline() {
                 </div>
             </Box>
             {/*<div className={headline.title}>localpiazza</div>*/}
-            <div className={headline.square}>user</div>
+
+                <HeadLineLogPart></HeadLineLogPart>
+            {/*</Box>*/}
         </Box>
     );
 }

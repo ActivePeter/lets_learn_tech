@@ -13,6 +13,7 @@ interface Props {
     hovercolor: string,
     color: string,
     children: any,
+    onClick:any,
 }
 
 export class TextBtn extends PureComponent<Props> {
@@ -34,6 +35,7 @@ export class TextBtn extends PureComponent<Props> {
                     "color": this.props.hovercolor,
                 }
             }}
+            onClick={this.props.onClick}
         >
             {this.props.children}
         </Box>)

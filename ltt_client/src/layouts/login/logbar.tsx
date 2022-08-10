@@ -9,12 +9,24 @@ import {TextField} from "@mui/joy";
 // import InputUnstyled from "@mui/base/InputUnstyled";
 import Button from "@mui/joy/Button";
 import {TextBtn} from "@/layouts/reusable/textbtn";
+import {LogBarRegi} from "@/layouts/login/logbar_regi";
+import {PaState} from "@/store/pastate";
+import {PaStateMan} from "@/util/pa_state_man";
 
 type Props = {
-
 };
 export class LogBar extends PureComponent<Props> {
+    componentDidMount() {
+        PaStateMan.regist_comp(this,(registval,state)=>{
+            registval(state.log_gui_log_or_regi)
+        })
+    }
+    componentWillUnmount() {
+        PaStateMan.unregist_comp(this)
+    }
+
     render() {
+        const logp=PaStateMan.getstate().proxy_log;
         return (
             <Box
                 className={style.logbar
@@ -46,32 +58,7 @@ export class LogBar extends PureComponent<Props> {
                             gap:curstyle().gap.l
                         }}
                     >
-                        <Input1/>
-                        <Input1/>
-                        <Box
-                            sx={{
-                                gap:curstyle().gap.common
-                            }}
-                            className={reuse.row_flexcontainer_reverse+" "
-                            +reuse.flex_secondaxis_align_center
-                        }>
-                            <Button>
-                                获取验证码
-                            </Button>
-                            <Box
-                                className={reuse.fillleft_flex}
-                                sx={{
-                                    width:"70px",
-                                    // background:curstyle().colors.main_s
-                                }}
-                            >
-                                <Input1/>
-                            </Box>
-                        </Box>
-                        <Button
-                        >
-                            注册
-                        </Button>
+                        {logp.get_log_or_regi()?undefined:<LogBarRegi/>}
                         <Box
                             sx={{
                                 gap:curstyle().gap.common
@@ -81,13 +68,20 @@ export class LogBar extends PureComponent<Props> {
                             }>
                             <TextBtn activecolor={curstyle().colors.main_s}
                                      hovercolor={curstyle().colors.main_l}
-                                     color={curstyle().colors.main_s}>
+                                     color={curstyle().colors.main_s}
+                                onClick={()=>{
+                                    logp.show_log_gui(false)
+                                }}
+                            >
                                 {'< 返回'}
                             </TextBtn>
                             <TextBtn activecolor={curstyle().colors.main_s}
                                      hovercolor={curstyle().colors.main_l}
-                                     color={curstyle().colors.main_s}>
-                                已有账号，前往登录
+                                     color={curstyle().colors.main_s} onClick={()=>{
+                                logp.switch_log_regi()
+                            }
+                            }>
+                                {logp.get_log_or_regi()?'没有账号，前往注册':'已有账号，前往登录'}
                             </TextBtn>
                         </Box>
                     </Box>

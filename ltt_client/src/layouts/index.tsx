@@ -4,6 +4,7 @@ import {bind_style_2_window, get_default_theme} from "@/theme/default_theme";
 import {GlobalStyles} from "@mui/system";
 import {Theme,CssVarsProvider} from "@mui/joy/styles";
 import Headline from "@/layouts/headline/headline";
+import {LogFloat} from "@/layouts/login/logfloat";
 
 export default function Layout() {
 
@@ -33,7 +34,8 @@ export default function Layout() {
                         },
                     })}
                 />
-                <Headline></Headline>
+                <LogFloat/>
+                <Headline/>
                 <Outlet/>
 
             </CssVarsProvider>

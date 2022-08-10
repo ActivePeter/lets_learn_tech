@@ -45,7 +45,7 @@ class _PaStateMan{
     private _val_ope(oldval:any,val:any){
         const id_2_afterchange:any={}
         const key=this.recentgetkeystackcombine();
-        // console.log("_val_ope",key,val)
+        console.log("_val_ope",key,val)
         if(key in this._valkey2compids){
             let delids:string[]=[]
             const ids=Object.keys(this._valkey2compids[key]);
@@ -126,7 +126,8 @@ class _PaStateMan{
                         _this._recentgetkey=key
                         _this._recentgetkeystackpos=level
                         _this._recentgetkeystack[_this._recentgetkeystackpos]=_this._recentgetkey
-                        console.log("sethook")
+                        // @ts-ignore
+                        // console.log("sethook",state["_"+key],value)
                         // @ts-ignore
                         if(state["_"+key]!=value){
                             // @ts-ignore
