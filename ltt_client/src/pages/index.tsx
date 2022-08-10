@@ -11,40 +11,37 @@ import {get_default_theme,bind_style_2_window} from "@/theme/default_theme";
 import ClassList from "@/layouts/class_list/class_list";
 import CourseList from "@/layouts/course_list/course_list";
 import {curstyle} from "@/theme/curtheme";
+import {Fragment} from "react";
+import {LogFloat} from "@/layouts/login/logfloat";
 
 export default function HomePage() {
     const headheight=curstyle().headheight
     return (
+        <Fragment>
+            <LogFloat></LogFloat>
             <Box className={
-             reuse_styles.col_flexcontainer}
+                reuse_styles.col_flexcontainer}
 
                  sx={{
                      height: "calc(100vh - 1px - " + headheight + ")"
                  }}
             >
-                {/*<div className={index_styles.headline}>*/}
-
-                {/*    */}
-                {/*</div>*/}
-                {/*<div className={reuse_styles.fillleft_flex + " "*/}
-                {/*+ reuse_styles.row_flexcontainer}>*/}
-                    {/*<div className={index_styles.sidebar}>*/}
-                    {/*    <ClassList></ClassList>*/}
-                    {/*</div>*/}
-                    <Box className={index_styles.control_panel}
-                        sx={{
-                            overflowY:"scroll"
-                        }}
-                    >
-                        <ControlPanel></ControlPanel>
-                    </Box>
-                    <div className={index_styles.main + " " +
+                <Box className={index_styles.control_panel}
+                     sx={{
+                         overflowY:"scroll"
+                     }}
+                >
+                    <ControlPanel/>
+                </Box>
+                <div className={index_styles.main + " " +
                     reuse_styles.fillleft_flex
-                    }>
+                }>
 
-                    </div>
+                </div>
                 {/*</div>*/}
             </Box>
+        </Fragment>
+
 
     );
 }

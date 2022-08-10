@@ -18,19 +18,21 @@ export class TagSetsComp extends Component {
         return (
             <Box>
                 {arr.map((v, i) =>
-                    <Fragment>
-                        <TagSetComp
-                            key={i}
-                            tagsetname={v.tagsetname}
-                            tags={v.tags}
+                    // <Fragment>
 
-                        />
 
-                        <Box sx={{
-                            marginBottom: curstyle().gap.common
-                        }}/>
-                    </Fragment>
-                    )}
+                        (<Box key={"B"+i}
+                             sx={{
+                                 marginBottom: curstyle().gap.common
+                             }}>
+                            <TagSetComp
+                                key={i}
+                                tagsetname={v.tagsetname}
+                                tags={v.tags}
+
+                            />
+                            </Box>)
+                )}
             </Box>
         );
     }

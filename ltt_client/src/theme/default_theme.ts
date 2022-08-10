@@ -13,7 +13,11 @@ export const default_global_style={
         _4_l:"#d9f0de",
         _5_l:"#FBC0D5",
         _6_l:"#BEEDF3",
+        main_halfopa:"rgba(255,231,222,0.51)",
+        main_sl:"#ff9c80",
         main_l:"#FABEAB",
+        main_ll:"#ffe7de",
+        main_lll:"#fff6f0",
         //_s solid
         _1_s:"#ffbe33",
         _2_s:"#326bff",
@@ -24,6 +28,7 @@ export const default_global_style={
         main_s:"#e06434",
         main_sx:"#ea4c15",
         main_sxx:"#b23a10",
+        white_common:"#ffffff",
         gray_common:"#f5f5f8",
         gray_d:"#e0e0e0",
         gray_dd:"#BDBDBD",
@@ -69,6 +74,12 @@ export function get_default_theme(){
                         solidBg: curstyle().colors.main_s,
                         solidHoverBg: curstyle().colors.main_sx,
                         solidActiveBg: curstyle().colors.main_sxx,
+                        softColor:curstyle().colors.main_sl,
+                        softBg:curstyle().colors.main_ll,
+                        softHoverBg:curstyle().colors.main_lll,
+                        softHoverBorder:curstyle().colors.main_s,
+                        softActiveBorder:curstyle().colors.main_s,
+                        // border
                     },
                     success: {
                         solidBg: '#2DA44E',
@@ -81,7 +92,8 @@ export function get_default_theme(){
                         outlinedActiveBg: 'rgba(238, 239, 242, 1)',
                         outlinedBorder: 'rgba(27, 31, 36, 0.15)',
                     },
-                    focusVisible: 'rgba(3, 102, 214, 0.3)',
+                    focusVisible: curstyle().colors.main_s,
+
                 },
             },
         },
@@ -97,7 +109,7 @@ export function get_default_theme(){
             JoyButton: {
                 styleOverrides: {
                     root: ({ ownerState }) => ({
-                        borderRadius: '6px',
+                        borderRadius: curstyle().radius.common,
                         boxShadow: '0 1px 0 0 rgba(27, 31, 35, 0.04)',
                         transition: '80ms cubic-bezier(0.33, 1, 0.68, 1)',
                         transitionProperty: 'color,background-color,box-shadow,border-color',
@@ -124,6 +136,21 @@ export function get_default_theme(){
                     }),
                 },
             },
+            JoyTextField:{
+                styleOverrides: {
+                    // root:({ownerState})=>({
+                    //     ...(ownerState.variant==='')
+                    // })
+
+                }
+            },
+            JoyInput:{
+                styleOverrides:{
+                    root:({ownerState})=>({
+
+                    })
+                }
+            }
         },
     });
 }
