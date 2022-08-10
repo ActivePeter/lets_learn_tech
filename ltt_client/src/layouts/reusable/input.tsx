@@ -4,7 +4,7 @@ import InputUnstyled, {InputUnstyledProps} from '@mui/base/InputUnstyled';
 import reuse from "@/assets/reuseable.less"
 import {curstyle} from "@/theme/curtheme";
 import styled from '@emotion/styled'
-import {Component, PureComponent} from "react";
+import {ChangeEventHandler, Component, PureComponent} from "react";
 import {Box} from "@mui/joy";
 
 // const StyledInputElement = styled('input')(
@@ -32,13 +32,17 @@ import {Box} from "@mui/joy";
 // );
 
 
-export function Input1(props:{placeholder: string}) {
+export function Input1(props:{
+    placeholder: string,
+    onChange?:any}) {
     return (<Input
         bg={curstyle().colors.gray_common}
         focusbg={curstyle().colors.main_lll}
         hoverbg={curstyle().colors.main_ll}
         padding={curstyle().gap.common} radius={curstyle().radius.common}
         placeholder={props.placeholder}
+        onChange={props.onChange}
+        // vmodel={vmodel}
     />)
 }
 
@@ -49,6 +53,8 @@ interface State {
 interface InnerProp {
     focus: (focus: boolean) => void,
     placeholder?:string,
+    // vmodel?:StringHolder
+    onChange?:any
 }
 
 export class InputInner extends Component<Props & InnerProp> {
@@ -90,7 +96,7 @@ export class InputInner extends Component<Props & InnerProp> {
                     this.props.focus(false)
                 }
             }
-
+            onChange={this.props.onChange}
         />;
     }
 }
@@ -103,6 +109,8 @@ interface Props {
     padding: string,
     radius: string,
     placeholder?:string,
+    vmodel?:StringHolder,
+    onChange?:any
 }
 export class Input extends PureComponent<Props, State> {
     constructor(props: Props) {
@@ -146,6 +154,7 @@ export class Input extends PureComponent<Props, State> {
                         // this.state.focused = focused
                     }}
                     placeholder={this.props.placeholder}
+                    onChange={this.props.onChange}
                 />
             </Box>
         )

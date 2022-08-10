@@ -5,6 +5,8 @@ import {GlobalStyles} from "@mui/system";
 import {Theme,CssVarsProvider} from "@mui/joy/styles";
 import Headline from "@/layouts/headline/headline";
 import {LogFloat} from "@/layouts/login/logfloat";
+import { ReactNotifications } from 'react-notifications-component'
+import 'react-notifications-component/dist/theme.css'
 
 export default function Layout() {
 
@@ -34,6 +36,7 @@ export default function Layout() {
                         },
                     })}
                 />
+                <ReactNotifications/>
                 <LogFloat/>
                 <Headline/>
                 <Outlet/>

@@ -16,7 +16,9 @@ type Props = {
 export class LogBarLog extends PureComponent<Props> {
     render() {
         return <Fragment>
-            <Input1  placeholder={"邮箱"}/>
+            <Input1  placeholder={"邮箱"}
+               onChange={()=>{}}
+            />
             <Input1 placeholder={"密码"}/>
             {/*<Box*/}
             {/*    sx={{*/}

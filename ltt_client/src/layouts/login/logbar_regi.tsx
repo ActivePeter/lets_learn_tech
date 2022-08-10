@@ -16,13 +16,37 @@ type Props = {
 
 };
 export class LogBarRegi extends PureComponent<Props> {
+    regiuser={
+        email:"",
+        username:"",
+        pw:"",
+        pw2:"",
+        verify:"",
+    }
     render() {
         const logp=PaStateMan.getstate().proxy_log
         return <Fragment>
-            <Input1 placeholder={"用户名"}/>
-            <Input1 placeholder={"邮箱"}/>
-            <Input1 placeholder={"密码"}/>
-            <Input1 placeholder={"再次输入密码"}/>
+            <Input1 placeholder={"用户名"}
+                onChange={(v)=>{
+                    console.log(v)
+                    this.regiuser.username=v.target.value
+                }}
+            />
+            <Input1 placeholder={"邮箱"}
+                    onChange={(v)=>{
+                        this.regiuser.email=v.target.value
+                    }}
+            />
+            <Input1 placeholder={"密码"}
+                    onChange={(v)=>{
+                        this.regiuser.pw=v.target.value
+                    }}
+            />
+            <Input1 placeholder={"再次输入密码"}
+                    onChange={(v)=>{
+                        this.regiuser.pw2=v.target.value
+                    }}
+            />
             <Box
                 sx={{
                     gap:curstyle().gap.common
@@ -40,14 +64,17 @@ export class LogBarRegi extends PureComponent<Props> {
                         // background:curstyle().colors.main_s
                     }}
                 >
-                    <Input1  placeholder={"验证码"}/>
+                    <Input1  placeholder={"验证码"}
+                             onChange={(v)=>{
+                                 this.regiuser.verify=v.target.value
+                             }}
+                    />
                 </Box>
             </Box>
             <Button
                 onClick={()=>{
-                    logp.net_regist(new CreateUserRequest(
-                        "","","",""
-                    ))
+                    console.log(this.regiuser)
+                    logp.check_registable_thenregist(this.regiuser)
                 }
                 }
             >
