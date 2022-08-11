@@ -146,5 +146,7 @@ class _PaStateMan{
         keylisten(this._state,0)
     }
 }
-
-export const PaStateMan= new _PaStateMan()
+export function ResetPaStateMan(){
+    PaStateMan= new _PaStateMan()
+}
+export var PaStateMan= new _PaStateMan()
