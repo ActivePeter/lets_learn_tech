@@ -11,13 +11,14 @@ import {get_default_theme,bind_style_2_window} from "@/theme/default_theme";
 import {curstyle} from "@/theme/curtheme";
 import {Fragment} from "react";
 import {LogFloat} from "@/layouts/login/logfloat";
+import {ArticlePreviewList} from "@/layouts/article/article_preview_list";
 
 export default function HomePage() {
     const headheight=curstyle().headheight
     return (
         <Fragment>
             <Box className={
-                reuse_styles.col_flexcontainer}
+                reuse_styles.row_flexcontainer}
 
                  sx={{
                      height: "calc(100vh - 1px - " + headheight + ")"
@@ -33,7 +34,7 @@ export default function HomePage() {
                 <div className={index_styles.main + " " +
                     reuse_styles.fillleft_flex
                 }>
-
+                    <ArticlePreviewList/>
                 </div>
                 {/*</div>*/}
             </Box>

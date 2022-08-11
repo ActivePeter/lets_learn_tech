@@ -44,6 +44,7 @@ export class LogProxy{
         }
     }
     get_logshowing(){
+        console.log("get_logshowing")
         return this.state.log_gui_show
     }
     get_log_or_regi(){

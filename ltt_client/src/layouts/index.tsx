@@ -7,11 +7,13 @@ import Headline from "@/layouts/headline/headline";
 import {LogFloat} from "@/layouts/login/logfloat";
 import { ReactNotifications } from 'react-notifications-component'
 import 'react-notifications-component/dist/theme.css'
+import {ResetPaStateMan} from "@/util/pa_state_man";
 
 export default function Layout() {
 
     bind_style_2_window();
     const theme = get_default_theme();
+    ResetPaStateMan()
     return (
         <div className={styles.navs}>
             {/*<ul>*/}
