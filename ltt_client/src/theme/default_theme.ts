@@ -41,8 +41,8 @@ export const default_global_style={
         xl:"20px !important",
         xxl:"24px !important",
         m:"8px !important",
-        mm:"4px !important",
-        mmm:"2px !important",
+        mm:"4px",
+        mmm:"2px",
     },
     radius:{
         common:"5px"

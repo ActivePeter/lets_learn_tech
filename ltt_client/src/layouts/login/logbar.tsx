@@ -14,28 +14,29 @@ import {PaState} from "@/store/pastate";
 import {PaStateMan} from "@/util/pa_state_man";
 import {LogBarLog} from "@/layouts/login/logbar_log";
 
-type Props = {
-};
+type Props = {};
+
 export class LogBar extends PureComponent<Props> {
     componentDidMount() {
-        PaStateMan.regist_comp(this,(registval,state)=>{
+        PaStateMan.regist_comp(this, (registval, state) => {
             registval(state.log_gui_log_or_regi)
         })
     }
+
     componentWillUnmount() {
         PaStateMan.unregist_comp(this)
     }
 
     render() {
-        const logp=PaStateMan.getstate().proxy_log;
+        const logp = PaStateMan.getstate().proxy_log;
         return (
             <Box
                 className={style.logbar
-            }
+                }
                 sx={{
-                    fontSize:curstyle().fontsize.s,
-                    background:curstyle().colors.white_common,
-                    borderRadius:curstyle().radius.common,
+                    fontSize: curstyle().fontsize.s,
+                    background: curstyle().colors.white_common,
+                    borderRadius: curstyle().radius.common,
 
                     // marginTop:"-100px"
                 }}
@@ -44,9 +45,9 @@ export class LogBar extends PureComponent<Props> {
                     className={reuse.col_flexcontainer}
                     sx={{
 
-                        marginBottom:curstyle().gap.xxl,
-                        marginTop:curstyle().gap.xxl,
-                        gap:curstyle().gap.l
+                        marginBottom: curstyle().gap.xxl,
+                        marginTop: curstyle().gap.xxl,
+                        gap: curstyle().gap.l
                     }}
                 >
                     <Logo/>
@@ -54,35 +55,35 @@ export class LogBar extends PureComponent<Props> {
                         className={reuse.col_flexcontainer}
                         sx={{
 
-                            marginLeft:curstyle().gap.xxl,
-                            marginRight:curstyle().gap.xxl,
-                            gap:curstyle().gap.l
+                            marginLeft: curstyle().gap.xxl,
+                            marginRight: curstyle().gap.xxl,
+                            gap: curstyle().gap.l
                         }}
                     >
-                        {logp.get_log_or_regi()?<LogBarLog/>:<LogBarRegi/>}
+                        {logp.get_log_or_regi() ? <LogBarLog/> : <LogBarRegi/>}
                         <Box
                             sx={{
-                                gap:curstyle().gap.common
+                                gap: curstyle().gap.common
                             }}
-                            className={reuse.row_flex2side_container+" "
-                                +reuse.flex_secondaxis_align_center
+                            className={reuse.row_flex2side_container + " "
+                                + reuse.flex_secondaxis_align_center
                             }>
                             <TextBtn activecolor={curstyle().colors.main_s}
                                      hovercolor={curstyle().colors.main_l}
                                      color={curstyle().colors.main_s}
-                                onClick={()=>{
-                                    logp.show_log_gui(false)
-                                }}
+                                     onClick={() => {
+                                         logp.show_log_gui(false)
+                                     }}
                             >
                                 {'< 返回'}
                             </TextBtn>
                             <TextBtn activecolor={curstyle().colors.main_s}
                                      hovercolor={curstyle().colors.main_l}
-                                     color={curstyle().colors.main_s} onClick={()=>{
+                                     color={curstyle().colors.main_s} onClick={() => {
                                 logp.switch_log_regi()
                             }
                             }>
-                                {logp.get_log_or_regi()?'没有账号，前往注册':'已有账号，前往登录'}
+                                {logp.get_log_or_regi() ? '没有账号，前往注册' : '已有账号，前往登录'}
                             </TextBtn>
                         </Box>
                     </Box>

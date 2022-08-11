@@ -35,6 +35,7 @@ export class LogProxy{
             this.state.log_gui_log_or_regi=log_or_regi;
             this.state.log_gui_show=show;
         }else{
+            console.log("hide log gui")
             this.state.log_gui_show=false;
         }
     }
