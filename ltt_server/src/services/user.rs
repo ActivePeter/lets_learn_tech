@@ -1,6 +1,6 @@
 use std::cmp::Ordering;
 use crate::models::user::User;
-use crate::daos::user::db_create_user;
+use crate::db::user::db_create_user;
 use crate::memstate_lock::MEM_STATE_WITH_LOCK;
 
 //用户相关的逻辑，给api层调用
