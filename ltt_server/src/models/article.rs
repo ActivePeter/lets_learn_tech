@@ -1,11 +1,17 @@
 use crate::models::user::{UserId, UserSimpleInfo};
 pub type ArticleId=u32;
-//store in sql
+
+// article_info table in sql
+/*
+文章存储在本地的命名格式: 日期_文章id
+ */
 pub struct Article{
-    pub id:ArticleId,
-    pub title:String,
-    pub content:String,
-    pub author:UserId
+    pub id:ArticleId, // 文章id,用于在其他表里检索信息
+    pub title:String,  // 文章标题
+    pub file_path:String,  // 文章存储在本地的位置
+    pub author_id:UserId,  // 作者id，user表中的id
+    pub dispatch_data : String,  // 发布日期
+    pub tag_ids : Vec<i32> // 标签，至多有三个
 }
 
 //列表内 文章预览内容

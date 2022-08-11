@@ -7,6 +7,7 @@ pub struct User{
 }
 
 pub struct UserSimpleInfo{
+    pub id : UserId, // 用户id用于检索
     pub username:String,//用户名
     pub avatoraddr:String,//头像地址
 }
