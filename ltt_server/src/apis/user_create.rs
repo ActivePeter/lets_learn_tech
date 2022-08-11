@@ -4,8 +4,8 @@ use axum::http::StatusCode;
 use serde::{Deserialize, Serialize};
 use std::io;
 use crate::memstate_lock;
-use crate::memstate_lock::{add_user, email_query, user_query};
 use crate::models::user::User;
+use crate::services::user::{user_query, email_query, add_user};
 
 
 pub async fn create_user(
