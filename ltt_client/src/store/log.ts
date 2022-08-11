@@ -18,7 +18,7 @@ export class LogProxy{
             Notify.warn("注册信息填写","密码长度至少8位")
             return
         }
-        if(regivars.pw==regivars.pw2){
+        if(regivars.pw!=regivars.pw2){
             Notify.warn("注册信息填写","两次密码输入不同")
             return
         }

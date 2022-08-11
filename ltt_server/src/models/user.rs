@@ -1,21 +1,27 @@
+pub type UserId=i32;
 pub struct User{
-    pub id:i32,
+    pub id:UserId,
     pub email:String,
     pub username:String,
     pub password:String,
+}
+
+pub struct UserSimpleInfo{
+    pub username:String,//用户名
+    pub avatoraddr:String,//头像地址
 }
 
 /*
 检查 传递过来的东西是否有空格，安全问题，SQL注入
  */
 
-fn check_content(check_value : &String) -> bool {
+fn space_in_string(check_value : &String) -> bool {
     for x in check_value.chars() {
        if x == ' '{
-           return false
+           return true
        }
     }
-    true
+    false
 }
 
 impl User {
@@ -24,12 +30,13 @@ impl User {
             self.password.len() >= 20 || self.username.len() >= 20{
             return Option::Some("wronglength")
         }
-        println!("#{}# #{}# #{}#",self.email,self.username,self.password);
+        log::debug!("#{}# #{}# #{}#",self.email,self.username,self.password);
 
-        if check_content(&self.email)
-            && check_content(&self.username)
-            && check_content(&self.password)
+        if space_in_string(&self.email)
+            || space_in_string(&self.username)
+            || space_in_string(&self.password)
         {
+            // log::debug!("")
             return Option::Some("space in values")
         }
         None
