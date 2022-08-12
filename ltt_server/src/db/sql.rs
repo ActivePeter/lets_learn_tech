@@ -15,8 +15,11 @@ use crate::db::user::UserDbHandler;
 // #[tokio::main] // By default, tokio_postgres uses the tokio crate as its runtime.
 pub async fn sqlstart(config : &ServerConfig) -> Result<(), Error> {
     //一个表由一个模块持有链接
-    db::user::user_sql_start(config).await;//启动链接并持有
+    let user_sql_wait=db::user::user_sql_start(config).await;//启动链接并持有
+    // ...先获取所有等待通道
 
+    //阻塞等待加载完成
+    user_sql_wait.await;
     Ok(())
 }
 

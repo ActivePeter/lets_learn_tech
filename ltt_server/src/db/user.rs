@@ -7,6 +7,7 @@ use crate::readconfig::ServerConfig;
 use crate::services::user_manager::{G_USER_MANAGER};
 use tokio::time;
 use tokio_postgres::tls::NoTlsStream;
+use tokio::sync::oneshot::Receiver;
 // use std::alloc::Global;
 
 //用户数据库的句柄，当链接断开时自动与主循环获取新的链接
@@ -65,7 +66,7 @@ impl UserDbHandler{
         // }
     }
 }
-pub async fn user_sql_start(config : &ServerConfig)  {
+pub async fn user_sql_start(config : &ServerConfig) -> Receiver<()> {
     let connto=format!("host={} port={} dbname={} password={} user={} ",
                        config.addr,config.port,config.dbname,config.password,config.username);
     let (firsttimememload_t,firsttimememload_r)=tokio::sync::oneshot::channel();
@@ -123,7 +124,8 @@ pub async fn user_sql_start(config : &ServerConfig)  {
     });
 
     //等首次内存加载成功后才继续，确保内存中已经有完整数据再启动服务
-    firsttimememload_r.await.unwrap();
-    println!("user sql load ok, continue");
+    // firsttimememload_r.await.unwrap();
+    // println!("user sql load ok, continue");
+    firsttimememload_r
 }
 
