@@ -4,8 +4,8 @@ use axum::http::StatusCode;
 use serde::{Deserialize, Serialize};
 use crate::memstate_lock;
 use crate::models::user::User;
-use crate::services::user::{user_query, email_query, add_user};
-
+// use crate::services::user::{user_query, email_query, add_user};
+use crate::services::user_manager::G_USER_MANAGER;
 
 /*
 用户创建逻辑：
@@ -29,17 +29,17 @@ pub async fn create_user(
 
     // todo : 检查优化
     println!("username:{} email:{}",payload.username,payload.email);
-    let userexist=  user_query(&payload.username).await;
+    let userexist=  G_USER_MANAGER.check_username(&payload.username).await;
     if userexist{
         return (StatusCode::BAD_REQUEST,"user exist").into_response()
     }
-    let emailexist=email_query(&payload.email).await;
+    let emailexist=G_USER_MANAGER.check_email(&payload.email).await;
     if emailexist {
         return (StatusCode::BAD_REQUEST,"email exist").into_response()
     }
     // // 异步写入数据库
     // tokio::spawn();
-    let res=add_user(new_user).await;
+    let res=G_USER_MANAGER.add_user(new_user).await;
     // 不返回id,出于安全问题，id仅后端与数据库交互使用，不直接作为参数。
     return (StatusCode::CREATED, "user create success").into_response()
 }

@@ -46,6 +46,7 @@ impl UserManager {
         true
     }
 
+    //没有返回true
     pub async fn check_email(&self , email : &String) -> bool{
         for user in self.users.read().await.iter() {
             match user.email.cmp(email){
