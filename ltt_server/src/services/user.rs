@@ -1,7 +1,7 @@
 use std::cmp::Ordering;
 use crate::models::user::User;
 use crate::db::user::db_create_user;
-use crate::manager::user_manager::G_USER_MANAGER;
+use crate::services::user_manager::G_USER_MANAGER;
 use crate::memstate_lock::MEM_STATE_WITH_LOCK;
 
 //用户相关的逻辑，给api层调用

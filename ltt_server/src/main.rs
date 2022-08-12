@@ -7,7 +7,6 @@ pub mod memstate_nolock;
 pub mod models;
 pub mod services;
 pub mod db;
-mod manager;
 // =======
 // >>>>>>> af4c70b49831f559438f519f7fd9c6ce40425809
 
