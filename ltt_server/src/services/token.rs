@@ -7,6 +7,7 @@ use tokio::sync::RwLock;
 use std::ops::DerefMut;
 use std::mem;
 use jsonwebtoken::errors::Error;
+use lazy_static::lazy_static;
 
 /// Our claims struct, it needs to derive `Serialize` and/or `Deserialize`
 #[derive(Debug, Serialize, Deserialize)]

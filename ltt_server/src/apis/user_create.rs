@@ -2,7 +2,6 @@ use axum::Json;
 use axum::response::IntoResponse;
 use axum::http::StatusCode;
 use serde::{Deserialize, Serialize};
-use std::io;
 use crate::memstate_lock;
 use crate::models::user::User;
 use crate::services::user::{user_query, email_query, add_user};

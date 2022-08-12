@@ -29,7 +29,7 @@ impl User {
     pub(crate) fn check(&self) -> Option<&'static str> {
         if self.email.len() >= 30 ||
             self.password.len() >= 20 || self.username.len() >= 20{
-            return Option::Some("wronglength")
+            return Some("wronglength")
         }
         log::debug!("#{}# #{}# #{}#",self.email,self.username,self.password);
 
@@ -38,7 +38,7 @@ impl User {
             || space_in_string(&self.password)
         {
             // log::debug!("")
-            return Option::Some("space in values")
+            return Some("space in values")
         }
         None
     }

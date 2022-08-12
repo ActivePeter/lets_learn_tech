@@ -6,7 +6,7 @@ pub type ArticleId=u32;
 文章存储在本地的命名格式: 日期_文章id
  */
 pub struct Article{
-    pub id:ArticleId, // 文章id,用于在其他表里检索信息
+    pub id:ArticleId, // 文呼唤你u章id,用于在其他表里检索信息
     pub title:String,  // 文章标题
     pub file_path:String,  // 文章存储在本地的位置
     pub author_id:UserId,  // 作者id，user表中的id

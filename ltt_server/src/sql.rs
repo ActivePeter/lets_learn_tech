@@ -6,6 +6,8 @@ use tokio_postgres::{NoTls, Error, Client};
 use crate::memstate_lock::{ MEM_STATE_WITH_LOCK};
 use crate::readconfig::ServerConfig;
 use crate::models::user::User;
+use crate::manager::user_manager;
+use crate::manager::user_manager::{G_USER_MANAGER};
 
 // #[tokio::main] // By default, tokio_postgres uses the tokio crate as its runtime.
 pub async fn sqlstart(config : &ServerConfig) -> Result<(), Error> {
@@ -23,26 +25,24 @@ pub async fn sqlstart(config : &ServerConfig) -> Result<(), Error> {
             eprintln!("connection error: {}", e);
         }
     });
-
-    let mut global_db = MEM_STATE_WITH_LOCK.write().await;
-    // Now we can execute a simple statement that just returns its parameter.
     let rows = client
         .query("select * from user_info",&[])
         .await?;
-    // And then check that we got back the same string we sent over.
 
     for row in rows.iter(){
         let id : i32 = row.get(0);
         let username : String = row.get(1);
         let password : String = row.get(2);
         let email :String = row.get(3);
-        let new_user = User{id : id ,username: username.trim_right().parse().unwrap(),password :
-        password.trim_right().parse().unwrap(),email:email.trim_right().parse().unwrap()};
+        let new_user = User{id,username: username.trim_end().parse().unwrap(),password :
+        password.trim_end().parse().unwrap(),email:email.trim_end().parse().unwrap()};
         println!("db : user : {} {} {} {}",new_user.id,new_user.username,
                  new_user.password,new_user.email);
-        global_db.g_users.push(new_user);
+        G_USER_MANAGER.write().await.push_user(new_user);
+        //global_db.g_users.push(new_user);
     }
-    global_db.db_client.push(client);
+    G_USER_MANAGER.write().await.set_client(client);
+   // global_db.db_client.push(client);
     Ok(())
 }
 
