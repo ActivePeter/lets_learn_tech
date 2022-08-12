@@ -7,6 +7,9 @@ pub mod memstate_nolock;
 pub mod models;
 pub mod services;
 pub mod db;
+
+#[macro_use]
+extern crate lazy_static;
 // =======
 // >>>>>>> af4c70b49831f559438f519f7fd9c6ce40425809
 
@@ -26,8 +29,17 @@ use crate::memstate_lock::MemStateWithLock;
 async fn main() {
     // initialize tracing
     // tracing_subscriber::fmt::init();
+
+    // 注册logger
     env_logger::init();
+
+    // 读取配置
     let config=readconfig::ServerConfig::read_from_file().await;
+
+    // 初始化token秘钥
+    services::token::init_from_config(config.token_secret.clone());
+
+    // 启动数据库
     log::debug!("The addr read from config.json : {}",config.addr);
     sql::sqlstart(&config).await.unwrap();
 

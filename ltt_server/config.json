@@ -3,5 +3,6 @@
   "port": "4890",
   "dbname": "user",
   "username": "postgres",
-  "password": "hanbaoaaa"
+  "password": "hanbaoaaa",
+  "token_secret": "lalalalalal"
 }

@@ -9,7 +9,8 @@ pub struct ServerConfig{
     pub port:String,
     pub dbname:String,
     pub username:String,
-    pub password:String
+    pub password:String,
+    pub token_secret:String
 }
 impl ServerConfig{
     pub async fn read_from_file()->ServerConfig{
