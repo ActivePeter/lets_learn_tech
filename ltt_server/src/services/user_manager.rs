@@ -5,16 +5,18 @@ use lazy_static::lazy_static;
 use tokio_postgres::{Client, Error, Row};
 use crate::models::user::User;
 use tokio::sync::RwLock;
-use crate::db::user::db_create_user;
+use crate::db::user::{UserDbHandler};
+use std::mem;
+use std::ops::DerefMut;
 
 // use std::alloc::Global;
 
 pub struct UserManager {
     // 此处将userclient移到 db::sql 下，因为这是数据库client，与用户并没有关联
     // user_client : Vec<Client>,
-
+    dbhandler : RwLock<UserDbHandler>,//更新连接时写，操作数据库时读
     //将manager锁移到内部
-    users : RwLock<Vec<User>>
+    users : RwLock<Vec<User>>//
 }
 
 
@@ -22,10 +24,13 @@ impl UserManager {
     pub fn new() -> UserManager {
         UserManager{
             // user_client : Vec::new(),
+            dbhandler: RwLock::new(UserDbHandler::new()),
             users : RwLock::new(Vec::new())
         }
     }
-
+    pub async fn update_user_db_client(&self, mut client:Client){
+        self.dbhandler.write().await.update_db_client_handle(client);
+    }
     // 此处将userclient移到 db::sql 下，因为这是数据库client，与用户并没有关联
     // pub async fn set_client(&mut self, client : Client ) {
     //     if self.user_client.is_empty() == false {
@@ -84,9 +89,8 @@ impl UserManager {
 
     pub async fn add_user(&self, new_user : User ) -> bool {
         //由于这里有数据库操作，所以usermanager不应该加锁，只对内部存储数据加锁
-        match db_create_user(&new_user).await{
+        match self.dbhandler.read().await.db_create_user(&new_user).await{
             Ok(_) => {
-
                 self.users.write().await.push(new_user);
                 //操作完db在持有usermanager写，不然操作db的过程中usermanager一直都是锁住的
                 // self.users.push(new_user);
