@@ -1,32 +1,41 @@
+use crate::*;
 use std::cmp::Ordering;
 use std::ptr::null;
 use lazy_static::lazy_static;
-use tokio_postgres::Client;
+use tokio_postgres::{Client, Error, Row};
 use crate::models::user::User;
 use tokio::sync::RwLock;
+use crate::db::user::db_create_user;
+
+// use std::alloc::Global;
 
 pub struct UserManager {
-    user_client : Vec<Client>,
-    users : Vec<User>
+    // 此处将userclient移到 db::sql 下，因为这是数据库client，与用户并没有关联
+    // user_client : Vec<Client>,
+
+    //将manager锁移到内部
+    users : RwLock<Vec<User>>
 }
 
 
 impl UserManager {
-    pub fn new() -> RwLock<UserManager> {
-        RwLock::new(UserManager{
-            user_client : Vec::new(),
-            users : Vec::new()
-        })
-    }
-    pub async fn set_client(&mut self, client : Client ) {
-        if self.user_client.is_empty() == false {
-            self.user_client[0] = client;
-        }else{
-            self.user_client.push(client);
+    pub fn new() -> UserManager {
+        UserManager{
+            // user_client : Vec::new(),
+            users : RwLock::new(Vec::new())
         }
     }
+
+    // 此处将userclient移到 db::sql 下，因为这是数据库client，与用户并没有关联
+    // pub async fn set_client(&mut self, client : Client ) {
+    //     if self.user_client.is_empty() == false {
+    //         self.user_client[0] = client;
+    //     }else{
+    //         self.user_client.push(client);
+    //     }
+    // }
     pub async fn check_username(&self , username : &String) -> bool{
-        for user in self.users.iter() {
+        for user in self.users.read().await.iter() {
             match user.username.cmp(username){
                 Ordering::Equal => {
                     return false
@@ -38,7 +47,7 @@ impl UserManager {
     }
 
     pub async fn check_email(&self , email : &String) -> bool{
-        for user in self.users.iter() {
+        for user in self.users.read().await.iter() {
             match user.email.cmp(email){
                 Ordering::Equal => {
                     return false
@@ -50,7 +59,7 @@ impl UserManager {
     }
 
     pub async fn check_password(&self,is_name : bool,key : &String, password : &String) -> bool {
-        for user in self.users.iter() {
+        for user in self.users.read().await.iter() {
             let cmp_value : &String;
             if is_name {
                 cmp_value = &user.username;
@@ -72,25 +81,37 @@ impl UserManager {
         return false
     }
 
-    pub async fn add_user(&mut self, new_user : User ){
-        let mut insert_cmd = format!("insert into user_info values ({},'{}','{}','{}')"
-                                     ,new_user.id,new_user.username,new_user.password,new_user.email);
-        println!("insert_cmt {}",insert_cmd);
-        let insert_result = self.user_client[0].
-            query(&insert_cmd,&[]).await;
-        if insert_result.is_err() {
-            eprintln!("insert error: {}", insert_result.unwrap_err());
-        }else{
-            self.users.push(new_user);
+    pub async fn add_user(&self, new_user : User ) -> bool {
+        //由于这里有数据库操作，所以usermanager不应该加锁，只对内部存储数据加锁
+        match db_create_user(&new_user).await{
+            Ok(_) => {
+
+                self.users.write().await.push(new_user);
+                //操作完db在持有usermanager写，不然操作db的过程中usermanager一直都是锁住的
+                // self.users.push(new_user);
+                true
+            }
+            Err(_) => {
+                false
+            }
         }
+        // let mut insert_cmd = format!("insert into user_info values ({},'{}','{}','{}')"
+        //                              ,new_user.id,new_user.username,new_user.password,new_user.email);
+        // println!("insert_cmt {}",insert_cmd);
+        // let insert_result =
+        //     .query(&insert_cmd,&[]).await;
+        // if insert_result.is_err() {
+        //     eprintln!("insert error: {}", insert_result.unwrap_err());
+        // }else{
+        // }
     }
 
-    pub fn push_user(&mut self, new_user : User ){
+    pub async fn push_user(&self, new_user : User ){
         println!("New user !");
-        self.users.push(new_user);
+        self.users.write().await.push(new_user);
     }
 }
 
 lazy_static! {
-    pub static ref G_USER_MANAGER : RwLock<UserManager> = UserManager::new();
+    pub static ref G_USER_MANAGER : UserManager = UserManager::new();
 }

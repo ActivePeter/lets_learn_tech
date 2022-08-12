@@ -1,5 +1,4 @@
 pub mod apis;
-pub mod sql;
 pub mod readconfig;
 pub mod memstate_lock;
 // <<<<<<< HEAD
@@ -29,7 +28,7 @@ async fn main() {
    // prepare database
     let config=readconfig::ServerConfig::read_from_file().await;
     log::debug!("The addr read from config.json : {}",config.addr);
-    sql::sqlstart(&config).await.unwrap();
+    db::sql::sqlstart(&config).await.unwrap();
 
     let app = Router::new()
         .route("/", get(root))

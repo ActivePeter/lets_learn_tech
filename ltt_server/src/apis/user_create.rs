@@ -29,7 +29,7 @@ pub async fn create_user(
 
     // todo : 检查优化
     println!("username:{} email:{}",payload.username,payload.email);
-    let userexist= user_query(&payload.username).await;
+    let userexist=  user_query(&payload.username).await;
     if userexist{
         return (StatusCode::BAD_REQUEST,"user exist").into_response()
     }
@@ -37,9 +37,9 @@ pub async fn create_user(
     if emailexist {
         return (StatusCode::BAD_REQUEST,"email exist").into_response()
     }
-    // 异步写入数据库
-    tokio::spawn(add_user(new_user));
-
+    // // 异步写入数据库
+    // tokio::spawn();
+    let res=add_user(new_user).await;
     // 不返回id,出于安全问题，id仅后端与数据库交互使用，不直接作为参数。
     return (StatusCode::CREATED, "user create success").into_response()
 }

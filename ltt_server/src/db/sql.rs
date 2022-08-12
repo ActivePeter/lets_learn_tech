@@ -7,13 +7,20 @@ use crate::memstate_lock::{ MEM_STATE_WITH_LOCK};
 use crate::readconfig::ServerConfig;
 use crate::models::user::User;
 use crate::services::user_manager::{G_USER_MANAGER};
+use tokio::sync::RwLock;
+
+lazy_static::lazy_static! {
+    pub static ref G_SQL_CLIENTS :RwLock<Vec<Client>> = RwLock::new(vec![]);
+}
+
 
 // #[tokio::main] // By default, tokio_postgres uses the tokio crate as its runtime.
 pub async fn sqlstart(config : &ServerConfig) -> Result<(), Error> {
+
     let connto=format!("host={} port={} dbname={} password={} user={} ",
                                 config.addr,config.port,config.dbname,config.password,config.username);
     // Connect to the database.
-    println!("The config info : {connto}");
+    println!("The config info : {}",connto);
     let (client, connection) =
         tokio_postgres::connect(&*connto, NoTls).await?;
 
@@ -37,10 +44,12 @@ pub async fn sqlstart(config : &ServerConfig) -> Result<(), Error> {
         password.trim_end().parse().unwrap(),email:email.trim_end().parse().unwrap()};
         println!("db : user : {} {} {} {}",new_user.id,new_user.username,
                  new_user.password,new_user.email);
-        G_USER_MANAGER.write().await.push_user(new_user);
+        G_USER_MANAGER.push_user(new_user).await;
         //global_db.g_users.push(new_user);
     }
-    G_USER_MANAGER.write().await.set_client(client);
+
+    G_SQL_CLIENTS.write().await.push(client);
+    // G_USER_MANAGER.write().await.set_client(client);
    // global_db.db_client.push(client);
     Ok(())
 }
