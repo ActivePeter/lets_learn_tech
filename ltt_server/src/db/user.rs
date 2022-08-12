@@ -67,8 +67,11 @@ impl UserDbHandler{
 pub async fn user_sql_start(config : &ServerConfig)  {
     let connto=format!("host={} port={} dbname={} password={} user={} ",
                        config.addr,config.port,config.dbname,config.password,config.username);
+    let (firsttimememload_t,firsttimememload_r)=tokio::sync::oneshot::channel();
+    let mut some_firsttimememload_t =Some(firsttimememload_t);
     tokio::spawn(async move{
         let mut fisrt=true;
+        let mut memloaded=false;
        loop{
            if !fisrt {//断连后休眠30秒再继续
                time::sleep(time::Duration::from_secs(30)).await;
@@ -97,19 +100,29 @@ pub async fn user_sql_start(config : &ServerConfig)  {
                    });
 
                    //初始化clientmanager
-                    tokio::spawn(async move{
-
-                        G_USER_MANAGER.update_user_db_client(client).await;
-                    });
+                   //  tokio::spawn(async move{
+                        //更新memloaded状态，若已经加载，则后续断连不用重载
+                    memloaded= G_USER_MANAGER.update_user_db_client(
+                        memloaded,client).await;
+                    if memloaded {
+                        if some_firsttimememload_t.is_some(){
+                            let t=some_firsttimememload_t.unwrap();
+                            some_firsttimememload_t=None;
+                            t.send(()).unwrap();
+                        }
+                        // firsttimememload_t.send(());
+                    }
+                    // });
 
                    //直到数据库链接断开
-                   let end=handle.await;
-                   G_USER_MANAGER.on_db_disco().await;
+                   let _end=handle.await;
                }
            }
-
        }
     });
 
+    //等首次内存加载成功后才继续，确保内存中已经有完整数据再启动服务
+    firsttimememload_r.await.unwrap();
+    println!("user sql load ok, continue");
 }
 

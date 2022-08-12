@@ -14,8 +14,9 @@ use std::ops::{DerefMut, Deref};
 pub struct UserManager {
     dbhandler : RwLock<UserDbHandler>,//更新连接时写，操作数据库时读
     //将manager锁移到内部
-    users : RwLock<Vec<User>>,//
-    inited:RwLock<bool>//在链接生效前和失效后，都置为false
+    users : RwLock<Vec<User>>,//内存状态的修改再数据库后，所以不用担心断开后与数据库不一致，
+
+    // inited:RwLock<bool>//在第一次初始化前
 }
 
 
@@ -25,32 +26,37 @@ impl UserManager {
             // user_client : Vec::new(),
             dbhandler: RwLock::new(UserDbHandler::new()),
             users : RwLock::new(Vec::new()),
-            inited:RwLock::new(false)
+            // inited:RwLock::new(false)
         }
     }
-    pub async fn on_db_disco(&self){
-        (*self.inited.write().await)=false;
-    }
-    pub async fn update_user_db_client(&self, mut client:Client){
-        //还未初始化完，要避免业务操作。
+    pub async fn update_user_db_client(
+        &self,
+        memloaded:bool,//若没有首次加载到内存就要从数据库读取加载
+        mut client:Client) -> bool {//返回是否加载到内存
+
         self.dbhandler.write().await.update_db_client_handle(client);
-        let rows_ =self.dbhandler.read().await
-            .db_get_all_user().await;
-        if let Some(rows)=rows_{
-            for row in rows.iter(){
-                let id : i32 = row.get(0);
-                let username : String = row.get(1);
-                let password : String = row.get(2);
-                let email :String = row.get(3);
-                let new_user = User{id,username: username.trim_end().parse().unwrap(),password :
-                password.trim_end().parse().unwrap(),email:email.trim_end().parse().unwrap()};
-                println!("db : user : {} {} {} {}",new_user.id,new_user.username,
-                         new_user.password,new_user.email);
-                self.push_user(new_user,true).await;
-                //global_db.g_users.push(new_user);
+        if !memloaded{
+
+            let rows_ =self.dbhandler.read().await
+                .db_get_all_user().await;
+            if let Some(rows)=rows_{
+                for row in rows.iter(){
+                    let id : i32 = row.get(0);
+                    let username : String = row.get(1);
+                    let password : String = row.get(2);
+                    let email :String = row.get(3);
+                    let new_user = User{id,username: username.trim_end().parse().unwrap(),password :
+                    password.trim_end().parse().unwrap(),email:email.trim_end().parse().unwrap()};
+                    println!("db : user : {} {} {} {}",new_user.id,new_user.username,
+                             new_user.password,new_user.email);
+                    self.users.write().await.push(new_user);
+                    //global_db.g_users.push(new_user);
+                }
+                return true;
             }
-            (*self.inited.write().await)=true;
+            return false;
         }
+        return true;
     }
     // 此处将userclient移到 db::sql 下，因为这是数据库client，与用户并没有关联
     // pub async fn set_client(&mut self, client : Client ) {
@@ -61,9 +67,6 @@ impl UserManager {
     //     }
     // }
     pub async fn check_username(&self , username : &String) -> bool{
-        if !self.inited.read().await.deref(){
-            return false;
-        }
         for user in self.users.read().await.iter() {
             match user.username.cmp(username){
                 Ordering::Equal => {
@@ -77,10 +80,6 @@ impl UserManager {
 
     //没有返回true
     pub async fn check_email(&self , email : &String) -> bool{
-        if !self.inited.read().await.deref(){
-            return false;
-        }
-
         for user in self.users.read().await.iter() {
             match user.email.cmp(email){
                 Ordering::Equal => {
@@ -93,10 +92,6 @@ impl UserManager {
     }
 
     pub async fn check_password(&self,is_name : bool,key : &String, password : &String) -> bool {
-        if !self.inited.read().await.deref(){
-            return false;
-        }
-
         for user in self.users.read().await.iter() {
             let cmp_value : &String;
             if is_name {
@@ -120,9 +115,6 @@ impl UserManager {
     }
 
     pub async fn add_user(&self, new_user : User ) -> bool {
-        if !self.inited.read().await.deref(){
-            return false;
-        }
         //由于这里有数据库操作，所以usermanager不应该加锁，只对内部存储数据加锁
         match self.dbhandler.read().await.db_create_user(&new_user).await{
             None => {false}
@@ -144,14 +136,6 @@ impl UserManager {
         // }
     }
 
-    //一种情况是数据库初始化时。
-    //一种是初始化后的业务操作
-    pub async fn push_user(&self, new_user : User,initing:bool ){
-        if initing || *self.inited.read().await {
-            println!("New user !");
-            self.users.write().await.push(new_user);
-        }
-    }
 }
 
 lazy_static! {
