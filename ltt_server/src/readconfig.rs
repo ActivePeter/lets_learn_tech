@@ -3,7 +3,7 @@ use tokio::fs::File;
 use tokio::io::AsyncReadExt;
 
 //用于读取服务端配置
-#[derive(Deserialize,Serialize)]
+#[derive(Deserialize,Serialize,Clone)]
 pub struct ServerConfig{
     pub addr:String,
     pub port:String,

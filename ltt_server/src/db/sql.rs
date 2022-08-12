@@ -14,10 +14,9 @@ use crate::db::user::UserDbHandler;
 
 // #[tokio::main] // By default, tokio_postgres uses the tokio crate as its runtime.
 pub async fn sqlstart(config : &ServerConfig) -> Result<(), Error> {
+    //一个表由一个模块持有链接
     db::user::user_sql_start(config).await;//启动链接并持有
 
-    // G_USER_MANAGER.write().await.set_client(client);
-   // global_db.db_client.push(client);
     Ok(())
 }
 
