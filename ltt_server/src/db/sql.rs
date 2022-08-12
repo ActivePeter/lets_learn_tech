@@ -20,6 +20,7 @@ pub async fn sqlstart(config : &ServerConfig) -> Result<(), Error> {
 
     //阻塞等待加载完成
     user_sql_wait.await;
+    println!("user_sql_wait ok");
     Ok(())
 }
 
