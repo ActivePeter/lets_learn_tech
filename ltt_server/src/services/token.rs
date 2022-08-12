@@ -46,10 +46,31 @@ pub async fn maketoken() -> jsonwebtoken::errors::Result<String> {
         exp: second as u64+EXPIRE_SEC
     }, &EncodingKey::from_secret(TOKEN_SECRET.read().await.as_bytes()))
 }
+
 pub enum CheckTokenRes{
     FailParse,
     Valid,
     Expire,
+}
+impl CheckTokenRes{
+    pub fn is_fail_parse(&self)->bool{
+        match self{
+            CheckTokenRes::FailParse => {true}
+            _=>false
+        }
+    }
+    pub fn is_valid(&self)->bool{
+        match self{
+            CheckTokenRes::Valid => {true}
+            _=>false
+        }
+    }
+    pub fn is_expire(&self)->bool{
+        match self{
+            CheckTokenRes::Expire => {true}
+            _=>false
+        }
+    }
 }
 pub async fn checktoken(token:String)->CheckTokenRes{
     let token = decode::<Claims>(&token, &DecodingKey::from_secret(TOKEN_SECRET.read().await.as_bytes()), &Validation::default());
