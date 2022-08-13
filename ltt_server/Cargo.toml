@@ -3,13 +3,6 @@ name = "ltt_server"
 version = "0.1.0"
 edition = "2021"
 
-[source.crates-io]
-replace-with = 'ustc'
-
-[source.ustc]
-registry = "git://mirrors.ustc.edu.cn/crates.io-index"
-
-
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
@@ -24,4 +17,4 @@ lazy_static = "1.4.0"
 jsonwebtoken = "8.1.1"
 chrono = "0.4"
 rand = "0.8.5"
-lettre = "0.10.1"
+deadpool-postgres = "0.10.2"

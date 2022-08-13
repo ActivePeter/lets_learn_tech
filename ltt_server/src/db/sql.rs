@@ -3,26 +3,122 @@ use std::io::Read;
 use std::ptr::null;
 use log::log;
 use tokio_postgres::{NoTls, Error, Client};
-use crate::memstate_lock::{ MEM_STATE_WITH_LOCK};
+use crate::memstate_lock::{MEM_STATE_WITH_LOCK};
 use crate::readconfig::ServerConfig;
 use crate::models::user::User;
 use crate::services::user_manager::{G_USER_MANAGER};
 use tokio::sync::RwLock;
 use crate::db;
-use crate::db::user::UserDbHandler;
+use tokio::sync::oneshot::Receiver;
+use tokio::time;
+use deadpool_postgres::{Config, Manager, ManagerConfig, Pool, RecyclingMethod, Runtime, Object};
 
+
+lazy_static::lazy_static! {
+    pub static ref G_DB_POOL_HANDLE : RwLock<Option<Pool>> =RwLock::new(None);
+}
+
+
+pub struct DbHandler{
+    pub pool:Pool
+}
+impl DbHandler{
+    pub async fn get(&self) -> Object {
+        return self.pool.get().await.unwrap()
+    }
+}
+// impl DbHandler{
+//     pub async fn new() -> DbHandler {
+//
+//     }
+// }
+pub async fn get_dbhandler() -> DbHandler {
+    DbHandler{
+        pool: G_DB_POOL_HANDLE.read().await.as_ref().unwrap().clone()
+    }
+}
 
 // #[tokio::main] // By default, tokio_postgres uses the tokio crate as its runtime.
-pub async fn sqlstart(config : &ServerConfig) -> Result<(), Error> {
+pub async fn sqlstart(config: &ServerConfig) -> Result<(), Error> {
     //一个表由一个模块持有链接
-    let user_sql_wait=db::user::user_sql_start(config).await;//启动链接并持有
-    // ...先获取所有等待通道
+    let _sql_wait = _sql_start(config).await;//启动链接并持有
 
-    //阻塞等待加载完成
-    user_sql_wait.await.unwrap();
     println!("user_sql_wait ok");
     Ok(())
 }
+
+//尝试下数据库连接池
+pub async fn _sql_start(config : &ServerConfig){
+    let mut cfg = Config::new();
+    cfg.user=Some(config.username.clone());
+    cfg.password=Some(config.password.clone());
+    cfg.host=Some(config.addr.clone());
+    cfg.dbname=Some(config.dbname.clone());
+    cfg.port=Some( config.port.clone());
+    let pool = cfg.create_pool(Some(Runtime::Tokio1), NoTls).unwrap();
+    G_DB_POOL_HANDLE.write().await.replace(pool);
+    // let connto=format!("host={} port={} dbname={} password={} user={} ",
+    //                    config.addr,config.port,config.dbname,config.password,config.username);
+    // let (firsttimememload_t,firsttimememload_r)=tokio::sync::oneshot::channel();
+    // let mut some_firsttimememload_t =Some(firsttimememload_t);
+    // tokio::spawn(async move{
+    //     let mut fisrt=true;
+    //     let mut memloaded=false;
+    //     loop{
+    //         if !fisrt {//断连后休眠30秒再继续
+    //             time::sleep(time::Duration::from_secs(30)).await;
+    //
+    //             println!("reconnect");
+    //         }
+    //         fisrt=false;
+    //
+    //         // Connect to the database.
+    //         println!("The config info : {}",connto);
+    //         let res=
+    //             tokio_postgres::connect(&*connto, NoTls).await;
+    //         match res{
+    //             Err(_) => {}
+    //             Ok((client,
+    //                    connection)) => {
+    //                 // The connection object performs the actual communication with the database,
+    //                 // so spawn it off to run on its own.
+    //
+    //                 //持有链接
+    //                 let handle=tokio::spawn(async move {
+    //                     if let Err(e) = connection.await {
+    //                         eprintln!("connection error: {}", e);
+    //                         //todo 链接断开后应该重连，更新client
+    //                     }
+    //                 });
+    //
+    //                 //初始化clientmanager
+    //                 //  tokio::spawn(async move{
+    //                 //更新memloaded状态，若已经加载，则后续断连不用重载
+    //                 memloaded= G_USER_MANAGER.update_user_db_client(
+    //                     memloaded,client).await;
+    //                 if memloaded {
+    //                     if some_firsttimememload_t.is_some(){
+    //                         let t=some_firsttimememload_t.unwrap();
+    //                         some_firsttimememload_t=None;
+    //                         t.send(()).unwrap();
+    //                     }
+    //                     // firsttimememload_t.send(());
+    //                 }
+    //                 // });
+    //
+    //                 //直到数据库链接断开
+    //                 let _end=handle.await;
+    //             }
+    //         }
+    //     }
+    // });
+
+    //等首次内存加载成功后才继续，确保内存中已经有完整数据再启动服务
+    // firsttimememload_r.await.unwrap();
+    // println!("user sql load ok, continue");
+    // firsttimememload_r
+}
+
 
 /*
 数据库查询思路：

@@ -6,7 +6,7 @@ use tokio::io::AsyncReadExt;
 #[derive(Deserialize,Serialize,Clone)]
 pub struct ServerConfig{
     pub addr:String,
-    pub port:String,
+    pub port:u16,
     pub dbname:String,
     pub username:String,
     pub password:String,
