@@ -33,7 +33,9 @@ async fn main() {
 
     let app = Router::new()
         .route("/", get(root))
-        .route("/user_create", post(apis::user_create::create_user));
+        .route("/user_create", post(apis::user_create::create_user))
+        .route("/user_login",post(apis::user_login::user_login))
+        ;
 
     let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
     axum::Server::bind(&addr)
