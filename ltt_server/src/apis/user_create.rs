@@ -17,27 +17,26 @@ pub async fn create_user(
 ) -> impl IntoResponse {
     // todo: 验证码处理
     // todo : id处理
+
     let new_user = User{ id: -1, email:payload.email.clone(),
         username:payload.username.clone(),password:payload.password.clone()};
     let check = new_user.check();
 
-
     if let Some(r) =check{
         return (StatusCode::BAD_REQUEST,r).into_response()
     }
-
-    // todo : 检查优化
     println!("username:{} email:{}",payload.username,payload.email);
-    let userexist=  G_USER_MANAGER.check_username(&payload.username).await;
-    if userexist{
+
+    let user_exist=  G_USER_MANAGER.check_username(&payload.username).await;
+    if user_exist{
         return (StatusCode::BAD_REQUEST,"user exist").into_response()
     }
-    let emailexist=G_USER_MANAGER.check_email(&payload.email).await;
-    if emailexist {
+
+    let email_exist=G_USER_MANAGER.check_email(&payload.email).await;
+    if email_exist {
         return (StatusCode::BAD_REQUEST,"email exist").into_response()
     }
-    // // 异步写入数据库
-    // tokio::spawn();
+
     let res=G_USER_MANAGER.add_user(new_user).await;
     // 不返回id,出于安全问题，id仅后端与数据库交互使用，不直接作为参数。
     if res == true {

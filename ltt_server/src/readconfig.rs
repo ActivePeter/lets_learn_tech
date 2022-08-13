@@ -10,8 +10,13 @@ pub struct ServerConfig{
     pub dbname:String,
     pub username:String,
     pub password:String,
-    pub token_secret:String
+    pub token_secret:String,
+    pub email_username : String,
+    pub email_password : String,
+    pub email_server : String
 }
+
+
 impl ServerConfig{
     pub async fn read_from_file()->ServerConfig{
         let mut f = File::open("./config.json").await.unwrap();
