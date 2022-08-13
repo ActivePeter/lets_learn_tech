@@ -4,5 +4,8 @@
   "dbname": "user",
   "username": "postgres",
   "password": "hanbaoaaa",
-  "token_secret": "lalalalalal"
+  "token_secret": "lalalalalal",
+  "email_username" : "sujinyanslip@foxmail.com",
+  "email_password" : "yohuvafjpezgbeca",
+  "email_server" : "smtp.qq.com"
 }

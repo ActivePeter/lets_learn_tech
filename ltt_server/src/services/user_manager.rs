@@ -134,25 +134,14 @@ impl UserManager {
         match self.dbhandler.read().await.db_create_user(&new_user).await{
             None => {false}
             Some(_) => {
-
                 self.users.write().await.push(new_user);
                 true
             }
 
         }
-        // let mut insert_cmd = format!("insert into user_info values ({},'{}','{}','{}')"
-        //                              ,new_user.id,new_user.username,new_user.password,new_user.email);
-        // println!("insert_cmt {}",insert_cmd);
-        // let insert_result =
-        //     .query(&insert_cmd,&[]).await;
-        // if insert_result.is_err() {
-        //     eprintln!("insert error: {}", insert_result.unwrap_err());
-        // }else{
-        // }
     }
 
 }
-
 lazy_static! {
     pub static ref G_USER_MANAGER : UserManager = UserManager::new();
 }
