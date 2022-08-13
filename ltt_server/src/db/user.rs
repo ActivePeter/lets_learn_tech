@@ -16,6 +16,10 @@ use crate::db::sql::{DbHandler, get_dbhandler};
 //对应user 表的dao层，持有到数据库的消息通道，
 //后续数据库断开没有关系，在数据库重新链接后会来更新这里的client
 impl DbHandler{
+    pub async fn create_user_table(&self){
+
+    }
+
     // pub fn update_db_client_handle(&mut self, mut client:Client){
     //     if self._client.is_empty() {
     //         self._client.push(client)

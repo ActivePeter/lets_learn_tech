@@ -10,6 +10,10 @@ use crate::db::sql::DbHandler;
 //   content
 //   comment_ids
 impl DbHandler{
+    pub async fn create_tag_table(&self){
+
+    }
+
     pub async fn db_create_tag(&self){
 
     }

@@ -4,6 +4,10 @@ use crate::db::sql::DbHandler;
 
 // 表划分
 impl DbHandler{
+    pub async fn create_comment_table(&self){
+
+    }
+
     pub async fn db_create_comment(&self){
 
     }
