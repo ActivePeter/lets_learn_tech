@@ -32,8 +32,9 @@ export class PaState{
     log_gui_log_or_regi=true;
 
     //logged
-    logged_token="";
-    logged_uid=-1;
+    logged_token="";//用于权限请求
+    logged_uid=-1;//当前登入用户记录
+
 
 
     constructor() {

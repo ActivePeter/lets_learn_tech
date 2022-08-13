@@ -34,7 +34,8 @@ pub async fn maketoken(uid:UserId) -> String {
 
     encode(&Header::default(), &Claims{
         uid,
-        exp: second as u64+EXPIRE_SEC
+        exp: second as u64
+            +EXPIRE_SEC
     }, &EncodingKey::from_secret(TOKEN_SECRET.read().await.as_bytes())).unwrap()
 }
 
@@ -49,10 +50,14 @@ pub async fn checktoken(uid:UserId,token:String)->CheckTokenRes{
     match token{
         Ok(data) => {
             let second=chrono::Local::now().timestamp()  as u64;
+
+            println!("{} {}",serde_json::to_string(&data.claims).unwrap(),second);
             if data.claims.uid!=uid{
                 return CheckTokenRes::NotMatchUid;
             }
-            if second-data.claims.exp>0 {
+            if second>
+                // EXPIRE_SEC +
+                    data.claims.exp{
                 return CheckTokenRes::Expire;
             }
             CheckTokenRes::Valid

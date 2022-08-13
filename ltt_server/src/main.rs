@@ -41,6 +41,7 @@ async fn main() {
         .route("/", get(root))
         .route("/user_create", post(apis::user_create::create_user))
         .route("/user_login",post(apis::user_login::user_login))
+        .route("/user_basic_info",post(apis::user_basic_info::user_basic_info))
         .route("/verify_token",post(apis::verify_token::verify_token))
         ;
 

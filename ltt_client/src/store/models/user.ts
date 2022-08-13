@@ -8,10 +8,11 @@ export class CreateUserRequest {
     }
 }
 
-export class UserSimpleInfo {
+export class UserBasicInfo {
     constructor(
+        uid:number,
         username: string,//用户名
-        avatoraddr: string,//头像地址
+        // avatoraddr: string,//头像地址
     ) {
     }
 }

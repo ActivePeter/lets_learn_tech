@@ -3,6 +3,7 @@ import {CreateUserRequest} from "@/store/models/user";
 import {api_user_create} from "@/store/net/api_user_create";
 import {Notify} from "@/util/notify";
 import {api_user_login, UserLoginResponse} from "@/store/net/api_user_login";
+import {api_verify_token} from "@/store/net/api_verify_token";
 
 export class LogProxy implements IProxy{
     check_logable_thenlog(name:string,pw:string):boolean{
@@ -74,9 +75,39 @@ export class LogProxy implements IProxy{
         this.state.logged_uid=res.uid
     }
     token_verify(){
-        //验证成功后，
-        this.state.logged_token=localStorage.logged_token
+        let uid=localStorage.logged_uid
+        if(uid!=undefined){
+            uid=parseInt(uid)
+        }
+        const token=localStorage.logged_token
+        function removeinvalid(){
+            delete localStorage.logged_uid
+            delete localStorage.logged_token
+        }
+        if(token!=undefined
+            &&uid!=undefined
+            &&token!=""){
+            api_verify_token(
+                uid,token
+            ).then((res)=>{
+                if(res=="invalid"){
+                    removeinvalid()
+                }else if(res=="expire"){
+                    Notify.warn("登入信息已过期","")
+                    removeinvalid()
+                }else{
+                    //覆盖token
+                    localStorage.logged_token=res.newtoken
+                    //验证成功后，
+                    this.state.logged_token=res.newtoken
+                    this.state.logged_uid=uid
 
+                    Notify.common("success","登入信息已更新","")
+                }
+            })
+        }else{
+            removeinvalid()
+        }
     }
     first_load(){
         //首次加载token，并检查token
@@ -84,6 +115,9 @@ export class LogProxy implements IProxy{
             &&localStorage.logged_token!=""){
             this.token_verify()
         }
+    }
+    get_logged_uid(){
+        return this.state.logged_uid
     }
     constructor(private state:PaState) {
     }
