@@ -5,7 +5,8 @@ import {Notify, NotifyTypes} from "@/util/notify";
 import {PaStateMan} from "@/util/pa_state_man";
 // import {apiProxy} from "@/store/net/proxy";
 export interface UserLoginResponse{
-    token:string
+    token:string,
+    uid:number
 }
 export function api_user_login(name:string,pw:string){
     const failtitle="登录请求失败"
@@ -35,9 +36,7 @@ export function api_user_login(name:string,pw:string){
                 return
             }
         }
-
         {
-
             Notify.warn(failtitle,e.toString())
         }
     })

@@ -19,7 +19,7 @@ pub async fn sqlstart(config : &ServerConfig) -> Result<(), Error> {
     // ...先获取所有等待通道
 
     //阻塞等待加载完成
-    user_sql_wait.await;
+    user_sql_wait.await.unwrap();
     println!("user_sql_wait ok");
     Ok(())
 }

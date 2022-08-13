@@ -68,8 +68,10 @@ export class LogProxy implements IProxy{
         // this.state.logged_token;
         this.state.log_gui_show=false
         localStorage.logged_token=res.token
+        localStorage.logged_uid=res.uid
 
         this.state.logged_token=res.token
+        this.state.logged_uid=res.uid
     }
     token_verify(){
         //验证成功后，
