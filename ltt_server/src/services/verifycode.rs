@@ -33,8 +33,11 @@ impl VerifyCodeManager{
                 failed_code.push(k.clone());
             }
         }
-        for s in failed_code {
-            self.codes.write().await.remove(&s);
+        if failed_code.len()!=0{
+            let mut hold=self.codes.write().await;
+            for s in failed_code {
+                hold.remove(&s);
+            }
         }
     }
 
