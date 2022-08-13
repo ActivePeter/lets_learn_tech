@@ -66,6 +66,21 @@ impl UserManager {
     //         self.user_client.push(client);
     //     }
     // }
+    pub async fn search_user(&self,username_or_email:&String)->Option<User>{
+        for user in self.users.read().await.iter() {
+            match user.username.cmp(&username_or_email){
+                Ordering::Equal => {
+                    return Some(user.clone())
+                }
+                _ => {}
+            }
+            if user.email==*username_or_email{
+                return Some(user.clone())
+            }
+        }
+        return None
+    }
+
     pub async fn check_username(&self , username : &String) -> bool{
         for user in self.users.read().await.iter() {
             match user.username.cmp(username){

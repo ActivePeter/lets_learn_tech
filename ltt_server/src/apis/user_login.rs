@@ -3,6 +3,9 @@ use axum::response::IntoResponse;
 use axum::http::StatusCode;
 use serde::{Deserialize, Serialize};
 use crate::services::token;
+use crate::services::user_manager::G_USER_MANAGER;
+use crate::models::user::User;
+use std::future::Future;
 /*
 用户创建逻辑：
 1. 检查用户各个参数是否合理，合理才继续
@@ -12,7 +15,17 @@ use crate::services::token;
 pub async fn user_login(
     Json(payload): Json<UserLoginRequest>,
 ) -> impl IntoResponse {
-
+    match G_USER_MANAGER.search_user(&payload.name_or_email).await
+    {
+        Some(user) => {
+            if user.password!=payload.password{
+                return (StatusCode::BAD_REQUEST, "wronginfo").into_response()
+            }
+        }
+        None=>{
+            return (StatusCode::BAD_REQUEST, "wronginfo").into_response()
+        }
+    }
     //经过检测之后，返回token
     let tokenres_=token::maketoken().await;
     if let Ok(tokenres)=tokenres_{

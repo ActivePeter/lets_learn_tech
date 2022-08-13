@@ -1,4 +1,6 @@
 pub type UserId=i32;
+
+#[derive(Clone)]
 pub struct User{
     pub id:UserId,
     pub email:String,
