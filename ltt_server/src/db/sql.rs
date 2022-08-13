@@ -42,7 +42,7 @@ pub async fn sqlstart(config: &ServerConfig) -> Result<(), Error> {
     Ok(())
 }
 
-//尝试下数据库连接池
+//尝试下数据库连接池 https://lib.rs/crates/deadpool-postgres
 pub async fn _sql_start(config : &ServerConfig){
     let mut cfg = Config::new();
     cfg.user=Some(config.username.clone());
