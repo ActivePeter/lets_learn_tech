@@ -1,6 +1,6 @@
 {
   "addr": "h9.maxlink.top",
-  "port": "4890",
+  "port": 4890,
   "dbname": "user",
   "username": "postgres",
   "password": "hanbaoaaa",

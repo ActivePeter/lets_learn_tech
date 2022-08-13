@@ -36,6 +36,7 @@ async fn main() {
     let config=readconfig::ServerConfig::read_from_file().await;
     log::debug!("The addr read from config.json : {}",config.addr);
     db::sql::sqlstart(&config).await.unwrap();
+    services::init_all().await;
 
     let mut app = Router::new()
         .route("/", get(root))

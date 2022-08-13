@@ -5,14 +5,13 @@ use lazy_static::lazy_static;
 use tokio_postgres::{Client, Error, Row};
 use crate::models::user::{User, UserId};
 use tokio::sync::RwLock;
-use crate::db::user::{UserDbHandler};
 use std::mem;
 use std::ops::{DerefMut, Deref};
+use crate::db::sql::{DbHandler, get_dbhandler};
 
 // use std::alloc::Global;
 
 pub struct UserManager {
-    dbhandler : RwLock<UserDbHandler>,//更新连接时写，操作数据库时读
     //将manager锁移到内部
     users : RwLock<Vec<User>>,//内存状态的修改再数据库后，所以不用担心断开后与数据库不一致，
 
@@ -23,22 +22,13 @@ pub struct UserManager {
 impl UserManager {
     pub fn new() -> UserManager {
         UserManager{
-            // user_client : Vec::new(),
-            dbhandler: RwLock::new(UserDbHandler::new()),
             users : RwLock::new(Vec::new()),
-            // inited:RwLock::new(false)
         }
     }
-    pub async fn update_user_db_client(
-        &self,
-        memloaded:bool,//若没有首次加载到内存就要从数据库读取加载
-        mut client:Client) -> bool {//返回是否加载到内存
+    pub async fn update_user_from_db(&self){//返回是否加载到内存
 
-        self.dbhandler.write().await.update_db_client_handle(client);
-        if !memloaded{
-
-            let rows_ =self.dbhandler.read().await
-                .db_get_all_user().await;
+        let handler=get_dbhandler().await;
+            let rows_ =handler.db_get_all_user().await;
             if let Some(rows)=rows_{
                 for row in rows.iter(){
                     let id : i32 = row.get(0);
@@ -52,11 +42,7 @@ impl UserManager {
                     self.users.write().await.push(new_user);
                     //global_db.g_users.push(new_user);
                 }
-                return true;
             }
-            return false;
-        }
-        return true;
     }
     // 此处将userclient移到 db::sql 下，因为这是数据库client，与用户并没有关联
     // pub async fn set_client(&mut self, client : Client ) {
@@ -139,7 +125,7 @@ impl UserManager {
 
     pub async fn add_user(&self, new_user : User ) -> bool {
         //由于这里有数据库操作，所以usermanager不应该加锁，只对内部存储数据加锁
-        match self.dbhandler.read().await.db_create_user(&new_user).await{
+        match get_dbhandler().await.db_create_user(&new_user).await{
             None => {false}
             Some(_) => {
 
