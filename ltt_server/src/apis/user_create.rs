@@ -2,7 +2,6 @@ use axum::Json;
 use axum::response::IntoResponse;
 use axum::http::StatusCode;
 use serde::{Deserialize, Serialize};
-use crate::memstate_lock;
 use crate::models::user::User;
 // use crate::services::user::{user_query, email_query, add_user};
 use crate::services::user_manager::G_USER_MANAGER;
@@ -20,7 +19,7 @@ pub async fn create_user(
     // todo : id处理
     let new_user = User{ id: -1, email:payload.email.clone(),
         username:payload.username.clone(),password:payload.password.clone()};
-    let mut check = new_user.check();
+    let check = new_user.check();
 
 
     if let Some(r) =check{
@@ -41,7 +40,10 @@ pub async fn create_user(
     // tokio::spawn();
     let res=G_USER_MANAGER.add_user(new_user).await;
     // 不返回id,出于安全问题，id仅后端与数据库交互使用，不直接作为参数。
-    return (StatusCode::CREATED, "user create success").into_response()
+    if res == true {
+        return (StatusCode::CREATED, "user create success").into_response()
+    }
+    return (StatusCode::BAD_REQUEST,"db error").into_response()
 }
 
 // the input to our `create_user` handler

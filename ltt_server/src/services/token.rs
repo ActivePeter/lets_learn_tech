@@ -14,20 +14,6 @@ use lazy_static::lazy_static;
 struct Claims {
     exp: u64,
 }
-// pub struct Test{
-//     pub testchildlock1:RwLock<u64>,//writable
-//     pub testchildlock2:RwLock<u64>,//writable
-//     pub testchildnolock:u64//cant write
-// }
-// impl Test{
-//     pub fn new() -> Test {
-//         return Test{
-//             testchildlock1: RwLock::new(0),
-//             testchildlock2: RwLock::new(0),
-//             testchildnolock: 0
-//         }
-//     }
-// }
 lazy_static! {
     pub static ref TOKEN_SECRET: RwLock<String> =RwLock::new( String::new());
     // pub static ref TEST:Test=Test::new();

@@ -1,8 +1,6 @@
-use std::cmp::Ordering;
 use tokio::sync::RwLock;
 use lazy_static::*;
 use tokio_postgres::Client;
-use tokio_postgres::error::Severity::Panic;
 use crate::models::user::User;
 
 ////有锁
@@ -22,12 +20,5 @@ impl MemStateWithLock{//如果数据相关性不大，就把大锁拆开
 //很多数据结构需要用到堆区，所以需要在运行期初始化
 lazy_static! {
     pub static ref MEM_STATE_WITH_LOCK: RwLock<MemStateWithLock> = MemStateWithLock::new();
-}
-async fn v(){
-    //读
-    // MEM_STATE_WITH_LOCK.read().await.xxx
-
-    //写
-    // MEM_STATE_WITH_LOCK.write().await.xxx
 }
 
