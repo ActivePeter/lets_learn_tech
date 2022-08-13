@@ -4,8 +4,7 @@ use axum::http::StatusCode;
 use serde::{Deserialize, Serialize};
 use crate::services::token;
 use crate::services::user_manager::G_USER_MANAGER;
-use crate::models::user::{User, UserId};
-use std::future::Future;
+use crate::models::user::UserId;
 
 
 pub async fn user_login(

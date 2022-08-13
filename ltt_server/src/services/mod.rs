@@ -1,7 +1,7 @@
 pub mod robot_service;
 pub mod token;
 pub mod user_manager;
-mod verifycode;
+pub(crate) mod verifycode;
 pub mod article;
 
 pub async fn init_all(){

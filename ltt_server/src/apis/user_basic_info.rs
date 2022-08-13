@@ -12,7 +12,7 @@ pub async fn user_basic_info(
     Json(payload): Json<UserBasicInfoRequest>,
 ) -> impl IntoResponse {
     //     return (StatusCode::OK,serde_json::to_string(&resp).unwrap() ).into_response()
-    let u=G_USER_MANAGER.search_user_byid(payload.uid).await;
+    let u=G_USER_MANAGER.search_user_by_id(payload.uid).await;
     if let Some(user)=u{
         let resp=UserBasicInfoResponse{
             uid: user.id,

@@ -9,15 +9,9 @@ use std::mem;
 use std::ops::{DerefMut, Deref};
 use crate::db::sql::{DbHandler, get_dbhandler};
 
-// use std::alloc::Global;
-
 pub struct UserManager {
-    //将manager锁移到内部
     users : RwLock<Vec<User>>,//内存状态的修改再数据库后，所以不用担心断开后与数据库不一致，
-
-    // inited:RwLock<bool>//在第一次初始化前
 }
-
 
 impl UserManager {
     pub fn new() -> UserManager {
@@ -25,8 +19,7 @@ impl UserManager {
             users : RwLock::new(Vec::new()),
         }
     }
-    pub async fn update_user_from_db(&self){//返回是否加载到内存
-
+    pub async fn update_user_from_db(&self){
         let handler=get_dbhandler().await;
             let rows_ =handler.db_get_all_user().await;
             if let Some(rows)=rows_{
@@ -44,15 +37,8 @@ impl UserManager {
                 }
             }
     }
-    // 此处将userclient移到 db::sql 下，因为这是数据库client，与用户并没有关联
-    // pub async fn set_client(&mut self, client : Client ) {
-    //     if self.user_client.is_empty() == false {
-    //         self.user_client[0] = client;
-    //     }else{
-    //         self.user_client.push(client);
-    //     }
-    // }
-    pub async fn search_user_byid(&self,uid:UserId)->Option<User>{
+
+    pub async fn search_user_by_id(&self,uid:UserId)->Option<User>{
         for user in self.users.read().await.iter() {
             if user.id==uid {
                 return Some(user.clone())
@@ -60,6 +46,7 @@ impl UserManager {
         }
         return None
     }
+
     pub async fn search_user(&self,username_or_email:&String)->Option<User>{
         for user in self.users.read().await.iter() {
             match user.username.cmp(&username_or_email){
@@ -123,15 +110,14 @@ impl UserManager {
         return false
     }
 
+    // 调用db_handler的读锁,添加成功返回true,添加失败返回false
     pub async fn add_user(&self, new_user : User ) -> bool {
-        //由于这里有数据库操作，所以usermanager不应该加锁，只对内部存储数据加锁
         match get_dbhandler().await.db_create_user(&new_user).await{
-            None => {false}
-            Some(_) => {
+            false => {false}
+            true => {
                 self.users.write().await.push(new_user);
                 true
             }
-
         }
     }
 

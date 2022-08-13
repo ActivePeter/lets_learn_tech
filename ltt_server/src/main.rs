@@ -1,3 +1,5 @@
+extern crate core;
+
 pub mod apis;
 pub mod readconfig;
 pub mod memstate_lock;
@@ -6,7 +8,7 @@ pub mod memstate_nolock;
 pub mod models;
 pub mod services;
 pub mod db;
-mod test;
+pub mod test;
 // =======
 // >>>>>>> af4c70b49831f559438f519f7fd9c6ce40425809
 
@@ -21,17 +23,13 @@ use serde::{Deserialize, Serialize};
 use std::net::SocketAddr;
 use axum::error_handling::HandleErrorLayer;
 use crate::memstate_lock::MemStateWithLock;
-
-// macro_rules! route_common{
-//   ($name:ident) => {
-//       app.route("/verify_token",post(apis::verify_token::verify_token))
-//   }
-// }
+use crate::services::verifycode::G_VERIFY_MANAGER;
+use crate::test::verifycode_test::verifycode_check;
 
 #[tokio::main]
 async fn main() {
     env_logger::init();
-
+    verifycode_check().await;
    // prepare database
     let config=readconfig::ServerConfig::read_from_file().await;
     log::debug!("The addr read from config.json : {}",config.addr);
