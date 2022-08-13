@@ -2,8 +2,10 @@
 
 import {AllTags} from "@/store/models/tag";
 import {LogProxy} from "@/store/log";
-
-export class PaStateProxy{
+export interface IProxy{
+    first_load():void
+}
+export class PaStateProxy implements IProxy{
     addcnt(){
         this.state.cnt++;
     }
@@ -11,8 +13,9 @@ export class PaStateProxy{
         return this.state.cnt
     }
     set cnt(cnt){}
-
-
+    first_load(){
+        this.proxy_log.first_load()
+    }
     proxy_log
     constructor(private state:PaState) {
         this.proxy_log=new LogProxy(state)
@@ -27,6 +30,12 @@ export class PaState{
     //log
     log_gui_show=false;
     log_gui_log_or_regi=true;
+
+    //logged
+    logged_token="";//用于权限请求
+    logged_uid=-1;//当前登入用户记录
+    logged_basicinfo={}
+
 
     constructor() {
     }

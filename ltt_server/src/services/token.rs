@@ -8,10 +8,12 @@ use std::ops::DerefMut;
 use std::mem;
 use jsonwebtoken::errors::Error;
 use lazy_static::lazy_static;
+use crate::models::user::UserId;
 
 /// Our claims struct, it needs to derive `Serialize` and/or `Deserialize`
 #[derive(Debug, Serialize, Deserialize)]
 struct Claims {
+    uid:UserId,
     exp: u64,
 }
 lazy_static! {
@@ -26,45 +28,36 @@ pub async fn init_from_config(mut secret:String){
     }
 }
 
-pub async fn maketoken() -> jsonwebtoken::errors::Result<String> {
+//需要保证uid有效
+pub async fn maketoken(uid:UserId) -> String {
     let second=chrono::Local::now().timestamp();
 
     encode(&Header::default(), &Claims{
-        exp: second as u64+EXPIRE_SEC
-    }, &EncodingKey::from_secret(TOKEN_SECRET.read().await.as_bytes()))
+        uid,
+        exp: second as u64
+            +EXPIRE_SEC
+    }, &EncodingKey::from_secret(TOKEN_SECRET.read().await.as_bytes())).unwrap()
 }
 
 pub enum CheckTokenRes{
     FailParse,
     Valid,
     Expire,
+    NotMatchUid
 }
-impl CheckTokenRes{
-    pub fn is_fail_parse(&self)->bool{
-        match self{
-            CheckTokenRes::FailParse => {true}
-            _=>false
-        }
-    }
-    pub fn is_valid(&self)->bool{
-        match self{
-            CheckTokenRes::Valid => {true}
-            _=>false
-        }
-    }
-    pub fn is_expire(&self)->bool{
-        match self{
-            CheckTokenRes::Expire => {true}
-            _=>false
-        }
-    }
-}
-pub async fn checktoken(token:String)->CheckTokenRes{
+pub async fn checktoken(uid:UserId,token:String)->CheckTokenRes{
     let token = decode::<Claims>(&token, &DecodingKey::from_secret(TOKEN_SECRET.read().await.as_bytes()), &Validation::default());
     match token{
         Ok(data) => {
             let second=chrono::Local::now().timestamp()  as u64;
-            if second-data.claims.exp>0 {
+
+            println!("{} {}",serde_json::to_string(&data.claims).unwrap(),second);
+            if data.claims.uid!=uid{
+                return CheckTokenRes::NotMatchUid;
+            }
+            if second>
+                // EXPIRE_SEC +
+                    data.claims.exp{
                 return CheckTokenRes::Expire;
             }
             CheckTokenRes::Valid

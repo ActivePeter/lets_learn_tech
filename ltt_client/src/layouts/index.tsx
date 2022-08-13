@@ -7,43 +7,51 @@ import Headline from "@/layouts/headline/headline";
 import {LogFloat} from "@/layouts/login/logfloat";
 import { ReactNotifications } from 'react-notifications-component'
 import 'react-notifications-component/dist/theme.css'
-import {ResetPaStateMan} from "@/util/pa_state_man";
+import {PaStateMan, ResetPaStateMan} from "@/util/pa_state_man";
+import {Component} from "react";
 
-export default function Layout() {
+export default class Layout extends Component<any, any> {
+    componentDidMount() {
+        PaStateMan.getstate().first_load()
+    }
 
-    bind_style_2_window();
-    const theme = get_default_theme();
-    ResetPaStateMan()
-    return (
-        <div className={styles.navs}>
-            {/*<ul>*/}
-            {/*  <li>*/}
-            {/*    <Link to="/">Home</Link>*/}
-            {/*  </li>*/}
-            {/*  <li>*/}
-            {/*    <Link to="/docs">Docs</Link>*/}
-            {/*  </li>*/}
-            {/*  <li>*/}
-            {/*    <a href="https://github.com/umijs/umi">Github</a>*/}
-            {/*  </li>*/}
-            {/*</ul>*/}
+    render() {
 
-            <CssVarsProvider theme={theme}>
-                <GlobalStyles<Theme>
-                    styles={(theme) => ({
+        bind_style_2_window();
+        const theme = get_default_theme();
+        ResetPaStateMan()
+        return (
+            <div className={styles.navs}>
+                {/*<ul>*/}
+                {/*  <li>*/}
+                {/*    <Link to="/">Home</Link>*/}
+                {/*  </li>*/}
+                {/*  <li>*/}
+                {/*    <Link to="/docs">Docs</Link>*/}
+                {/*  </li>*/}
+                {/*  <li>*/}
+                {/*    <a href="https://github.com/umijs/umi">Github</a>*/}
+                {/*  </li>*/}
+                {/*</ul>*/}
 
-                        body: {
-                            margin: 0,
-                            fontFamily: theme.vars.fontFamily.body,
-                        },
-                    })}
-                />
-                <ReactNotifications/>
-                <LogFloat/>
-                <Headline/>
-                <Outlet/>
+                <CssVarsProvider theme={theme}>
+                    <GlobalStyles<Theme>
+                        styles={(theme) => ({
 
-            </CssVarsProvider>
-        </div>
-    );
+                            body: {
+                                margin: 0,
+                                fontFamily: theme.vars.fontFamily.body,
+                            },
+                        })}
+                    />
+                    <ReactNotifications/>
+                    <LogFloat/>
+                    <Headline/>
+                    <Outlet/>
+
+                </CssVarsProvider>
+            </div>
+        );
+    }
+
 }

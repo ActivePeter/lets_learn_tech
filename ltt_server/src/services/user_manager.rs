@@ -3,7 +3,7 @@ use std::cmp::Ordering;
 use std::ptr::null;
 use lazy_static::lazy_static;
 use tokio_postgres::{Client, Error, Row};
-use crate::models::user::User;
+use crate::models::user::{User, UserId};
 use tokio::sync::RwLock;
 use crate::db::user::{UserDbHandler};
 use std::mem;
@@ -66,6 +66,14 @@ impl UserManager {
     //         self.user_client.push(client);
     //     }
     // }
+    pub async fn search_user_byid(&self,uid:UserId)->Option<User>{
+        for user in self.users.read().await.iter() {
+            if user.id==uid {
+                return Some(user.clone())
+            }
+        }
+        return None
+    }
     pub async fn search_user(&self,username_or_email:&String)->Option<User>{
         for user in self.users.read().await.iter() {
             match user.username.cmp(&username_or_email){
