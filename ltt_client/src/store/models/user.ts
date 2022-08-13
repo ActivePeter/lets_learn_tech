@@ -10,8 +10,9 @@ export class CreateUserRequest {
 
 export class UserBasicInfo {
     constructor(
-        uid:number,
-        username: string,//用户名
+        public uid:number,
+        public username: string,//用户名
+        public email:string
         // avatoraddr: string,//头像地址
     ) {
     }

@@ -12,19 +12,30 @@ pub async fn user_basic_info(
     Json(payload): Json<UserBasicInfoRequest>,
 ) -> impl IntoResponse {
     //     return (StatusCode::OK,serde_json::to_string(&resp).unwrap() ).into_response()
-
-    // return (StatusCode::BAD_REQUEST, "fail token make").into_response()
+    let u=G_USER_MANAGER.search_user_byid(payload.uid).await;
+    if let Some(user)=u{
+        let resp=UserBasicInfoResponse{
+            uid: user.id,
+            username:user.username,
+            email:user.email
+        };
+        return (StatusCode::OK, serde_json::to_string(&resp).unwrap()).into_response()
+    }
+    return (StatusCode::BAD_REQUEST, "notfound").into_response()
 }
 
 // the input to our `create_user` handler
 #[derive(Deserialize,Serialize)]
 pub struct UserBasicInfoResponse {
+    pub uid:UserId,
+    pub username: String,//用户名
+    pub email:String
 }
 
 // the input to our `create_user` handler
 #[derive(Deserialize,Serialize)]
 pub struct UserBasicInfoRequest {
-    pub uid:number,
+    pub uid:UserId,
 }
 
 

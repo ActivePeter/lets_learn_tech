@@ -34,7 +34,7 @@ export class PaState{
     //logged
     logged_token="";//用于权限请求
     logged_uid=-1;//当前登入用户记录
-
+    logged_basicinfo={}
 
 
     constructor() {

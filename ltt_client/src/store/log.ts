@@ -1,9 +1,10 @@
 import {IProxy, PaState} from "@/store/pastate";
-import {CreateUserRequest} from "@/store/models/user";
+import {CreateUserRequest, UserBasicInfo} from "@/store/models/user";
 import {api_user_create} from "@/store/net/api_user_create";
 import {Notify} from "@/util/notify";
 import {api_user_login, UserLoginResponse} from "@/store/net/api_user_login";
 import {api_verify_token} from "@/store/net/api_verify_token";
+import {api_user_basic_info} from "@/store/net/api_user_basic_info";
 
 export class LogProxy implements IProxy{
     check_logable_thenlog(name:string,pw:string):boolean{
@@ -73,6 +74,21 @@ export class LogProxy implements IProxy{
 
         this.state.logged_token=res.token
         this.state.logged_uid=res.uid
+        this.update_logged_userbasic()
+    }
+    update_logged_userbasic(){
+        if(this.state.logged_uid!=-1){
+            api_user_basic_info(this.state.logged_uid).then((res)=>{
+                if(res){
+                    this.state.logged_basicinfo=res;
+                }else{
+                    Notify.warn("获取登入用户信息失败","")
+                    window.setTimeout(()=>{
+                        this.update_logged_userbasic()
+                    },5000)
+                }
+            })
+        }
     }
     token_verify(){
         let uid=localStorage.logged_uid
@@ -101,7 +117,7 @@ export class LogProxy implements IProxy{
                     //验证成功后，
                     this.state.logged_token=res.newtoken
                     this.state.logged_uid=uid
-
+                    this.update_logged_userbasic()
                     Notify.common("success","登入信息已更新","")
                 }
             })
@@ -118,6 +134,9 @@ export class LogProxy implements IProxy{
     }
     get_logged_uid(){
         return this.state.logged_uid
+    }
+    get_logged_basic():UserBasicInfo|{}{
+        return this.state.logged_basicinfo
     }
     constructor(private state:PaState) {
     }

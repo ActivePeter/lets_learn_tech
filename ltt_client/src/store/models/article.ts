@@ -1,4 +1,4 @@
-import {UserSimpleInfo} from "@/store/models/user";
+import {UserBasicInfo} from "@/store/models/user";
 
 export class Article{
     constructor(
@@ -15,7 +15,7 @@ export class ArticlePreview{
         public id:number,
         public title:string,
         public contentcut:string,
-        public authorinfo:UserSimpleInfo
+        public authorinfo:UserBasicInfo
     ) {
     }
 }
@@ -33,9 +33,9 @@ export class PageOfArticle{
                     0,
                     "title",
                     "content",
-                    new UserSimpleInfo(
+                    new UserBasicInfo(
                         "hhh",
-                        ""
+                        "",""
                     )
                 )
             )
