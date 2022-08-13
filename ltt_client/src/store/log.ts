@@ -1,9 +1,22 @@
-import {PaState} from "@/store/pastate";
+import {IProxy, PaState} from "@/store/pastate";
 import {CreateUserRequest} from "@/store/models/user";
 import {api_user_create} from "@/store/net/api_user_create";
 import {Notify} from "@/util/notify";
+import {api_user_login, UserLoginResponse} from "@/store/net/api_user_login";
 
-export class LogProxy{
+export class LogProxy implements IProxy{
+    check_logable_thenlog(name:string,pw:string):boolean{
+        if(name.length==0){
+            Notify.warn("登录信息填写","用户名为空")
+            return false
+        }
+        if(pw.length==0){
+            Notify.warn("登录信息填写","密码为空")
+            return false
+        }
+        api_user_login(name,pw)
+        return true
+    }
     check_registable_thenregist(regivars:{
         email:string,
         username:string,
@@ -50,6 +63,25 @@ export class LogProxy{
     }
     get_log_or_regi(){
         return this.state.log_gui_log_or_regi
+    }
+    log_succ(res:UserLoginResponse){
+        // this.state.logged_token;
+        this.state.log_gui_show=false
+        localStorage.logged_token=res.token
+
+        this.state.logged_token=res.token
+    }
+    token_verify(){
+        //验证成功后，
+        this.state.logged_token=localStorage.logged_token
+
+    }
+    first_load(){
+        //首次加载token，并检查token
+        if(localStorage.logged_token
+            &&localStorage.logged_token!=""){
+            this.token_verify()
+        }
     }
     constructor(private state:PaState) {
     }

@@ -9,38 +9,31 @@ import {TextField} from "@mui/joy";
 // import InputUnstyled from "@mui/base/InputUnstyled";
 import Button from "@mui/joy/Button";
 import {TextBtn} from "@/layouts/reusable/textbtn";
+import {PaStateMan} from "@/util/pa_state_man";
 
 type Props = {
 
 };
 export class LogBarLog extends PureComponent<Props> {
+    loginfo={
+        email:"",
+        pw:""
+    }
     render() {
         return <Fragment>
-            <Input1  placeholder={"邮箱"}
-               onChange={()=>{}}
+            <Input1  placeholder={"邮箱/用户名"}
+               onChange={(e:any)=>{
+                   this.loginfo.email=e.target.value}}
             />
-            <Input1 placeholder={"密码"}/>
-            {/*<Box*/}
-            {/*    sx={{*/}
-            {/*        gap:curstyle().gap.common*/}
-            {/*    }}*/}
-            {/*    className={reuse.row_flexcontainer_reverse+" "*/}
-            {/*        +reuse.flex_secondaxis_align_center*/}
-            {/*    }>*/}
-            {/*    <Button>*/}
-            {/*        获取验证码*/}
-            {/*    </Button>*/}
-            {/*    <Box*/}
-            {/*        className={reuse.fillleft_flex}*/}
-            {/*        sx={{*/}
-            {/*            width:"70px",*/}
-            {/*            // background:curstyle().colors.main_s*/}
-            {/*        }}*/}
-            {/*    >*/}
-            {/*        <Input1/>*/}
-            {/*    </Box>*/}
-            {/*</Box>*/}
+            <Input1 placeholder={"密码"}
+                onChange={(e:any)=>{
+                    this.loginfo.pw=e.target.value}}
+            />
             <Button
+                onClick={()=>{
+                    PaStateMan.getstate().proxy_log
+                        .check_logable_thenlog(this.loginfo.email,this.loginfo.pw)
+                }}
             >
                 登录
             </Button>
