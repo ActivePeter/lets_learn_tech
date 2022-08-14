@@ -52,7 +52,13 @@ export class LogProxy implements IProxy{
             regivars.email,
             regivars.pw,
             parseInt(regivars.verify),
-            regivars.username))
+            regivars.username)).then(res=>{
+                if(res!=undefined){
+                    this.log_succ(
+                        
+                    )
+                }
+        })
     }
     show_log_gui(show:boolean,log_or_regi?:boolean){
         if(show&&log_or_regi!=undefined){

@@ -7,6 +7,7 @@ use crate::models::user::User;
 use crate::services::user_manager::G_USER_MANAGER;
 use crate::services::verifycode::G_VERIFY_MANAGER;
 use crate::services::token::maketoken;
+use crate::apis::user_login::UserLoginResponse;
 /*
 用户创建逻辑：
 1. 检查用户各个参数是否合理，合理才继续
@@ -42,7 +43,11 @@ pub async fn create_user(
         // 不返回id,出于安全问题，id仅后端与数据库交互使用，不直接作为参数。
         if res == true {
             let token=maketoken(new_user.id).await;
-            return (StatusCode::CREATED, token).into_response()
+            let resp=UserLoginResponse{
+                token,
+                uid: new_user.id
+            };
+            return (StatusCode::CREATED, serde_json::to_string(&resp).unwrap()).into_response()
         }
         return (StatusCode::BAD_REQUEST,"db error").into_response()
     }

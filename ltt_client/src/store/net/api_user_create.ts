@@ -4,10 +4,14 @@ import {BaseUrl} from "@/store/net/baseurl";
 import {Notify, NotifyTypes} from "@/util/notify";
 // import {apiProxy} from "@/store/net/proxy";
 
-export function api_user_create(data:CreateUserRequest){
+export function api_user_create(data:CreateUserRequest):Promise<undefined|string>{
     // console.log(apiProxy)
-    axios.post(BaseUrl+"user_create",data).then((res)=>{
+    return axios.post(BaseUrl+"user_create",data).then((res)=>{
         console.log(res)
+        if(res.status==200){
+            return res.data
+        }
+        return undefined
     }).catch((e)=>{
         const failtitle="注册请求失败"
         console.log(e?.response)
@@ -23,7 +27,7 @@ export function api_user_create(data:CreateUserRequest){
             const v=matches[key]
             if(e?.response?.data==v[0]){
                 Notify.warn(failtitle,v[1])
-                return
+                return undefined
             }
         }
 
@@ -31,5 +35,7 @@ export function api_user_create(data:CreateUserRequest){
 
             Notify.warn(failtitle,e.toString())
         }
+
+        return undefined
     })
 }
