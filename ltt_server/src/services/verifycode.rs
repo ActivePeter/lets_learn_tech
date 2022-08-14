@@ -59,7 +59,8 @@ impl VerifyCodeManager{
         }
     }
 
-    pub async fn get_code(&self, content : &String) -> Option<u32> {
+    pub async fn get_code(&self, content : &String) -> Option<u32>
+    {
         self.fresh_code().await;
         // 这里为什么获取写锁，因为先获取读锁，这个锁不会释放，再次申请写锁，由于同一线程，会造成死锁问题
         let mut hash_table = self.codes.write().await;
@@ -82,6 +83,22 @@ impl VerifyCodeManager{
         }
     }
 
+    pub async fn verify(&self,content : &String, verify_code : u32) -> bool {
+      // 验证验证码是只读操作
+        let table  = self.codes.read().await;
+        let result = table.get(content);
+        return match result {
+            Some(find_code) => {
+                if verify_code == find_code.code {
+                    return true
+                }
+                false
+            }
+            None => {
+                false
+            }
+        }
+    }
 }
 lazy_static! {
     pub static ref G_VERIFY_MANAGER : VerifyCodeManager = VerifyCodeManager::new();

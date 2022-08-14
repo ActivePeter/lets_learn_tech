@@ -50,6 +50,7 @@ impl  EmailManager{
             server : config.email_server.clone()
         }
     }
+
     pub async fn set(&mut self,username : &String, password : &String,server : &String) {
         self.username = username.clone();
         self.password = password.clone();
