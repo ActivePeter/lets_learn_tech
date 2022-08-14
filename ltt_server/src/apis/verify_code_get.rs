@@ -24,11 +24,14 @@ pub async fn verify_code_get(
     let v_=G_VERIFY_MANAGER.get_code(&req.email).await;
     if let Some(v)=v_{
         match G_EMAIL_MANAGER.send_verify_code(&*req.email,v){
-            EmailSendResult::EmailNotExist => {
-                return (StatusCode::OK, "email not exist").into_response();
+            EmailSendResult::EmailSendFail => {
+                return (StatusCode::BAD_REQUEST, "sendfail").into_response();
             }
             EmailSendResult::Succ => {
                 return (StatusCode::OK, "sent").into_response();
+            }
+            EmailSendResult::EmailParseFail => {
+                return (StatusCode::BAD_REQUEST, "parsefail").into_response();
             }
         }
     }

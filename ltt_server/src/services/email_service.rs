@@ -25,8 +25,9 @@ fn read_from_file() -> ServerConfig{
     des
 }
 pub enum EmailSendResult{
-    EmailNotExist,
-    Succ
+    EmailSendFail,
+    Succ,
+    EmailParseFail
 }
 impl  EmailManager{
     fn new() -> EmailManager {
@@ -58,39 +59,50 @@ impl  EmailManager{
     pub fn send_verify_code(&self, to_email : &str, code : u32) -> EmailSendResult {
         let mut body = String::from("Your verify code is ");
         body.push_str(&code.to_string());
-        let email = Message::builder()
-            .from(Mailbox::new(None, self.username.clone().parse().unwrap()))
-            .to(to_email.parse().unwrap())
-            .subject("Verify code from LetTeach ")
-            .body(String::from(body))
-            .unwrap();
+        if let Ok(to)=to_email.parse(){
+            let email = Message::builder()
+                .from(Mailbox::new(None, self.username.clone().parse().unwrap()))
+                .to(to)
+                .subject("Verify code from Let's Learn Tech")
+                .body(String::from(body))
+                .unwrap();
 
-        let creds = Credentials::new(self.username.clone(), self.password.clone());
+            let creds = Credentials::new(self.username.clone(), self.password.clone());
 
-        let mailer = SmtpTransport::relay(&self.server)
-            .unwrap()
-            .credentials(creds)
-            .build();
+            let mailer = SmtpTransport::relay(&self.server)
+                .unwrap()
+                .credentials(creds)
+                .build();
 
-        // send email success !
-        match mailer.send(&email) {
-            Ok(_) => {
-                println!("Email sent successfully!");
-                return
-                    EmailSendResult::Succ;
-            },
-            Err(e) => {
-
-                panic!("Could not send email: {:?}", e) },
+            // send email success !
+            match mailer.send(&email) {
+                Ok(_) => {
+                    println!("Email sent successfully!");
+                    return
+                        EmailSendResult::Succ;
+                },
+                Err(e) => {
+                    eprintln!("Could not send email: {:?}", e);
+                    return EmailSendResult::EmailSendFail;
+                }
+                    // panic!("Could not send email: {:?}", e) },
+            }
         }
+        EmailSendResult::EmailParseFail
     }
 }
 lazy_static! {
     pub static ref G_EMAIL_MANAGER : EmailManager = EmailManager::new();
 }
 
-
+#[tokio::test(flavor = "multi_thread", worker_threads = 1)]
 pub async fn email_test(){
     println!("hhhhhhhhhhhhhhhhhhhhhh");
-    G_EMAIL_MANAGER.send_verify_code("751080330@qq.com",123456);
+    G_EMAIL_MANAGER.send_verify_code("751080330@qq.com",123472);
+}
+
+#[tokio::test(flavor = "multi_thread", worker_threads = 1)]
+pub async fn email_test_fail(){
+    println!("hhhhhhhhhhhhhhhhhhhhhh");
+    G_EMAIL_MANAGER.send_verify_code("1020401660@qq.com",123472);
 }
