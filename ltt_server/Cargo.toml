@@ -18,3 +18,5 @@ jsonwebtoken = "8.1.1"
 chrono = "0.4"
 rand = "0.8.5"
 deadpool-postgres = "0.10.2"
+tower = { version = "0.4", features = ["util", "timeout", "load-shed", "limit"] }
+tower-http = { version = "0.2.0", features = ["add-extension", "auth", "compression-full", "trace"] }

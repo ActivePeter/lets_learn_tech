@@ -28,18 +28,25 @@ impl DbHandler{
 
         return None;
     }
-    pub async fn db_create_user(&self,new_user : &User) -> bool {
+    pub async fn db_create_user(&self,new_user : &mut User) -> bool {
         // 由user_manger调用
-        let mut insert_cmd = format!("insert into user_info values ({},'{}','{}','{}')"
-                                     ,new_user.id,new_user.username,new_user.password,new_user.email);
+        let mut insert_cmd = format!("insert into user_info(username,password,email) values('{}','{}','{}')"
+                                     ,new_user.username,new_user.password,new_user.email);
         println!("insert_cmt {}",insert_cmd);
 
         let insert_result =self.get().await
             .query(&insert_cmd,&[]).await;
 
         match insert_result{
-            Ok(v) => {true}
-            Err(_) => {false}
+            Ok(v) => {
+                for a in v{
+                    let id=a.get(1);
+                    new_user.id=id;
+                }
+                true}
+            Err(e) => {
+                eprintln!("{}",e);
+                false}
         }
     }
 }

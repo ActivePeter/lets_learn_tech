@@ -27,12 +27,12 @@ pub async fn create_user(
     }
     println!("username:{} email:{}",payload.username,payload.email);
 
-    let user_exist=  G_USER_MANAGER.check_username(&payload.username).await;
+    let user_exist=  !G_USER_MANAGER.check_username(&payload.username).await;
     if user_exist{
         return (StatusCode::BAD_REQUEST,"user exist").into_response()
     }
 
-    let email_exist=G_USER_MANAGER.check_email(&payload.email).await;
+    let email_exist=!G_USER_MANAGER.check_email(&payload.email).await;
     if email_exist {
         return (StatusCode::BAD_REQUEST,"email exist").into_response()
     }
