@@ -47,6 +47,7 @@ pub async fn create_user(
                 token,
                 uid: new_user.id
             };
+            // println!("new user {}",new_user.id);
             return (StatusCode::CREATED, serde_json::to_string(&resp).unwrap()).into_response()
         }
         return (StatusCode::BAD_REQUEST,"db error").into_response()

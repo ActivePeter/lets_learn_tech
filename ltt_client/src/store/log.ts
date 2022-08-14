@@ -55,7 +55,7 @@ export class LogProxy implements IProxy{
             regivars.username)).then(res=>{
                 if(res!=undefined){
                     this.log_succ(
-                        
+                        res
                     )
                 }
         })

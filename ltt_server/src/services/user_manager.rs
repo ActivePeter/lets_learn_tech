@@ -115,6 +115,7 @@ impl UserManager {
         match get_dbhandler().await.db_create_user(new_user).await{
             false => {false}
             true => {
+                // println!("new user {}",new_user.id);
                 self.users.write().await.push(new_user.clone());
                 true
             }

@@ -2,13 +2,15 @@ import {CreateUserRequest} from "@/store/models/user";
 import axios from "axios";
 import {BaseUrl} from "@/store/net/baseurl";
 import {Notify, NotifyTypes} from "@/util/notify";
+import {UserLoginResponse} from "@/store/net/api_user_login";
 // import {apiProxy} from "@/store/net/proxy";
 
-export function api_user_create(data:CreateUserRequest):Promise<undefined|string>{
+export function api_user_create(data:CreateUserRequest):Promise<undefined|UserLoginResponse>{
     // console.log(apiProxy)
     return axios.post(BaseUrl+"user_create",data).then((res)=>{
         console.log(res)
-        if(res.status==200){
+        if(res.status==201){
+            Notify.common("success","注册成功","")
             return res.data
         }
         return undefined
