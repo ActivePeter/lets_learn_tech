@@ -24,6 +24,10 @@ fn read_from_file() -> ServerConfig{
     let des:ServerConfig=serde_json::from_str(&*content).unwrap();
     des
 }
+pub enum EmailSendResult{
+    EmailNotExist,
+    Succ
+}
 impl  EmailManager{
     fn new() -> EmailManager {
         let config=read_from_file();
@@ -51,7 +55,7 @@ impl  EmailManager{
         self.server = server.clone();
     }
 
-    pub async fn send_verify_code(&self, to_email : &str, code : u32) {
+    pub fn send_verify_code(&self, to_email : &str, code : u32) -> EmailSendResult {
         let mut body = String::from("Your verify code is ");
         body.push_str(&code.to_string());
         let email = Message::builder()
@@ -70,8 +74,14 @@ impl  EmailManager{
 
         // send email success !
         match mailer.send(&email) {
-            Ok(_) => println!("Email sent successfully!"),
-            Err(e) => panic!("Could not send email: {:?}", e),
+            Ok(_) => {
+                println!("Email sent successfully!");
+                return
+                    EmailSendResult::Succ;
+            },
+            Err(e) => {
+
+                panic!("Could not send email: {:?}", e) },
         }
     }
 }
@@ -82,5 +92,5 @@ lazy_static! {
 
 pub async fn email_test(){
     println!("hhhhhhhhhhhhhhhhhhhhhh");
-    G_EMAIL_MANAGER.send_verify_code("751080330@qq.com",123456).await;
+    G_EMAIL_MANAGER.send_verify_code("751080330@qq.com",123456);
 }

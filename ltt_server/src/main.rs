@@ -42,11 +42,12 @@ async fn main() {
         .route("/user_login",post(apis::user_login::user_login))
         .route("/user_basic_info",post(apis::user_basic_info::user_basic_info))
         .route("/verify_token",post(apis::verify_token::verify_token))
+        .route("/verify_code_get",post(apis::verify_code_get::verify_code_get))
         ;
 
     let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
     axum::Server::bind(&addr)
-        .serve(app.into_make_service())
+        .serve(app.into_make_service_with_connect_info::<SocketAddr>())
         .await
         .unwrap();
 }
