@@ -6,6 +6,7 @@ use crate::models::user::User;
 // use crate::services::user::{user_query, email_query, add_user};
 use crate::services::user_manager::G_USER_MANAGER;
 use crate::services::verifycode::G_VERIFY_MANAGER;
+use crate::services::token::maketoken;
 /*
 用户创建逻辑：
 1. 检查用户各个参数是否合理，合理才继续
@@ -18,7 +19,7 @@ pub async fn create_user(
     // todo: 验证码处理
     // todo : id处理
 
-    let new_user = User{ id: -1, email:payload.email.clone(),
+    let mut new_user = User{ id: -1, email:payload.email.clone(),
         username:payload.username.clone(),password:payload.password.clone()};
     let check = new_user.check();
 
@@ -37,10 +38,11 @@ pub async fn create_user(
         return (StatusCode::BAD_REQUEST,"email exist").into_response()
     }
     if G_VERIFY_MANAGER.verify_code(&payload.email,payload.verify).await{
-        let res=G_USER_MANAGER.add_user(new_user).await;
+        let res=G_USER_MANAGER.add_user(&mut new_user).await;
         // 不返回id,出于安全问题，id仅后端与数据库交互使用，不直接作为参数。
         if res == true {
-            return (StatusCode::CREATED, "user create success").into_response()
+            let token=maketoken(new_user.id).await;
+            return (StatusCode::CREATED, token).into_response()
         }
         return (StatusCode::BAD_REQUEST,"db error").into_response()
     }

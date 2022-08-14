@@ -111,11 +111,11 @@ impl UserManager {
     }
 
     // 调用db_handler的读锁,添加成功返回true,添加失败返回false
-    pub async fn add_user(&self, mut new_user: User ) -> bool {
-        match get_dbhandler().await.db_create_user(&mut new_user).await{
+    pub async fn add_user(&self, new_user:&mut User ) -> bool {
+        match get_dbhandler().await.db_create_user(new_user).await{
             false => {false}
             true => {
-                self.users.write().await.push(new_user);
+                self.users.write().await.push(new_user.clone());
                 true
             }
         }
