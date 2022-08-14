@@ -54,7 +54,10 @@ export class LogBarRegi extends PureComponent<Props> {
                 className={reuse.row_flexcontainer_reverse+" "
                     +reuse.flex_secondaxis_align_center
                 }>
-                <Button>
+                <Button onClick={()=>{
+                    PaStateMan.getstate().proxy_log
+                        .get_verify_code(this.regiuser.email);
+                }}>
                     获取验证码
                 </Button>
                 <Box

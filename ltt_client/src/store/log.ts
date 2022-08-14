@@ -5,6 +5,8 @@ import {Notify} from "@/util/notify";
 import {api_user_login, UserLoginResponse} from "@/store/net/api_user_login";
 import {api_verify_token} from "@/store/net/api_verify_token";
 import {api_user_basic_info} from "@/store/net/api_user_basic_info";
+import {Rules} from "@/store/models/_rules";
+import {api_verify_code_get} from "@/store/net/api_verify_code_get";
 
 export class LogProxy implements IProxy{
     check_logable_thenlog(name:string,pw:string):boolean{
@@ -124,6 +126,17 @@ export class LogProxy implements IProxy{
         }else{
             removeinvalid()
         }
+    }
+    get_verify_code(email:string){
+        if(Rules.check_email(email)){
+            api_verify_code_get(email).then(
+                (ok)=>{
+
+                }
+            )
+            return
+        }
+        Notify.warn("email 格式不正确","")
     }
     first_load(){
         //首次加载token，并检查token
