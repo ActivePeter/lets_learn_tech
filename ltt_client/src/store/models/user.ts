@@ -2,7 +2,7 @@ export class CreateUserRequest {
     constructor(
         public email: string,
         public password: string,
-        public verify: string,
+        public verify: number,
         public username: string
     ) {
     }

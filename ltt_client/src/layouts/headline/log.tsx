@@ -10,7 +10,9 @@ type Props = {};
 export class HeadLineLogPart extends PureComponent<Props> {
     componentDidMount() {
         PaStateMan.regist_comp(this,(registval , state)=>{
-            registval(state.logged_uid)
+            registval(state.logged_uid,()=>{
+                console.log('statechange',state.logged_uid)
+            })
             registval(state.logged_basicinfo)
         })
 

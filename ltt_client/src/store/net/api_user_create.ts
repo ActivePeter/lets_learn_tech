@@ -17,6 +17,7 @@ export function api_user_create(data:CreateUserRequest){
             ["email exist","邮箱已存在"],
             ["wronglength","错误长度"],
             ["user exist","用户已存在"],
+            ["wrong verify","验证码错误或超时"],
         ]
         for(const key in matches){
             const v=matches[key]

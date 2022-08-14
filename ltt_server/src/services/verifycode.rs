@@ -22,7 +22,7 @@ pub struct VerifyCodeManager{
  */
 
 // 秒为单位,超时后失效，从map移除
-static FAIL_TIME: i64 = 120;
+pub static FAIL_TIME: i64 = 120;
 static NEW_CODE_PERMIT_TIME:i64=60;
 
 impl VerifyCodeManager{
@@ -33,8 +33,9 @@ impl VerifyCodeManager{
     }
 
     pub async fn verify_code(&self,key:&String,code:u32)->bool{
+        self.fresh_code().await;
         if let Some(v)=self.codes.read().await.get(key){
-            if code==v {
+            if code==v.code {
                 return true
             }
         }

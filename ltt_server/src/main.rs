@@ -29,7 +29,7 @@ use crate::test::verifycode_test::verifycode_check;
 #[tokio::main]
 async fn main() {
     env_logger::init();
-    verifycode_check().await;
+    // verifycode_check().await;
    // prepare database
     let config=readconfig::ServerConfig::read_from_file().await;
     log::debug!("The addr read from config.json : {}",config.addr);

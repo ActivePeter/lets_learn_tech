@@ -36,13 +36,15 @@ pub async fn create_user(
     if email_exist {
         return (StatusCode::BAD_REQUEST,"email exist").into_response()
     }
-    G_VERIFY_MANAGER
-    let res=G_USER_MANAGER.add_user(new_user).await;
-    // 不返回id,出于安全问题，id仅后端与数据库交互使用，不直接作为参数。
-    if res == true {
-        return (StatusCode::CREATED, "user create success").into_response()
+    if G_VERIFY_MANAGER.verify_code(&payload.email,payload.verify).await{
+        let res=G_USER_MANAGER.add_user(new_user).await;
+        // 不返回id,出于安全问题，id仅后端与数据库交互使用，不直接作为参数。
+        if res == true {
+            return (StatusCode::CREATED, "user create success").into_response()
+        }
+        return (StatusCode::BAD_REQUEST,"db error").into_response()
     }
-    return (StatusCode::BAD_REQUEST,"db error").into_response()
+    return (StatusCode::BAD_REQUEST,"wrong verify").into_response()
 }
 
 // the input to our `create_user` handler
@@ -51,7 +53,7 @@ pub struct CreateUserRequest {
     username:String, // the username utf8?
     email:String,    // the email
     password:String,  // the password of user
-    verify:String   // verify code from verifycode
+    verify:u32   // verify code from verifycode
 }
 
 

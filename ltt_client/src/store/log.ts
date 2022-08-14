@@ -31,6 +31,10 @@ export class LogProxy implements IProxy{
         //邮箱
         //用户名
         //密码
+        if(!Rules.check_email(regivars.email)){
+            Notify.warn("注册信息填写","邮箱格式错误")
+            return
+        }
         if(regivars.pw.length<8){
             Notify.warn("注册信息填写","密码长度至少8位")
             return
@@ -40,11 +44,14 @@ export class LogProxy implements IProxy{
             return
         }
         //验证码
-
+        if(!Rules.check_verify(regivars.verify)){
+            Notify.warn("注册信息填写","验证码为数字")
+            return;
+        }
         api_user_create(new CreateUserRequest(
             regivars.email,
             regivars.pw,
-            regivars.verify,
+            parseInt(regivars.verify),
             regivars.username))
     }
     show_log_gui(show:boolean,log_or_regi?:boolean){
@@ -76,6 +83,7 @@ export class LogProxy implements IProxy{
 
         this.state.logged_token=res.token
         this.state.logged_uid=res.uid
+        console.log("log succ",this.state.logged_uid)
         this.update_logged_userbasic()
     }
     update_logged_userbasic(){
@@ -118,6 +126,7 @@ export class LogProxy implements IProxy{
                     localStorage.logged_token=res.newtoken
                     //验证成功后，
                     this.state.logged_token=res.newtoken
+                    console.log("logged_uid",this.state.logged_uid,uid)
                     this.state.logged_uid=uid
                     this.update_logged_userbasic()
                     Notify.common("success","登入信息已更新","")
