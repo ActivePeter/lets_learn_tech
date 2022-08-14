@@ -21,14 +21,24 @@ pub struct VerifyCodeManager{
 
  */
 
-// 秒为单位
-pub static FAIL_TIME: i64 = 10;
+// 秒为单位,超时后失效，从map移除
+static FAIL_TIME: i64 = 120;
+static NEW_CODE_PERMIT_TIME:i64=60;
 
 impl VerifyCodeManager{
     pub fn new() -> VerifyCodeManager {
         VerifyCodeManager{
             codes : RwLock::new(HashMap::new())
         }
+    }
+
+    pub async fn verify_code(&self,key:&String,code:u32)->bool{
+        if let Some(v)=self.codes.read().await.get(key){
+            if code==v {
+                return true
+            }
+        }
+        return false
     }
 
     pub async fn fresh_code(&self)  {
@@ -62,7 +72,7 @@ impl VerifyCodeManager{
             }
             Some(get_value) => {
                 // 小于60秒不重发
-                if Utc::now().sub(get_value.get_time).num_seconds() <= 60{
+                if Utc::now().sub(get_value.get_time).num_seconds() <= NEW_CODE_PERMIT_TIME{
                     return None
                 }
                 let result = get_value.code;
