@@ -6,6 +6,7 @@ import {Box, Typography} from "@mui/joy";
 import {curstyle} from "@/theme/curtheme";
 import {TagSetsComp} from "@/layouts/tag/tagsets_in_controlpanel";
 import {Component} from "react";
+import {push_create_article, RouteControl} from "@/store/route_control";
 
 export default class ControlPanel extends Component<any, any>{
     render() {
@@ -35,7 +36,11 @@ export default class ControlPanel extends Component<any, any>{
                             marginRight: curstyle().gap.common
                         }}
                         className={cp.listitem}
-                        variant="solid" color="primary">
+                        variant="solid" color="primary"
+                        onClick={()=>{
+                            RouteControl.push_create_article()
+                        }}
+                    >
                         说点什么？
                     </Button>
                     <Box className={

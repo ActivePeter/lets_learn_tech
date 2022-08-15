@@ -12,6 +12,7 @@ export class LogFloat extends PureComponent<Props> {
     componentDidMount() {
         PaStateMan.regist_comp(this, (registval, state) => {
             registval(state.log_gui_show)
+            registval(state.logged_uid)
         })
     }
 
@@ -24,11 +25,11 @@ export class LogFloat extends PureComponent<Props> {
         // if(logp.get_logshowing()){
         return (
             <Box
-                className={style.logfloat + " "
-                    + reuse.col_flexcontainer
+                className={logp.get_logshowing() ?style.logfloat + " "
+                    + reuse.col_flexcontainer:""
                 }
                 sx={{
-                    display: logp.get_logshowing() ? undefined : "none",
+                    display: logp.get_logshowing() ? "" : "none",
                     fontSize: curstyle().fontsize.s,
                     background: curstyle().colors.main_halfopa,
                     borderRadius: curstyle().radius.common,

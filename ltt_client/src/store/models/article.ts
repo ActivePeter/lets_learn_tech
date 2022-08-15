@@ -8,6 +8,11 @@ export class Article{
         public author:string
     ) {
     }
+    static emptu(){
+        return new Article(
+            -1,"","",""
+        )
+    }
 }
 
 export class ArticlePreview{

@@ -4,6 +4,7 @@ import {TextBtn} from "@/layouts/reusable/textbtn";
 import {curstyle} from "@/theme/curtheme";
 import {PaStateMan} from "@/util/pa_state_man";
 import reuse from "@/assets/reuseable.less";
+import {LoggedUserBar} from "@/layouts/headline/logged_user_bar";
 
 type Props = {};
 
@@ -46,7 +47,7 @@ export class HeadLineLogPart extends PureComponent<Props> {
                 </TextBtn>
             </Fragment>
         ):(basic.uid)?(
-            basic.username
+            <LoggedUserBar userbasic={basic}/>
         ):undefined;
         return <Box
             className={reuse.flex_secondaxis_align_center+" "

@@ -75,8 +75,8 @@ export class LogProxy implements IProxy{
         }
     }
     get_logshowing(){
-        console.log("get_logshowing")
-        return this.state.log_gui_show
+        console.log("get_logshowing",this.state.log_gui_show)
+        return this.state.log_gui_show&&(this.state.logged_uid==-1)
     }
     get_log_or_regi(){
         return this.state.log_gui_log_or_regi
@@ -91,6 +91,13 @@ export class LogProxy implements IProxy{
         this.state.logged_uid=res.uid
         console.log("log succ",this.state.logged_uid)
         this.update_logged_userbasic()
+    }
+    log_out(){
+        delete localStorage.logged_token
+        delete localStorage.logged_uid
+
+        this.state.logged_token=""
+        this.state.logged_uid=-1
     }
     update_logged_userbasic(){
         if(this.state.logged_uid!=-1){
