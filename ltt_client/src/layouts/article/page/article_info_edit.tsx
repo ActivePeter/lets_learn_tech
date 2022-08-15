@@ -14,6 +14,7 @@ import {PaState} from "@/store/pastate";
 import {PaStateMan} from "@/util/pa_state_man";
 import {LogBarLog} from "@/layouts/login/logbar_log";
 import styled from "@emotion/styled";
+import {TagSetsComp} from "@/layouts/tag/tagsets_in_controlpanel";
 
 
 type Props = {
@@ -62,7 +63,7 @@ export class ArticleInfoEdit extends PureComponent<Props> {
                     >
                         选择标签
                     </Typography>
-                    tags...
+                    <TagSetsComp/>
                 </SetWrapper>
             </Box>
         );
