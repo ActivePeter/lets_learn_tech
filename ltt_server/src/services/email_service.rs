@@ -60,6 +60,8 @@ impl  EmailManager{
     pub fn send_verify_code(&self, to_email : &str, code : u32) -> EmailSendResult {
         let mut body = String::from("Your verify code is ");
         body.push_str(&code.to_string());
+
+        // 生成邮件
         if let Ok(to)=to_email.parse(){
             let email = Message::builder()
                 .from(Mailbox::new(None, self.username.clone().parse().unwrap()))
@@ -68,6 +70,7 @@ impl  EmailManager{
                 .body(String::from(body))
                 .unwrap();
 
+            // SMTP服务相关信息
             let creds = Credentials::new(self.username.clone(), self.password.clone());
 
             let mailer = SmtpTransport::relay(&self.server)

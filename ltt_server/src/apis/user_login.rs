@@ -42,8 +42,7 @@ pub struct UserLoginResponse {
 #[derive(Deserialize, Serialize)]
 pub struct UserLoginRequest {
     pub name_or_email: String,
-    pub password: String,
-    // the password of user
+    pub password: String, // the password of user
     pub verify: String,   // verify code from verifycode
 }
 

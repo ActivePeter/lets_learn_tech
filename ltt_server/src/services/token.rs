@@ -10,17 +10,20 @@ use jsonwebtoken::errors::Error;
 use lazy_static::lazy_static;
 use crate::models::user::UserId;
 
-/// Our claims struct, it needs to derive `Serialize` and/or `Deserialize`
+// Our claims struct, it needs to derive `Serialize` and/or `Deserialize`
 #[derive(Debug, Serialize, Deserialize)]
 struct Claims {
     uid:UserId,
     exp: u64,
 }
+
 lazy_static! {
     pub static ref TOKEN_SECRET: RwLock<String> =RwLock::new( String::new());
     // pub static ref TEST:Test=Test::new();
 }
 const EXPIRE_SEC:u64=60*60*24*15;//15 day
+
+// todo : 不知道哪里调用了这个函数
 pub async fn init_from_config(mut secret:String){
     {
         let mut sec = TOKEN_SECRET.write().await;
@@ -30,8 +33,12 @@ pub async fn init_from_config(mut secret:String){
 
 //需要保证uid有效
 pub async fn maketoken(uid:UserId) -> String {
+    // 用于设置过期时间
     let second=chrono::Local::now().timestamp();
 
+    // 生成JWT，主要用于保存uid
+    // 用于加密的key是服务器配置的
+    // todo : 安全性思考
     encode(&Header::default(), &Claims{
         uid,
         exp: second as u64
@@ -45,8 +52,13 @@ pub enum CheckTokenRes{
     Expire,
     NotMatchUid
 }
+
+// 解析token
 pub async fn checktoken(uid:UserId,token:String)->CheckTokenRes{
-    let token = decode::<Claims>(&token, &DecodingKey::from_secret(TOKEN_SECRET.read().await.as_bytes()), &Validation::default());
+    // 解析用于验证的token
+    let token = decode::<Claims>(&token,
+                                 &DecodingKey::from_secret(TOKEN_SECRET.read().await.as_bytes()),
+                                 &Validation::default());
     match token{
         Ok(data) => {
             let second=chrono::Local::now().timestamp()  as u64;
@@ -55,9 +67,8 @@ pub async fn checktoken(uid:UserId,token:String)->CheckTokenRes{
             if data.claims.uid!=uid{
                 return CheckTokenRes::NotMatchUid;
             }
-            if second>
-                // EXPIRE_SEC +
-                    data.claims.exp{
+            // 过期
+            if second > data.claims.exp{
                 return CheckTokenRes::Expire;
             }
             CheckTokenRes::Valid

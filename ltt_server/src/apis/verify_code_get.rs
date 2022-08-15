@@ -21,7 +21,9 @@ pub async fn verify_code_get(
     req: Json<RequestContent>,
 ) -> impl IntoResponse {
     println!("addr{}",addr);
+    // todo : 这里是是邮箱
     let v_=G_VERIFY_MANAGER.get_code(&req.email).await;
+    // 如果获取验证码行为合法
     if let Some(v)=v_{
         return match G_EMAIL_MANAGER.send_verify_code(&*req.email, v) {
             EmailSendResult::EmailSendFail => {
@@ -31,11 +33,12 @@ pub async fn verify_code_get(
                 (StatusCode::OK, "sent").into_response()
             }
             EmailSendResult::EmailParseFail => {
+                // TODO : 这里到底会不会parsefaile?
                 (StatusCode::BAD_REQUEST, "parsefail").into_response()
             }
         }
     }
-    return (StatusCode::BAD_REQUEST, "wait").into_response();
+    return (StatusCode::BAD_REQUEST, "Request too quick").into_response();
 }
 
 // the input to our `create_user` handler

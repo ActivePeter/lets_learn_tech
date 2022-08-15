@@ -39,6 +39,7 @@ pub async fn create_user(
     if G_VERIFY_MANAGER.verify_code(&payload.email,payload.verify).await{
         let res=G_USER_MANAGER.add_user(&mut new_user).await;
         // 不返回id,出于安全问题，id仅后端与数据库交互使用，不直接作为参数。
+        // 返回JWT
         if res == true {
             let token=maketoken(new_user.id).await;
             let resp=UserLoginResponse{
