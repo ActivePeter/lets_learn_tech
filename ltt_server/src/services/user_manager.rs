@@ -87,6 +87,25 @@ impl UserManager {
         true
     }
 
+    pub async fn check_both(&self, username : &String, email : &String) -> bool {
+        for user in self.users.read().await.iter() {
+            match user.email.cmp(email){
+                Ordering::Equal => {
+                    return false
+                }
+                _ => {}
+            }
+            match user.username.cmp(username) {
+                Ordering::Equal =>{
+                    return false
+                }
+
+                _ => {}
+            }
+        }
+        true
+    }
+
     pub async fn check_password(&self,is_name : bool,key : &String, password : &String) -> bool {
         for user in self.users.read().await.iter() {
             let cmp_value : &String;

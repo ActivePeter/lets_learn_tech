@@ -17,27 +17,25 @@ use crate::apis::user_login::UserLoginResponse;
 pub async fn create_user(
     Json(payload): Json<CreateUserRequest>,
 ) -> impl IntoResponse {
-    // todo: 验证码处理
-    // todo : id处理
 
     let mut new_user = User{ id: -1, email:payload.email.clone(),
         username:payload.username.clone(),password:payload.password.clone()};
+    // 检查用户名，邮箱名，密码中是否含有空格
     let check = new_user.check();
 
-    if let Some(r) =check{
+    if let Some(r) = check {
         return (StatusCode::BAD_REQUEST,r).into_response()
     }
     println!("username:{} email:{}",payload.username,payload.email);
 
-    let user_exist=  !G_USER_MANAGER.check_username(&payload.username).await;
-    if user_exist{
-        return (StatusCode::BAD_REQUEST,"user exist").into_response()
+    // 检查用户名和邮箱的唯一性
+    let is_exist = G_USER_MANAGER.check_both(&new_user.username,&new_user.email);
+
+    if is_exist {
+        return (StatusCode::BAD_REQUEST,"Username or email already exist")
     }
 
-    let email_exist=!G_USER_MANAGER.check_email(&payload.email).await;
-    if email_exist {
-        return (StatusCode::BAD_REQUEST,"email exist").into_response()
-    }
+    // 验证验证码
     if G_VERIFY_MANAGER.verify_code(&payload.email,payload.verify).await{
         let res=G_USER_MANAGER.add_user(&mut new_user).await;
         // 不返回id,出于安全问题，id仅后端与数据库交互使用，不直接作为参数。
@@ -47,7 +45,6 @@ pub async fn create_user(
                 token,
                 uid: new_user.id
             };
-            // println!("new user {}",new_user.id);
             return (StatusCode::CREATED, serde_json::to_string(&resp).unwrap()).into_response()
         }
         return (StatusCode::BAD_REQUEST,"db error").into_response()
