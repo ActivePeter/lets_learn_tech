@@ -20,9 +20,8 @@ export function api_user_create(data:CreateUserRequest):Promise<undefined|UserLo
         // let var=
         let matches=[
             ["space in values","输入内容中存在空格"],
-            ["email exist","邮箱已存在"],
+            ["Username or email already exist","用户名或邮箱已存在"],
             ["wronglength","错误长度"],
-            ["user exist","用户已存在"],
             ["wrong verify","验证码错误或超时"],
         ]
         for(const key in matches){

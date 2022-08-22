@@ -29,10 +29,11 @@ pub async fn create_user(
     println!("username:{} email:{}",payload.username,payload.email);
 
     // 检查用户名和邮箱的唯一性
-    let is_exist = G_USER_MANAGER.check_both(&new_user.username,&new_user.email);
+    let is_exist = G_USER_MANAGER
+        .check_both(&new_user.username,&new_user.email).await;
 
     if is_exist {
-        return (StatusCode::BAD_REQUEST,"Username or email already exist")
+        return (StatusCode::BAD_REQUEST,"Username or email already exist").into_response()
     }
 
     // 验证验证码

@@ -9,11 +9,15 @@ use crate::models::article::{Article, ArticleId};
 缓存问题后期再想一想，现在数据量不大，直接问数据库也不是不行
 但后期数据量假如起来了，比如有一百多篇文章，缓存热门标签对应的文章
 hash<TagId,Vec<ArticleId>> 现在暂时不考虑这个东西
+
+直接用tag-文章关系表查询
  */
+
+pub type TagId=u32;
 
 #[derive(Deserialize, Serialize)]
 pub struct TagInfo{
-    tag_id:u32,
+    tag_id:TagId,
     tag_name:String,
 }
 
