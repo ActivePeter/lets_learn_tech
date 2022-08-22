@@ -2,7 +2,7 @@
 
 import {AllTags} from "@/store/models/tag";
 import {LogProxy} from "@/store/proxy_log";
-import {Article} from "@/store/models/article";
+import {Article, ArticleMap} from "@/store/models/article";
 import {ArticleProxy} from "@/store/proxy_article";
 export interface IProxy{
     first_load():void
@@ -18,6 +18,7 @@ export class PaStateProxy implements IProxy{
     first_load(){
         this.proxy_log.first_load()
     }
+
     proxy_article
     proxy_log
     constructor(private state:PaState) {
@@ -42,6 +43,8 @@ export class PaState{
     //article
     article=Article.emptu()
     article_mode=""
+    preview_articles:number[]=[]
+    // article_map:{}={}
 
     constructor() {
     }

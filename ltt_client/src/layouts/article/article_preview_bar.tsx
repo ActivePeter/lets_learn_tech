@@ -1,4 +1,4 @@
-import {PureComponent} from "react";
+import {Fragment, PureComponent} from "react";
 import {Box} from "@mui/joy";
 import style from "@/layouts/login/logfloat.less";
 import {curstyle} from "@/theme/curtheme";
@@ -15,12 +15,16 @@ import {PaStateMan} from "@/util/pa_state_man";
 import {LogBarLog} from "@/layouts/login/logbar_log";
 
 type Props = {
+    articleid:number
 };
 export class ArticlePreviewBar extends PureComponent<Props> {
 
 
     render() {
         const logp=PaStateMan.getstate().proxy_log;
+        const articlep=PaStateMan.getstate().proxy_article;
+        const articledetail=articlep.article_map.getbyid(
+            this.props.articleid)
         return (
             <Box
                 sx={{
@@ -32,6 +36,18 @@ export class ArticlePreviewBar extends PureComponent<Props> {
                     // marginTop:"-100px"
                 }}
             >
+                {articledetail!=undefined?
+                    (
+                        <Fragment>
+                            <Box>
+                                {articledetail.title}
+                            </Box>
+                            <Box>
+                                {articledetail.content}
+                            </Box>
+                        </Fragment>
+                    )
+                    :undefined}
             </Box>
         );
     }

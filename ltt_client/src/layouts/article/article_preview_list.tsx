@@ -31,11 +31,15 @@ const state_instance={
 export class ArticlePreviewList extends PureComponent<Props,typeof state_instance> {
 
     componentDidMount() {
+        PaStateMan.regist_comp(this,(registval, state)=>{
+            registval(state.preview_articles)
+        })
         window.addEventListener('resize', this.on_window_resize.bind(this));
         this.waterfall_recalc(true);
     }
 
     componentWillUnmount() {
+        PaStateMan.unregist_comp(this)
         window.removeEventListener('resize', this.on_window_resize);
     }
     state=state_instance
@@ -134,22 +138,39 @@ export class ArticlePreviewList extends PureComponent<Props,typeof state_instanc
         const colcnt=this.waterfall.cols.length;
         const colwidth='calc('+100.0/colcnt+'% - '+(12.0*(colcnt-1)/colcnt)+'px)';
         const cols=[]
+        const previewarts=PaStateMan.getstate().proxy_article
+            .get_preview_articles();
         for(const coli in this.waterfall.cols){
             const v=this.waterfall.cols[coli]
             const onecol=[]
             for(const i in v.elemids){
                 const eid=v.elemids[i]
-                onecol.push(<Box
-                    id={"item_"+eid}
-                    key={eid}
-                    sx={{
-                        // border:"1px solid black",
-                        width:"100%",
-                        height:this.all_content[eid]+"px",
-                    }}
-                >
-                    <ArticlePreviewBar></ArticlePreviewBar>
-                </Box>)
+                if(eid<previewarts.length){
+                    onecol.push(<Box
+                        id={"item_"+eid}
+                        key={eid}
+                        sx={{
+                            // border:"1px solid black",
+                            width:"100%",
+                            height:this.all_content[eid]+"px",
+                        }}
+                    >
+                        <ArticlePreviewBar articleid={previewarts[eid]}/>
+                    </Box>)
+                }else{
+                    onecol.push(<Box
+                        id={"item_"+eid}
+                        key={eid}
+                        sx={{
+                            // border:"1px solid black",
+                            width:"100%",
+                            height:this.all_content[eid]+"px",
+                        }}
+                    >
+                        <ArticlePreviewBar articleid={-1}/>
+                    </Box>)
+                }
+
             }
             cols.push(
                 <Box
