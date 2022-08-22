@@ -10,40 +10,37 @@ use crate::models::tag::{TagInfo, TagId};
 //   tag_ids
 //   content
 //   comment_ids
-impl DbHandler{
-    pub async fn create_article_table(&self){
+impl DbHandler {
+    pub async fn create_article_table(&self) {}
 
-    }
+    pub async fn db_create_article(&self) {}
+    pub async fn db_remove_article(&self) {}
+    pub async fn db_edit_article(&self) {}
 
-    pub async fn db_create_article(&self){
-
-    }
-    pub async fn db_remove_article(&self){
-
-    }
-    pub async fn db_edit_article(&self){
-
-    }
-
-    pub async fn db_article_search_bytags(&self,tags:&Vec<TagId>){
+    pub async fn db_article_search_bytags(&self, tags: &Vec<TagId>) {
         // 由user_manger调用
-        let cmd=if tags.len()==0{
+        let cmd = if tags.len() == 0 {
             format!("SELECT * FROM public.article_info")
-        }else{
-            let mut cmdmake="SELECT * FROM public.article_info \
-            WHERE articleid in \
-            (SELECT articleid FROM public.article_tag_relation \
-            WHERE tagid in (".to_string();
-            let mut first =true;
-            for i in tags{
+        } else {
+            let mut cmdmake =
+                "SELECT articleid,author_uid,content,tags,title, \
+                    createtime,\
+                    edittime \
+                 FROM public.article_info \
+                WHERE articleid in \
+                (SELECT articleid FROM public.article_tag_relation \
+                WHERE tagid in ("
+                    .to_string();
+            let mut first = true;
+            for i in tags {
                 if !first {
-                    cmdmake+= &*format!(",{}", i)
-                }else{
-                    cmdmake=cmdmake+ &*i.to_string()
+                    cmdmake += &*format!(",{}", i)
+                } else {
+                    cmdmake = cmdmake + &*i.to_string()
                 }
-                first=false
+                first = false
             }
-            cmdmake+="))";
+            cmdmake += "))";
 
             cmdmake
         };
@@ -51,6 +48,6 @@ impl DbHandler{
 
         let result = self.get().await
             .query(&cmd, &[]).await;
-        println!("article search {:?}",result)
+        println!("article search {:?}", result)
     }
 }
