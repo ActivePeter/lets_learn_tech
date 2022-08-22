@@ -27,6 +27,7 @@ impl DbHandler{
     }
 }
 
+//大家都来读而已啦，没有关系！
 pub async fn get_dbhandler() -> DbHandler {
     DbHandler{
         pool: G_DB_POOL_HANDLE.read().await.as_ref().unwrap().clone()

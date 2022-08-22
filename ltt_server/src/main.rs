@@ -43,9 +43,11 @@ async fn main() {
         .route("/user_basic_info",post(apis::user_basic_info::user_basic_info))
         .route("/verify_token",post(apis::verify_token::verify_token))
         .route("/verify_code_get",post(apis::verify_code_get::verify_code_get))
+        .route("/articles_getwithtag",post(apis::articles_getwithtag::articles_getwithtag))
         ;
 
     let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
+    println!("server start at addr {}",addr);
     axum::Server::bind(&addr)
         .serve(app.into_make_service_with_connect_info::<SocketAddr>())
         .await

@@ -25,17 +25,32 @@ impl DbHandler{
 
     }
 
-    pub async fn db_search_article_bytags(&self,tags:Vec<TagId>){
+    pub async fn db_article_search_bytags(&self,tags:&Vec<TagId>){
         // 由user_manger调用
-        if tags.len()
-        let mut insert_cmd = format!("SELECT * FROM public.article_info\n
-            WHERE articleid in\n
-            (SELECT articleid FROM public.article_tag_relation\n
-            WHERE tagid in (1,2))"
-                                     , );
-        println!("insert_cmt {}", insert_cmd);
+        let cmd=if tags.len()==0{
+            format!("SELECT * FROM public.article_info")
+        }else{
+            let mut cmdmake="SELECT * FROM public.article_info \
+            WHERE articleid in \
+            (SELECT articleid FROM public.article_tag_relation \
+            WHERE tagid in (".to_string();
+            let mut first =true;
+            for i in tags{
+                if !first {
+                    cmdmake+= &*format!(",{}", i)
+                }else{
+                    cmdmake=cmdmake+ &*i.to_string()
+                }
+                first=false
+            }
+            cmdmake+="))";
 
-        let insert_result = self.get().await
-            .query(&insert_cmd, &[]).await;
+            cmdmake
+        };
+        // let mut insert_cmd =
+
+        let result = self.get().await
+            .query(&cmd, &[]).await;
+        println!("article search {:?}",result)
     }
 }
