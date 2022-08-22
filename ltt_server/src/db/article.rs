@@ -23,7 +23,11 @@ impl DbHandler {
     pub async fn db_article_search_bytags(&self, tags: &Vec<TagId>) -> Option<Vec<Article>> {
         // 由user_manger调用
         let cmd = if tags.len() == 0 {
-            format!("SELECT * FROM public.article_info")
+            "SELECT articleid,author_uid,content,tags,title, \
+                    to_char(createtime,'yyyy-mm-dd hh24:mi:ss'),\
+                    to_char(edittime,'yyyy-mm-dd hh24:mi:ss') \
+                FROM public.article_info"
+                .to_string()
         } else {
             let mut cmdmake =
                 "SELECT articleid,author_uid,content,tags,title, \

@@ -16,16 +16,27 @@ use std::net::SocketAddr;
 use std::future::Future;
 use crate::models::tag::TagId;
 use crate::db::sql::get_dbhandler;
+use crate::models::article::Article;
+// use std::alloc::Global;
 
 
 pub async fn articles_getwithtag(
     ConnectInfo(addr): ConnectInfo<SocketAddr>,
     req: Json<RequestContent>,
 ) -> impl IntoResponse {
-    get_dbhandler().await
+    let res=get_dbhandler().await
         .db_article_search_bytags(&req.tags).await;
+    match res{
+        None => {
+            return (StatusCode::BAD_REQUEST, "dbfail").into_response();
+        }
+        Some(ar) => {
 
-    return (StatusCode::OK, "article searched").into_response();
+            return (StatusCode::OK, serde_json::to_string(&ResponseContent{
+                articles: ar
+            }).unwrap()).into_response();
+        }
+    }
 }
 
 // the input to our `create_user` handler
@@ -34,3 +45,7 @@ pub struct RequestContent {
     pub tags:Vec<TagId>
 }
 
+#[derive(Deserialize, Serialize)]
+pub struct ResponseContent{
+    articles:Vec<Article>
+}
