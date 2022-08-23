@@ -26,7 +26,7 @@ export default class ControlPanel extends Component<any, any>{
 
                         display: 'flex',
                         flexDirection: 'column',
-                        gap: curstyle().gap.common,
+                        gap: curstyle().gap.l,
                         // alignItems: 'center',
                         // justifyContent: 'space-between',
                     }}

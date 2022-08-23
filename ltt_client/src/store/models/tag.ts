@@ -1,7 +1,8 @@
 export class TagInfo{
     constructor(
-        public tagid:number,
-        public tagname:string
+        public tag_id:number,
+        public tag_name:string,
+        public artcnt:number
     ) {
     }
 }
@@ -21,6 +22,3 @@ export class AllTags{
         return new AllTags([])
     }
 }
-// export class TagProxy{
-//
-// }
