@@ -1,6 +1,6 @@
 use tokio::sync::RwLock;
 use std::collections::{HashMap, HashSet};
-use crate::models::tag::{TagId, TagInfo};
+use crate::models::tag::{TagId, TagInfo, TagInfoWithoutArticles};
 use crate::models::article::ArticleId;
 use crate::db::sql::get_dbhandler;
 use std::ops::{DerefMut, Deref};
@@ -53,6 +53,26 @@ impl TagManager {
             tagname2id.insert(t.1.tag_name.clone(),*t.0);
         }
     }
+
+    pub async fn getgrouped_tagsinfo_without_articles(&self)
+        ->HashMap<String,Vec<TagInfoWithoutArticles>>{
+        let a=self.tagsets.read().await;
+        let b=self.tags.read().await;
+        let mut ret =HashMap::new();
+        for (setname,idset) in a.deref(){
+            let mut set =Vec::new();
+            for (id,info) in b.deref(){
+                set.push(TagInfoWithoutArticles{
+                    tag_id: info.tag_id,
+                    tag_name:info.tag_name.clone(),
+                    artcnt: info.articles.len() as i32
+                })
+            }
+            ret.insert(setname.clone(),set);
+        }
+        ret
+    }
+
     pub async fn addtag(&self, tagname: String) -> AddTagRes {
         if self.tagname_2_tagid.read().await.get(&tagname).is_some() {
             return AddTagRes::Exist;

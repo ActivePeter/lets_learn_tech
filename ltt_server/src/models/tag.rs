@@ -24,9 +24,9 @@ pub struct TagInfo{
 
 #[derive(Deserialize, Serialize)]
 pub struct TagInfoWithoutArticles{
-    tag_id:TagId,
-    tag_name:String,
-    articles:HashSet<ArticleId>
+    pub tag_id:TagId,
+    pub tag_name:String,
+    pub artcnt:i32,
 }
 
 
