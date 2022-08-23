@@ -139,6 +139,14 @@ impl TagManager {
     //memonly 非单独操作，
     // 一般是创建或修改文章后，sql改变文章tag关系,
     // 将变更同步到内存
-    pub async fn memonly_add_articles_2_tag(&self, aid: &[ArticleId]) {}
+    pub async fn memonly_add_articles_2_tags(&self,tid:&[TagId], aids: &[ArticleId]) {
+        let mut lock =self.tags.write().await;
+        for t in tid{
+            for v in aids{
+                lock.get_mut(t).unwrap()
+                    .articles.insert(*v);
+            }
+        }
+    }
     pub async fn memonly_remove_articles_2_tag(&self, aid: &[ArticleId]) {}
 }

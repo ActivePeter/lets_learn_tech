@@ -2,7 +2,7 @@ use crate::db::sql::get_dbhandler;
 use crate::models::tag::TagId;
 use crate::models::user::UserId;
 use crate::models::article::ArticleId;
-
+use crate::services;
 pub struct ArticleManager {}
 
 lazy_static::lazy_static! {
@@ -29,6 +29,12 @@ impl ArticleManager {
             preview,
             title,
         ).await;
+        if let Some(res)=res{
+
+            services::tag::G_TAG_MAN.memonly_add_articles_2_tags(
+                &*tags,&[res]
+            ).await;
+        }
         res
     }
 }

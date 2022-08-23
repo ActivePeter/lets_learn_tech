@@ -63,7 +63,7 @@ impl DbHandler {
         preview: String,
         title: String, )->Option<ArticleId>{
         let tagsstr=serde_json::to_string(&tags).unwrap();
-        let mut cmd=format!("select create_article({},{},{},ARRAY{});",
+        let mut cmd=format!("select create_article('{}','{}',{},ARRAY{});",
                          title,content,uid,tagsstr);
         let db=self.get().await;
         let ret=match db.query(&*cmd,&[]).await{
@@ -71,7 +71,8 @@ impl DbHandler {
                 let v:i64=row[0].get(0);
                 Some(v as ArticleId)
             }
-            Err(_) => {
+            Err(e) => {
+                eprintln!("db err{:?}",e);
                 None
             }
         };
