@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use serde::{Deserialize, Serialize};
 use crate::models::article::{Article, ArticleId};
 
@@ -19,14 +19,10 @@ pub type TagId=u32;
 pub struct TagInfo{
     tag_id:TagId,
     tag_name:String,
+    articles:HashSet<ArticleId>
 }
 
-pub struct TagSet {
-    tag_id : u32,
-    tag_name : String,
-    articles : Vec<ArticleId>
-}
 
-pub struct TagQuery {
-    m_tag : HashMap<String,TagSet>
-}
+// pub struct TagQuery {
+//     m_tag : HashMap<String,TagSet>
+// }
