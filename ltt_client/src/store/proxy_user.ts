@@ -43,7 +43,8 @@ export class UserProxy{
                               cb:(res:undefined|UserBasicInfo)=>void){
         const user=this.usermap.get_userdatas(uid)
         if(user?.userbasic&&!(user.userbasic instanceof Array)){
-            return user.userbasic
+            cb(user.userbasic)
+            // return 
         }
         if(user?.userbasic instanceof Array){
             user.userbasic.push(cb)
