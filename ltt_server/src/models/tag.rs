@@ -17,9 +17,9 @@ pub type TagId=u32;
 
 #[derive(Deserialize, Serialize)]
 pub struct TagInfo{
-    tag_id:TagId,
-    tag_name:String,
-    articles:HashSet<ArticleId>
+    pub tag_id:TagId,
+    pub tag_name:String,
+    pub articles:HashSet<ArticleId>
 }
 
 #[derive(Deserialize, Serialize)]

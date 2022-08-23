@@ -23,6 +23,11 @@ pub enum RemoveTagRes{
     NotFound,
     Ok
 }
+pub enum RenameTagRes{
+    NotFound,
+    Exist,
+    Ok
+}
 impl TagManager{
     pub fn new() -> TagManager {
         TagManager{
@@ -43,8 +48,33 @@ impl TagManager{
         }
         return RemoveTagRes::Ok
     }
-    pub async fn renametag(&self,name:String){
+    pub async fn renametag(&self,tagid:TagId,name:String)->RenameTagRes{
+        //检查名字已存在
+        match self.tagname_2_tagid.read().await.get(&name){
+            Some(id_) => {
+                return RenameTagRes::Exist;
+                // RenameTagRes::Ok
+            }
+            _=>{}
+        }
+        //变名字，需要原子改变两个映射
+        let mut name2id =self.tagname_2_tagid.write().await;
+        let mut id2info =self.tags.write().await;
+        let info=id2info.get_mut(&tagid);
+        return match info{
+            None => {
+                RenameTagRes::NotFound
+            }
+            Some(info) => {
+                //todo 这里首先要改数据库
 
+
+                name2id.remove(&info.tag_name);
+                info.tag_name=name.clone();
+                name2id.insert(name,info.tag_id);
+                RenameTagRes::Ok
+            }
+        }
     }
 
     //memonly 非单独操作，
