@@ -37,7 +37,7 @@ impl TagManager{
         AddTagRes::Ok(1)
     }
     pub async fn removetag(&self,tagid:TagId)->RemoveTagRes{
-        if self.tagname_2_tagid.read().await.get(&tagname).is_none(){
+        if self.tags.read().await.get(&tagid).is_none(){
             return RemoveTagRes::NotFound
         }
         return RemoveTagRes::Ok
