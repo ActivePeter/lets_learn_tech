@@ -22,6 +22,13 @@ pub struct TagInfo{
     articles:HashSet<ArticleId>
 }
 
+#[derive(Deserialize, Serialize)]
+pub struct TagInfoWithoutArticles{
+    tag_id:TagId,
+    tag_name:String,
+    articles:HashSet<ArticleId>
+}
+
 
 // pub struct TagQuery {
 //     m_tag : HashMap<String,TagSet>
