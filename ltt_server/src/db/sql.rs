@@ -38,6 +38,11 @@ pub async fn get_dbhandler() -> DbHandler {
 pub async fn sqlstart(config: &ServerConfig) -> Result<(), Error> {
     //一个表由一个模块持有链接
     let _sql_wait = _sql_start(config).await;//启动链接并持有
+    let handler=get_dbhandler().await;
+
+    //tables init
+    handler.article_tag_init().await;
+    handler.article_init().await;
 
     println!("user_sql_wait ok");
     Ok(())

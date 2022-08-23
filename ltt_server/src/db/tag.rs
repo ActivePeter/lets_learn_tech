@@ -17,7 +17,24 @@ impl DbHandler{
     pub async fn create_tag_table(&self){
 
     }
-
+    // pub fn makecmd_insert_relation_tags_to_article(
+    //     &self,tags:Vec<TagId>,article:ArticleId)->String{
+    //     if tags.len()==0{
+    //         return String::new();
+    //     }
+    //     let mut cmd="insert into article_tag_relation(articleid,tagid) values".to_string();
+    //     let mut first=true;
+    //     for t in &tags{
+    //         if !first{
+    //             cmd+= &*format!(",({},{})", article, t)
+    //         }else{
+    //             cmd+= &*format!("({},{})", article, t)
+    //         }
+    //         first=false
+    //     }
+    //     cmd+=";";
+    //     cmd
+    // }
     pub async fn db_create_tag(&self){
 
     }

@@ -13,11 +13,9 @@ use crate::models::article::Article;
 pub async fn article_new(
     Json(payload): Json<ArticleNewRequest>,
 ) -> impl IntoResponse {
-    //     return (StatusCode::OK,serde_json::to_string(&resp).unwrap() ).into_response()
-    //let u=G_USER_MANAGER.search_user_byid(payload.uid).await;
     match token::checktoken(payload.uid,payload.token).await{
         CheckTokenRes::Valid => {
-            
+
         }
         v=>{
           return v.into_common_response();
