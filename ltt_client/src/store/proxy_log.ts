@@ -173,6 +173,9 @@ export class LogProxy implements IProxy{
     get_logged_basic():UserBasicInfo|{}{
         return this.state.logged_basicinfo
     }
+    get_logged_token(){
+        return this.state.logged_token
+    }
     constructor(private state:PaState) {
     }
 }

@@ -3,15 +3,30 @@ import {BaseUrl} from "@/store/net/baseurl";
 import {Notify} from "@/util/notify";
 import {UserBasicInfo} from "@/store/models/user";
 import {Article} from "@/store/models/article";
+import {PaState} from "@/store/pastate";
+import {PaStateMan} from "@/util/pa_state_man";
 
-export function api_article_new(tags:number[]):
+export function api_article_new(
+    tags: number[],
+    content: string,
+    preview: string,
+    title: string,
+):
     Promise<undefined>|Promise<{ articles:Article[] }>{
     // console.log({
     //     uid
     // })
+    const token=PaStateMan.getstate().proxy_log.get_logged_basic()
+    const uid=PaStateMan.getstate().proxy_log.get_logged_token()
 // console.log(apiProxy)
-    return axios.post(BaseUrl+"articles_getwithtag",{
-        tags
+    async function _undefined(){
+        return undefined
+    }
+    if(token==""){
+        return _undefined()
+    }
+    return axios.post(BaseUrl+"article_new",{
+        tags,content,preview,title,token,uid
     }).then((res)=>{
         return res.data
     }).catch((e)=>{

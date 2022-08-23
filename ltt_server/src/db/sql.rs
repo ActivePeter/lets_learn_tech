@@ -12,6 +12,8 @@ use crate::db;
 use tokio::sync::oneshot::Receiver;
 use tokio::time;
 use deadpool_postgres::{Config, Manager, ManagerConfig, Pool, RecyclingMethod, Runtime, Object};
+use std::fs;
+use std::fs::File;
 
 lazy_static::lazy_static! {
     pub static ref G_DB_POOL_HANDLE : RwLock<Option<Pool>> =RwLock::new(None);
@@ -40,9 +42,45 @@ pub async fn sqlstart(config: &ServerConfig) -> Result<(), Error> {
     let _sql_wait = _sql_start(config).await;//启动链接并持有
     let handler=get_dbhandler().await;
 
+    let (tx, mut rx)
+        =tokio::sync::mpsc::channel(10);
     //tables init
-    handler.article_tag_init().await;
-    handler.article_init().await;
+    let r = fs::read_dir("./sql").unwrap();
+    // let mut rank_by_edit_time = BTreeMap::new/();
+    tokio::task::spawn_blocking(move ||{
+        for dir_ in r {
+            match dir_ {
+                Ok(dir) => {
+                    // println!("scanning log {}", dir.path().as_os_str().to_str().unwrap());
+                    let p = dir.path();
+                    if p.is_file(){
+                        let fname=String::from(p.file_name().unwrap().to_str().unwrap());
+                        if fname.find("func_")==Some(0){
+                            println!("regist func {}",fname);
+                            let mut file = File::open(&p).unwrap();
+                            let mut s =String::new();
+                            file.read_to_string(&mut s);
+                            tx.blocking_send(s);
+                        }
+                    }
+                }
+                Err(e) => {
+                    panic!("{}",e)
+                    // error!("err when go through store folder {}", e);
+                }
+            }
+        }
+    });
+    let db=get_dbhandler().await.get().await;
+    loop{
+        if let Some(v)=rx.recv().await{
+            db.query(&*v,&[]).await;
+        }else{
+            break;
+        }
+    }
+    // handler.article_tag_init().await;
+    // handler.article_init().await;
 
     println!("user_sql_wait ok");
     Ok(())

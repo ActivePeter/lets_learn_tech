@@ -1,1 +1,3 @@
 ltt_server/target/
+ltt_server/.idea/dataSources.xml
+ltt_server/.idea/sqldialects.xml
