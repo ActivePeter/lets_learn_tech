@@ -14,6 +14,7 @@ export default class ControlPanel extends Component<any, any>{
         return (
             <Box
                 sx={{
+                    padding:curstyle().gap.common,
                     marginTop:curstyle().gap.common,
                     height:"100%",
                 }}
