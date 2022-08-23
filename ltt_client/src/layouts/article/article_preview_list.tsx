@@ -152,7 +152,7 @@ export class ArticlePreviewList extends PureComponent<Props,typeof state_instanc
                         sx={{
                             // border:"1px solid black",
                             width:"100%",
-                            height:this.all_content[eid]+"px",
+                            // height:this.all_content[eid]+"px",
                         }}
                     >
                         <ArticlePreviewBar articleid={previewarts[eid]}/>
@@ -177,6 +177,7 @@ export class ArticlePreviewList extends PureComponent<Props,typeof state_instanc
                     className={reuse.col_flexcontainer}
                     key={"col_"+coli}
                     sx={{
+                        position:"relative",
                         width:colwidth,
                         gap:curstyle().gap.common,
                     }}

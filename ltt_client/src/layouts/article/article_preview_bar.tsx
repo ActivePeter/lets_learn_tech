@@ -1,5 +1,5 @@
 import {Fragment, PureComponent} from "react";
-import {Box} from "@mui/joy";
+import {Box, Typography} from "@mui/joy";
 import style from "@/layouts/login/logfloat.less";
 import {curstyle} from "@/theme/curtheme";
 import {Logo} from "@/layouts/reusable/logo/logo";
@@ -33,19 +33,29 @@ export class ArticlePreviewBar extends PureComponent<Props> {
                     borderRadius:curstyle().radius.common,
                     width:"100%",
                     height:"100%",
+
                     // marginTop:"-100px"
                 }}
             >
                 {articledetail!=undefined?
                     (
-                        <Fragment>
-                            <Box>
+                        <Box
+                            className={reuse.col_flexcontainer}
+                            sx={{
+                            padding:curstyle().gap.common,
+                            gap:curstyle().gap.mm,
+                        }}>
+                            <Typography
+                                className={reuse.cursorhand}
+                                level="h5">
                                 {articledetail.title}
-                            </Box>
-                            <Box>
+                            </Typography>
+                            <Box sx={{
+                                color:curstyle().colors.font_main2
+                            }}>
                                 {articledetail.content}
                             </Box>
-                        </Fragment>
+                        </Box>
                     )
                     :undefined}
             </Box>
