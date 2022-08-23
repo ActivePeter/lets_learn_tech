@@ -9,18 +9,22 @@ use std::future::Future;
 use crate::services::token::CheckTokenRes;
 use crate::models::tag::TagId;
 use crate::models::article::Article;
-
+use crate::services;
 pub async fn article_new(
     Json(payload): Json<ArticleNewRequest>,
 ) -> impl IntoResponse {
-    match token::checktoken(payload.uid,payload.token).await{
-        CheckTokenRes::Valid => {
-
-        }
-        v=>{
-          return v.into_common_response();
-        }
-    }
+    services::article::G_ARTICLE_MAN.new_article(
+        payload.uid,payload.tags,payload.content,payload.preview,payload.title
+    ).await;
+    return (StatusCode::OK, "dbfail").into_response();
+    // match token::checktoken(payload.uid,payload.token).await{
+    //     CheckTokenRes::Valid => {
+    //
+    //     }
+    //     v=>{
+    //       return v.into_common_response();
+    //     }
+    // }
 }
 
 // the input to our `create_user` handler

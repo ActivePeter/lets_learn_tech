@@ -14,7 +14,7 @@ use crate::models::user::UserId;
 //   tag_ids
 //   content
 //   comment_ids
-const INITCMDS:[&'static str]= *[
+const INITCMDS:&'static[&'static str]= &[
     // create_article func
     "CREATE OR REPLACE FUNCTION create_article( \
 	 title_ text,content_ text,uid_ bigint,tagids bigint[]) \
@@ -49,7 +49,7 @@ impl DbHandler {
         self.create_article_table().await;
         let db=self.get().await;
         for cmd in INITCMDS{
-            db.query(cmd,&[]).await.unwrap()
+            db.query(*cmd,&[]).await.unwrap();
         }
 
     }
@@ -63,8 +63,7 @@ impl DbHandler {
         preview: String,
         title: String, )->Option<ArticleId>{
         let tagsstr=serde_json::to_string(&tags).unwrap();
-        let mut cmd=self.makecmd_insert_relation_tags_to_article(tags,);
-            cmd+=format!("select create_article({},{},{},ARRAY{});",
+        let mut cmd=format!("select create_article({},{},{},ARRAY{});",
                          title,content,uid,tagsstr);
         let db=self.get().await;
         let ret=match db.query(&*cmd,&[]).await{
