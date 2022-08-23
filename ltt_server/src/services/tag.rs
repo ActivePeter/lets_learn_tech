@@ -2,6 +2,8 @@ use tokio::sync::RwLock;
 use std::collections::{HashMap, HashSet};
 use crate::models::tag::{TagId, TagInfo};
 use crate::models::article::ArticleId;
+use crate::db::sql::get_dbhandler;
+use std::ops::{DerefMut, Deref};
 
 pub struct TagManager {
     //setname->tagids
@@ -39,6 +41,18 @@ impl TagManager {
             tags: Default::default(),
         }
     }
+    pub async fn loadfromdb(&self){
+        let (mut map,mut groups_)=get_dbhandler().await
+            .db_get_all_taginfo().await.unwrap();
+        let mut groups=self.tagsets.write().await;
+        let mut tags=self.tags.write().await;
+        let mut tagname2id=self.tagname_2_tagid.write().await;
+        std::mem::swap(tags.deref_mut(),&mut map);
+        std::mem::swap(groups.deref_mut(),&mut groups_);
+        for t in tags.deref(){
+            tagname2id.insert(t.1.tag_name.clone(),*t.0);
+        }
+    }
     pub async fn addtag(&self, tagname: String) -> AddTagRes {
         if self.tagname_2_tagid.read().await.get(&tagname).is_some() {
             return AddTagRes::Exist;
@@ -48,7 +62,7 @@ impl TagManager {
         //将从数据库分配到的tagid存入内存
         let mut name2id = self.tagname_2_tagid.write().await;
         let mut id2info = self.tags.write().await;
-        
+
         AddTagRes::Ok(1)
     }
     pub async fn removetag(&self, tagid: TagId) -> RemoveTagRes {

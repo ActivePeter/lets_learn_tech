@@ -8,4 +8,5 @@ pub mod tag;
 
 pub async fn init_all(){
     user_manager::G_USER_MANAGER.update_user_from_db().await;
+    tag::G_TAG_MAN.loadfromdb().await;
 }
