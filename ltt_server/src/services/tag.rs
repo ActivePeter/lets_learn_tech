@@ -61,7 +61,8 @@ impl TagManager {
         let mut ret =HashMap::new();
         for (setname,idset) in a.deref(){
             let mut set =Vec::new();
-            for (id,info) in b.deref(){
+            for id_ in idset{
+                let info=b.get(id_).unwrap();
                 set.push(TagInfoWithoutArticles{
                     tag_id: info.tag_id,
                     tag_name:info.tag_name.clone(),
