@@ -28,6 +28,7 @@ export const default_global_style={
         main_s:"#e06434",
         main_sx:"#ea4c15",
         main_sxx:"#b23a10",
+        main_d:"#7a2300",
         white_common:"#ffffff",
         gray_common:"#fafafa",
         gray_d:"#e0e0e0",
