@@ -40,7 +40,7 @@ export class TagSetComp extends PureComponent<Props> {
                             (
                                 <TagComp
                                     key={index}
-                                    tagname={value.tag_name} tagcolor={""}/>
+                                    tagname={value.tag_name+"("+value.artcnt+")"} tagcolor={""}/>
 
                             ))
                     }

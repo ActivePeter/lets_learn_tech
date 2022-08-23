@@ -14,6 +14,8 @@ import {PaState} from "@/store/pastate";
 import {PaStateMan} from "@/util/pa_state_man";
 import {LogBarLog} from "@/layouts/login/logbar_log";
 import {UserBasicInfo} from "@/store/models/user";
+import {TagSetComp} from "@/layouts/tag/tag_set";
+import {TagComp} from "@/layouts/tag/tag";
 
 type Props = {
     articleid:number
@@ -26,6 +28,7 @@ export class ArticlePreviewBar extends PureComponent<Props> {
     render() {
         const logp=PaStateMan.getstate().proxy_log;
         const articlep=PaStateMan.getstate().proxy_article;
+        const tagp=PaStateMan.getstate().proxy_tag;
         const articledetail=articlep.article_map.getbyid(
             this.props.articleid)
         if(this.state.authorbasic==undefined&&articledetail
@@ -82,6 +85,23 @@ export class ArticlePreviewBar extends PureComponent<Props> {
                                     authorbasic.username
                                     :articledetail.author_id} <br/>编辑于 {articledetail.edit_time}</Box>
                             </Box>
+                                <Box
+                                    className={reuse.row_flexcontainer}
+                                    sx={{
+                                        gap:curstyle().gap.common
+                                    }}
+                                >
+
+                                    {articledetail.tag_ids.map((id)=>{
+                                        const find=tagp.findtag(id)
+                                        if(find){
+                                            return <TagComp tagname={find.tag_name}/>
+                                        }else{
+                                            return undefined
+                                        }
+                                    })
+                                    }
+                                </Box>
                         </Box>
                     )
                     :undefined}

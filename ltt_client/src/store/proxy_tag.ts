@@ -8,6 +8,7 @@ import {api_user_basic_info} from "@/store/net/api_user_basic_info";
 import {Rules} from "@/store/models/_rules";
 import {api_verify_code_get} from "@/store/net/api_verify_code_get";
 import {api_tags_fetch} from "@/store/net/api_tags_fetch";
+import {TagInfo} from "@/store/models/tag";
 
 export class TagProxy implements IProxy{
 
@@ -15,6 +16,18 @@ export class TagProxy implements IProxy{
     }
     gettagset(){
         return this.state.tags.tagsets
+    }
+    findtag(tid:number):TagInfo|undefined{
+        const sets=this.state.tags.tagsets
+        for(let i=0;i<sets.length;i++){
+            const set=sets[i]
+            for(let j=0;j<set.tags.length;j++){
+                const tag=set.tags[j]
+                if(tag.tag_id==tid){
+                    return tag
+                }
+            }
+        }
     }
     first_load(): void {
         api_tags_fetch().then((res)=>{
