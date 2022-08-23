@@ -13,18 +13,34 @@ import {LogBarRegi} from "@/layouts/login/logbar_regi";
 import {PaState} from "@/store/pastate";
 import {PaStateMan} from "@/util/pa_state_man";
 import {LogBarLog} from "@/layouts/login/logbar_log";
+import {UserBasicInfo} from "@/store/models/user";
 
 type Props = {
     articleid:number
 };
 export class ArticlePreviewBar extends PureComponent<Props> {
 
-
+    state={
+        authorbasic:undefined
+    }
     render() {
         const logp=PaStateMan.getstate().proxy_log;
         const articlep=PaStateMan.getstate().proxy_article;
         const articledetail=articlep.article_map.getbyid(
             this.props.articleid)
+        if(this.state.authorbasic==undefined&&articledetail
+        ){
+            PaStateMan.getstate().proxy_user
+                .lazy_get_user_basic(articledetail.author_id,
+                    (res)=>{
+                    if(res!=undefined){
+                        this.setState({
+                            authorbasic:res
+                        })
+                    }
+                })
+        }
+        const authorbasic:undefined|UserBasicInfo=this.state.authorbasic
         return (
             <Box
                 sx={{
@@ -62,7 +78,9 @@ export class ArticlePreviewBar extends PureComponent<Props> {
                                 fontSize:curstyle().fontsize.s
                                 }}
                             >
-                                <Box>发布者 {articledetail.author_id} <br/>编辑于 {articledetail.edit_time}</Box>
+                                <Box>发布者 {authorbasic?
+                                    authorbasic.username
+                                    :articledetail.author_id} <br/>编辑于 {articledetail.edit_time}</Box>
                             </Box>
                         </Box>
                     )

@@ -4,6 +4,7 @@ import {AllTags} from "@/store/models/tag";
 import {LogProxy} from "@/store/proxy_log";
 import {Article, ArticleMap} from "@/store/models/article";
 import {ArticleProxy} from "@/store/proxy_article";
+import {UserProxy} from "@/store/proxy_user";
 export interface IProxy{
     first_load():void
 }
@@ -21,9 +22,11 @@ export class PaStateProxy implements IProxy{
 
     proxy_article
     proxy_log
+    proxy_user
     constructor(private state:PaState) {
         this.proxy_log=new LogProxy(state)
         this.proxy_article=new ArticleProxy(state)
+        this.proxy_user=new UserProxy(state)
     }
 }
 export class PaState{
