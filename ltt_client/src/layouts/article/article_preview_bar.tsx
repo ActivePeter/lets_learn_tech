@@ -43,7 +43,7 @@ export class ArticlePreviewBar extends PureComponent<Props> {
                             className={reuse.col_flexcontainer}
                             sx={{
                             padding:curstyle().gap.common,
-                            gap:curstyle().gap.mm,
+                            gap:curstyle().gap.m,
                         }}>
                             <Typography
                                 className={reuse.cursorhand}
@@ -51,9 +51,18 @@ export class ArticlePreviewBar extends PureComponent<Props> {
                                 {articledetail.title}
                             </Typography>
                             <Box sx={{
-                                color:curstyle().colors.font_main2
+                                color:curstyle().colors.font_main2,
+                                fontSize:curstyle().fontsize.s
                             }}>
                                 {articledetail.content}
+                            </Box>
+                            <Box
+                                className={reuse.row_flex2side_container}
+                                sx={{color:curstyle().colors.gray_dd,
+                                fontSize:curstyle().fontsize.s
+                                }}
+                            >
+                                <Box>发布者 {articledetail.author_id} <br/>编辑于 {articledetail.edit_time}</Box>
                             </Box>
                         </Box>
                     )
