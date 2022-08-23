@@ -34,7 +34,9 @@ import {Box} from "@mui/joy";
 
 export function Input1(props:{
     placeholder: string,
-    onChange?:any}) {
+    onChange?:({target:{value:string}})=>void,
+    sx?: { fontSize:string },
+}) {
     return (<Input
         bg={curstyle().colors.gray_common}
         focusbg={curstyle().colors.main_lll}
@@ -42,6 +44,7 @@ export function Input1(props:{
         padding={curstyle().gap.common} radius={curstyle().radius.common}
         placeholder={props.placeholder}
         onChange={props.onChange}
+        sx={props.sx}
         // vmodel={vmodel}
     />)
 }
@@ -54,7 +57,8 @@ interface InnerProp {
     focus: (focus: boolean) => void,
     placeholder?:string,
     // vmodel?:StringHolder
-    onChange?:any
+    onChange?:any,
+    sx?:any
 }
 
 export class InputInner extends Component<Props & InnerProp> {
@@ -70,6 +74,9 @@ export class InputInner extends Component<Props & InnerProp> {
           min-width: 0;
           width: 100%;
           flex: 1;
+          font-size: ${
+            this.props.sx?.fontSize
+          } ;
             //margin-left: ${"-" + this.props.padding};
             //width:calc(100% - ${this.props.padding});
           // &:hover{
@@ -84,6 +91,7 @@ export class InputInner extends Component<Props & InnerProp> {
             content: '';
           }
         `
+        console.log("input",Input)
         return <Input
             placeholder={this.props.placeholder}
             onFocus={
@@ -110,7 +118,8 @@ interface Props {
     radius: string,
     placeholder?:string,
     vmodel?:StringHolder,
-    onChange?:any
+    onChange?:any,
+    sx?:any
 }
 export class Input extends PureComponent<Props, State> {
     constructor(props: Props) {
@@ -123,21 +132,21 @@ export class Input extends PureComponent<Props, State> {
 
 // padding: ${this.props.? };
     render() {
+        const sx={
+            position: "relative",
+            padding: this.props.padding,
+            background: this.state.focused ?
+                this.props.focusbg : this.props.bg,
+            borderRadius: this.props.radius,
+            ":hover": {
+                background: this.props.hoverbg
+            },
+        }
 
         return (<Box
 
                 className={reuse.trans_color_common}
-                sx={{
-                    position: "relative",
-                    padding: this.props.padding,
-                    background: this.state.focused ?
-                        this.props.focusbg : this.props.bg,
-                    borderRadius: this.props.radius,
-                    ":hover": {
-                        background: this.props.hoverbg
-                    },
-
-                }}
+                sx={sx}
             >
                 <InputInner
                     bg={this.props.bg}
@@ -155,6 +164,7 @@ export class Input extends PureComponent<Props, State> {
                     }}
                     placeholder={this.props.placeholder}
                     onChange={this.props.onChange}
+                    sx={this.props.sx}
                 />
             </Box>
         )

@@ -54,6 +54,8 @@ export const default_global_style={
         bold:550,
     },
     fontsize:{
+
+        l:"18px",
         common:"16px",
         s:"14px",
         ss:"12px"

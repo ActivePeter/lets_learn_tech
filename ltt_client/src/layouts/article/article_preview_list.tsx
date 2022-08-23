@@ -40,6 +40,9 @@ export class ArticlePreviewList extends PureComponent<Props,typeof state_instanc
 
     componentWillUnmount() {
         PaStateMan.unregist_comp(this)
+        if(this.waterfall.interval!=0){
+            window.clearInterval(this.waterfall.interval)
+        }
         window.removeEventListener('resize', this.on_window_resize);
     }
     state=state_instance
@@ -111,6 +114,9 @@ export class ArticlePreviewList extends PureComponent<Props,typeof state_instanc
     }
     waterfall_recalc(forcereplace:boolean){
         const dom=document.getElementById("ArticlePreviewList");
+        if(!dom){
+            return
+        }
         const w=dom.offsetWidth;
         // console.log(w)
         const singlemaxw=300

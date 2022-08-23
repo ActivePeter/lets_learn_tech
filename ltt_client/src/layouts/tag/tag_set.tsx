@@ -8,7 +8,8 @@ import {TagInfo, TagSet} from "@/store/models/tag"
 type Props = {
     // using `interface` is also ok
     tagsetname: string,
-    tags: TagInfo[]
+    tags: TagInfo[],
+    on_select?:(tagid:number,selected:boolean)=>void
 };
 
 export class TagSetComp extends PureComponent<Props> {
@@ -39,7 +40,13 @@ export class TagSetComp extends PureComponent<Props> {
                         (value, index) =>
                             (
                                 <TagComp
-                                    key={index}
+                                    onselect_change={(select)=>{
+                                        this.props.on_select?.(
+                                            value.tag_id,select
+                                        )
+                                    }}
+                                    selectable={true}
+                                    key={value.tag_id}
                                     tagname={value.tag_name+"("+value.artcnt+")"} tagcolor={""}/>
 
                             ))

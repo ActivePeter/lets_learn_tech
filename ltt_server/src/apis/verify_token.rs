@@ -9,7 +9,6 @@ use std::future::Future;
 use crate::services::token::CheckTokenRes;
 use crate::apis::user_login::UserLoginResponse;
 
-
 pub async fn verify_token(
     Json(payload): Json<VerifyTokenRequest>,
 ) -> impl IntoResponse {

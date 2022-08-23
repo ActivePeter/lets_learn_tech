@@ -9,6 +9,8 @@ use std::mem;
 use jsonwebtoken::errors::Error;
 use lazy_static::lazy_static;
 use crate::models::user::UserId;
+use axum::response::IntoResponse;
+use axum::http::StatusCode;
 
 // Our claims struct, it needs to derive `Serialize` and/or `Deserialize`
 #[derive(Debug, Serialize, Deserialize)]
@@ -51,6 +53,22 @@ pub enum CheckTokenRes{
     Valid,
     Expire,
     NotMatchUid
+}
+impl CheckTokenRes{
+    pub fn into_common_response(self)->impl IntoResponse{
+        match self{
+            CheckTokenRes::FailParse => {
+                return (StatusCode::BAD_REQUEST, "token_invalid").into_response()
+            }
+            CheckTokenRes::Expire => {
+                return (StatusCode::BAD_REQUEST, "token_invalid").into_response()
+            }
+            CheckTokenRes::NotMatchUid => {
+                return (StatusCode::BAD_REQUEST, "token_invalid").into_response()
+            }
+            _=>{unreachable!()}
+        }
+    }
 }
 
 // 解析token

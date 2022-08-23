@@ -20,11 +20,13 @@ import {TagSetsComp} from "@/layouts/tag/tagsets_in_controlpanel";
 type Props = {
 };
 export class ArticleInfoEdit extends PureComponent<Props> {
+    title=""
     render() {
         const logp=PaStateMan.getstate().proxy_log;
         const SetWrapper=styled.div`
           
         `
+
         return (
             <Box
                 className={reuse.col_flexcontainer}
@@ -50,7 +52,14 @@ export class ArticleInfoEdit extends PureComponent<Props> {
                     >
                         标题
                     </Typography>
-                    输入标题
+                    <Input1 placeholder={"输入标题"} sx={{
+                        fontSize:curstyle().fontsize.l
+                    }}
+                    onChange={(e)=>{
+
+                        this.title=e.target.value
+                    }}
+                    />
                 </SetWrapper>
                 <SetWrapper>
                     <Typography

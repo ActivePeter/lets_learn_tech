@@ -95,7 +95,7 @@ export class ArticlePreviewBar extends PureComponent<Props> {
                                     {articledetail.tag_ids.map((id)=>{
                                         const find=tagp.findtag(id)
                                         if(find){
-                                            return <TagComp tagname={find.tag_name}/>
+                                            return <TagComp key={id} tagname={find.tag_name}/>
                                         }else{
                                             return undefined
                                         }

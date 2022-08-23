@@ -6,7 +6,7 @@ import {Theme,CssVarsProvider} from "@mui/joy/styles";
 import Headline from "@/layouts/headline/headline";
 import {LogFloat} from "@/layouts/login/logfloat";
 import { ReactNotifications } from 'react-notifications-component'
-import 'react-notifications-component/dist/theme.css'
+import '@/assets/notify_theme.css'
 import {PaStateMan, ResetPaStateMan} from "@/util/pa_state_man";
 import {Component} from "react";
 
@@ -41,6 +41,9 @@ export default class Layout extends Component<any, any> {
                             body: {
                                 margin: 0,
                                 fontFamily: theme.vars.fontFamily.body,
+                                position:"absolute",
+                                top:"0",bottom:"0",left:"0",right:"0",
+                                overflow:"hidden"
                             },
                         })}
                     />
