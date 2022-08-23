@@ -1,6 +1,7 @@
 use tokio::sync::RwLock;
 use std::collections::{HashMap, HashSet};
 use crate::models::tag::{TagId, TagInfo};
+use crate::models::article::ArticleId;
 
 pub struct TagManager{
     //setname->tagids
@@ -41,5 +42,18 @@ impl TagManager{
             return RemoveTagRes::NotFound
         }
         return RemoveTagRes::Ok
+    }
+    pub async fn renametag(&self,name:String){
+
+    }
+
+    //memonly 非单独操作，
+    // 一般是创建或修改文章后，sql改变文章tag关系,
+    // 将变更同步到内存
+    pub async fn memonly_add_articles_2_tag(&self,aid:&[ArticleId]){
+
+    }
+    pub async fn memonly_remove_articles_2_tag(&self,aid:&[ArticleId]){
+
     }
 }
