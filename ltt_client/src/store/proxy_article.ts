@@ -9,20 +9,20 @@ export class ArticleProxy{
     article_map=new ArticleMap()
 
     private edit_article_state={
-        preview:"",
+        rawtext:"",
         content:"",
         title:"",
     }
     edit_article_state_reset(){
         this.edit_article_state={
-            preview:"",
+            rawtext:"",
             content:"",
             title:"",
         }
     }
-    edit_article_change_content(preview:string,content:string){
+    edit_article_change_content(rawtext:string,content:string){
         this.edit_article_state.content=content;
-        this.edit_article_state.preview=preview;
+        this.edit_article_state.rawtext=rawtext;
     }
     edit_article_change_title(title:string){
         this.edit_article_state.title=title;
@@ -41,7 +41,7 @@ export class ArticleProxy{
             tags.push(tagselected[k])
         }
         const state=this.edit_article_state
-        api_article_new(tags,state.content, state.preview, state.title).then(
+        api_article_new(tags,state.content, state.rawtext, state.title).then(
             (res)=>{
             if(res){
                 Notify.common("success","创建文章成功"+res,"")

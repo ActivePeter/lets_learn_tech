@@ -14,7 +14,7 @@ pub async fn article_new(
     Json(payload): Json<ArticleNewRequest>,
 ) -> impl IntoResponse {
     services::article::G_ARTICLE_MAN.new_article(
-        payload.uid,payload.tags,payload.content,payload.preview,payload.title
+        payload.uid,payload.tags,payload.content,payload.rawtext,payload.title
     ).await;
     return (StatusCode::OK, "dbfail").into_response();
     // match token::checktoken(payload.uid,payload.token).await{
@@ -40,7 +40,7 @@ pub struct ArticleNewRequest {
     pub token:String,
     pub tags:Vec<TagId>,
     pub content:String,
-    pub preview:String,
+    pub rawtext:String,
     pub title:String,
 }
 

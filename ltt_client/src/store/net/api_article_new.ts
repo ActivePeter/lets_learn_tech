@@ -9,7 +9,7 @@ import {PaStateMan} from "@/util/pa_state_man";
 export function api_article_new(
     tags: number[],
     content: string,
-    preview: string,
+    rawtext: string,
     title: string,
 ):
     Promise<undefined>|Promise<{ articles:Article[] }>{
@@ -27,10 +27,10 @@ export function api_article_new(
     }
     const uid= PaStateMan.getstate().proxy_log.get_logged_basic().uid
     console.log({
-        tags,content,preview,title,token,uid
+        tags,content,rawtext,title,token,uid
     })
     return axios.post(BaseUrl+"article_new",{
-        tags,content,preview,title,token,uid
+        tags,content,rawtext,title,token,uid
     }).then((res)=>{
         return res.data
     }).catch((e)=>{

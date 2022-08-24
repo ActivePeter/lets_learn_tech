@@ -25,11 +25,11 @@ impl DbHandler {
         uid:UserId,
         tags: &Vec<TagId>,
         content: String,
-        preview: String,
+        rawtext: String,
         title: String, )->Option<ArticleId>{
         let tagsstr=serde_json::to_string(&tags).unwrap();
-        let mut cmd=format!("select create_article('{}','{}',{},ARRAY{}::integer[]);",
-                         title,content,uid,tagsstr);
+        let mut cmd=format!("select create_article('{}','{}','{}',{},ARRAY{}::integer[]);",
+                         title,content,rawtext,uid,tagsstr);
         let db=self.get().await;
         let ret=match db.query(&*cmd,&[]).await{
             Ok(row) => {
@@ -49,14 +49,14 @@ impl DbHandler {
     pub async fn db_article_search_bytags(&self, tags: &Vec<TagId>) -> Option<Vec<Article>> {
         // 由user_manger调用
         let cmd = if tags.len() == 0 {
-            "SELECT articleid,author_uid,content,tags,title, \
+            "SELECT articleid,author_uid,rawtext,tags,title, \
                     to_char(createtime,'yyyy-mm-dd hh24:mi:ss'),\
                     to_char(edittime,'yyyy-mm-dd hh24:mi:ss') \
                 FROM public.article_info"
                 .to_string()
         } else {
             let mut cmdmake =
-                "SELECT articleid,author_uid,content,tags,title, \
+                "SELECT articleid,author_uid,rawtext,tags,title, \
                     to_char(createtime,'yyyy-mm-dd hh24:mi:ss'),\
                     to_char(edittime,'yyyy-mm-dd hh24:mi:ss')\
                  FROM public.article_info \
@@ -89,7 +89,7 @@ impl DbHandler {
                     let mut ar: Article = Default::default();
                     ar.id = v.get::<usize, i64>(0) as ArticleId;
                     ar.author_id = v.get::<usize, i64>(1) as UserId;
-                    ar.content = v.get(2);
+                    ar = v.get(2);
                     ar.title = v.get(4);
                     ar.create_time = v.get(5);
                     ar.edit_time = v.get(6);

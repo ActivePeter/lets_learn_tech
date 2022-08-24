@@ -18,7 +18,7 @@ impl ArticleManager {
         uid:UserId,
         tags: Vec<TagId>,
         content: String,
-        preview: String,
+        rawtext: String,
         title: String,
     ) -> Option<ArticleId> {
         let db=get_dbhandler().await;
@@ -26,7 +26,7 @@ impl ArticleManager {
             uid,
             &tags,
             content,
-            preview,
+            rawtext,
             title,
         ).await;
         if let Some(res)=res{

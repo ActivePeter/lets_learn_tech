@@ -21,9 +21,9 @@ export class ArticleViewRoot{
     edit=new ArticleEditRoot()
 }
 export class ArticleEditRoot{
-    article_content_change(content:string,preview:string){
+    article_content_change(content:string,rawtext:string){
         PaStateMan.getstate().proxy_article
-            .edit_article_change_content(preview,content)
+            .edit_article_change_content(rawtext,content)
     }
 }
 

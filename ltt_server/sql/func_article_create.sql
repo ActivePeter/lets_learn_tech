@@ -1,5 +1,5 @@
 CREATE OR REPLACE FUNCTION
-create_article(title_ text,content_ text,uid_ bigint,tagids bigint[])
+create_article(title_ text,content_ text,rawtext_ text,uid_ bigint,tagids bigint[])
   RETURNS bigint
   LANGUAGE plpgsql
  AS
@@ -9,9 +9,9 @@ count bigint;
   id_
 bigint;
 begin
-with jjj as (insert into article_info(author_uid, content,
+with jjj as (insert into article_info(author_uid, content,rawtext,
                                       createtime, edittime, title,tags)
-values (uid_, content_, now(), now(), title_,
+values (uid_, content_,rawtext_, now(), now(), title_,
     '['||array_to_string(tagids, ',')||']')
     RETURNING articleid)
 select * from jjj into count;

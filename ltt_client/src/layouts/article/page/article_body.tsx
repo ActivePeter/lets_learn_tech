@@ -49,7 +49,7 @@ export class ArticleBody extends PureComponent<Props> {
                     value={editorState}
                     onChange={(v)=>{
                         this.props.root.edit.article_content_change(
-                            v.toHTML(),v.toText().slice(0,100)
+                            v.toHTML(),v.toText()
                         )
                     }}
                     onSave={()=>{}}
