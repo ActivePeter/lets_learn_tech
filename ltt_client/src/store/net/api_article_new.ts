@@ -16,15 +16,19 @@ export function api_article_new(
     // console.log({
     //     uid
     // })
-    const token=PaStateMan.getstate().proxy_log.get_logged_basic()
-    const uid=PaStateMan.getstate().proxy_log.get_logged_token()
 // console.log(apiProxy)
     async function _undefined(){
         return undefined
     }
+
+    const token=PaStateMan.getstate().proxy_log.get_logged_token()
     if(token==""){
         return _undefined()
     }
+    const uid= PaStateMan.getstate().proxy_log.get_logged_basic().uid
+    console.log({
+        tags,content,preview,title,token,uid
+    })
     return axios.post(BaseUrl+"article_new",{
         tags,content,preview,title,token,uid
     }).then((res)=>{

@@ -15,14 +15,21 @@ import {PaStateMan} from "@/util/pa_state_man";
 import {LogBarLog} from "@/layouts/login/logbar_log";
 import styled from "@emotion/styled";
 import {TagSetsComp} from "@/layouts/tag/tagsets_in_controlpanel";
+import {TagSet} from "@/store/models/tag";
 
 
 type Props = {
 };
 export class ArticleInfoEdit extends PureComponent<Props> {
-    title=""
+    // title=""
+    componentDidMount() {
+        PaStateMan.getstate().proxy_article.edit_article_state_reset();
+    }
+
     render() {
         const logp=PaStateMan.getstate().proxy_log;
+        const articlep=
+            PaStateMan.getstate().proxy_article;
         const SetWrapper=styled.div`
           
         `
@@ -37,6 +44,12 @@ export class ArticleInfoEdit extends PureComponent<Props> {
                 <Button
                     sx={{
                         width:"100%"
+                    }}
+                    onClick={()=>{
+                        const ts_:TagSetsComp=this.refs.tag_select
+                        articlep.edit_article_try_upload(
+                            ts_.seltag_hashmap
+                        )
                     }}
                 >
                     提交并创建文章
@@ -56,8 +69,9 @@ export class ArticleInfoEdit extends PureComponent<Props> {
                         fontSize:curstyle().fontsize.l
                     }}
                     onChange={(e)=>{
-
-                        this.title=e.target.value
+                        PaStateMan.getstate().proxy_article
+                            .edit_article_change_title(e.target.value);
+                        // this.title=e.target.value
                     }}
                     />
                 </SetWrapper>
@@ -72,7 +86,7 @@ export class ArticleInfoEdit extends PureComponent<Props> {
                     >
                         选择标签
                     </Typography>
-                    <TagSetsComp/>
+                    <TagSetsComp ref="tag_select"/>
                 </SetWrapper>
             </Box>
         );

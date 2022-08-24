@@ -74,7 +74,7 @@ pub async fn sqlstart(config: &ServerConfig) -> Result<(), Error> {
     let db=get_dbhandler().await.get().await;
     loop{
         if let Some(v)=rx.recv().await{
-            db.query(&*v,&[]).await;
+            db.query(&*v,&[]).await.unwrap();
         }else{
             break;
         }

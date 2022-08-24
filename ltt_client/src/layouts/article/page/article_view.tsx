@@ -15,8 +15,10 @@ import {PaStateMan} from "@/util/pa_state_man";
 import {LogBarLog} from "@/layouts/login/logbar_log";
 import {ArticleBody} from "@/layouts/article/page/article_body";
 import {CommentBody} from "@/layouts/article/page/comment_body";
+import {ArticleViewRoot} from "@/pages/article/$id";
 
 type Props = {
+    root:ArticleViewRoot
 };
 export class ArticleView extends PureComponent<Props> {
     componentDidMount() {
@@ -44,7 +46,7 @@ export class ArticleView extends PureComponent<Props> {
                         background:curstyle().colors.gray_common,
                     }}
                 >
-                    <ArticleBody/>
+                    <ArticleBody root={this.props.root}/>
                     {/*<CommentBody/>*/}
                     {/*{this.props.tagname}*/}
                 </Box>

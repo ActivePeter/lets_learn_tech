@@ -15,8 +15,10 @@ import {PaStateMan} from "@/util/pa_state_man";
 import {LogBarLog} from "@/layouts/login/logbar_log";
 import BraftEditor from 'braft-editor'
 import 'braft-editor/dist/index.css'
+import {ArticleViewRoot} from "@/pages/article/$id";
 
 type Props = {
+    root:ArticleViewRoot
 };
 export class ArticleBody extends PureComponent<Props> {
     state = {
@@ -45,7 +47,11 @@ export class ArticleBody extends PureComponent<Props> {
             >
                 <BraftEditor
                     value={editorState}
-                    onChange={()=>{}}
+                    onChange={(v)=>{
+                        this.props.root.edit.article_content_change(
+                            v.toHTML(),v.toText().slice(0,100)
+                        )
+                    }}
                     onSave={()=>{}}
                 />
                 {/*{this.props.tagname}*/}

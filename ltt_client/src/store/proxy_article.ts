@@ -2,9 +2,53 @@ import {PaState} from "@/store/pastate";
 import {RouteControl} from "@/store/route_control";
 import {api_articles_getwithtag} from "@/store/net/api_articles_getwithtag";
 import {Article, ArticleMap} from "@/store/models/article";
+import {Notify} from "@/util/notify";
+import {api_article_new} from "@/store/net/api_article_new";
 
 export class ArticleProxy{
     article_map=new ArticleMap()
+
+    private edit_article_state={
+        preview:"",
+        content:"",
+        title:"",
+    }
+    edit_article_state_reset(){
+        this.edit_article_state={
+            preview:"",
+            content:"",
+            title:"",
+        }
+    }
+    edit_article_change_content(preview:string,content:string){
+        this.edit_article_state.content=content;
+        this.edit_article_state.preview=preview;
+    }
+    edit_article_change_title(title:string){
+        this.edit_article_state.title=title;
+    }
+    edit_article_try_upload(tagselected:any){
+        if(this.edit_article_state.title.length==0){
+            Notify.warn("未填写文章标题","")
+            return;
+        }
+        if(this.edit_article_state.preview.length==0){
+            Notify.warn("未填写文章内容","")
+            return;
+        }
+        const tags=[]
+        for (const k in tagselected){
+            tags.push(tagselected[k])
+        }
+        const state=this.edit_article_state
+        api_article_new(tags,state.content, state.preview, state.title).then(
+            (res)=>{
+            if(res){
+                Notify.common("success","创建文章成功"+res,"")
+            }
+        })
+    }
+
     sync_info_in_title(){
         const curmode=RouteControl.get_article_mode()
         this.state.article_mode=curmode

@@ -18,14 +18,6 @@ use crate::models::user::UserId;
 
 impl DbHandler {
 
-    pub async fn article_init(&self){
-        self.create_article_table().await;
-        let db=self.get().await;
-        for cmd in INITCMDS{
-            db.query(*cmd,&[]).await.unwrap();
-        }
-
-    }
     async fn create_article_table(&self) {}
 
     pub async fn db_create_article(
@@ -36,7 +28,7 @@ impl DbHandler {
         preview: String,
         title: String, )->Option<ArticleId>{
         let tagsstr=serde_json::to_string(&tags).unwrap();
-        let mut cmd=format!("select create_article('{}','{}',{},ARRAY{});",
+        let mut cmd=format!("select create_article('{}','{}',{},ARRAY{}::integer[]);",
                          title,content,uid,tagsstr);
         let db=self.get().await;
         let ret=match db.query(&*cmd,&[]).await{

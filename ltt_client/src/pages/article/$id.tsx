@@ -17,6 +17,16 @@ import {ArticleInfo} from "@/layouts/article/page/article_info";
 import {ArticleView} from "@/layouts/article/page/article_view";
 import {PaStateMan} from "@/util/pa_state_man";
 
+export class ArticleViewRoot{
+    edit=new ArticleEditRoot()
+}
+export class ArticleEditRoot{
+    article_content_change(content:string,preview:string){
+        PaStateMan.getstate().proxy_article
+            .edit_article_change_content(preview,content)
+    }
+}
+
 export default class HomePage extends PureComponent{
     componentDidMount() {
         PaStateMan.getstate().proxy_article.sync_info_in_title()
@@ -24,7 +34,7 @@ export default class HomePage extends PureComponent{
     componentWillUnmount() {
 
     }
-
+    root=new ArticleViewRoot()
     render() {
         const headheight=curstyle().headheight
         return (
@@ -47,7 +57,7 @@ export default class HomePage extends PureComponent{
                     <div className={index_styles.main + " " +
                         reuse_styles.fillleft_flex
                     }>
-                        <ArticleView/>
+                        <ArticleView root={this.root}/>
                     </div>
                     {/*</div>*/}
                 </Box>
