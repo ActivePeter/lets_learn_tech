@@ -22,11 +22,12 @@ import {UserBasicInfo} from "@/store/models/user";
 type Props = {
 };
 export class ArticleInfoView extends PureComponent<Props> {
-    componentDidMount() {
+    componentWillMount()  {
         PaStateMan.regist_comp(this,(registval, state)=>{
             registval(state.article)
         })
         const articlep=PaStateMan.getstate().proxy_article
+        articlep.clear_cur_article();
         articlep.sync_info_in_path();
         articlep.fetch_article_if_id_ok()
     }

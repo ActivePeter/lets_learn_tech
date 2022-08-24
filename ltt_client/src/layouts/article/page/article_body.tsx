@@ -59,6 +59,7 @@ export class ArticleBody extends PureComponent<Props> {
             <Box
             >
                 <BraftEditor
+                    controls={articlep.get_cur_mode()=="view"?[]:undefined}
                     readOnly={articlep.get_cur_mode()=="view"}
                     value={state? state:""}
                     onChange={(v)=>{

@@ -83,6 +83,9 @@ export class ArticleProxy{
             this.state.article=Article.emptu()
         }
     }
+    clear_cur_article(){
+        this.state.article=Article.emptu()
+    }
     get_cur_article(){
         if(this.state.article.id!=-1){
             return this.state.article
