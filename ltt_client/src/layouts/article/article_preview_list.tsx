@@ -31,7 +31,10 @@ export class ArticlePreviewList extends PureComponent<Props,typeof state_instanc
 
     componentDidMount() {
         PaStateMan.regist_comp(this,(registval, state)=>{
-            registval(state.preview_articles)
+            registval(state.preview_articles,()=>{
+                this.all_cnt=state.preview_articles.length
+                this.waterfall_recalc(true);
+            })
         })
         window.addEventListener('resize', this.on_window_resize.bind(this));
         this.waterfall_recalc(true);
@@ -46,6 +49,7 @@ export class ArticlePreviewList extends PureComponent<Props,typeof state_instanc
     }
     state=state_instance
     all_content=[100,200,300,100,200,300,100,200,300,100,200,300]
+    all_cnt=0
     waterfall={
         cols:[new WaterFallOneCol()],
         interval:0,
@@ -94,7 +98,7 @@ export class ArticlePreviewList extends PureComponent<Props,typeof state_instanc
                 if(dom){
                     insert2col(dom.offsetHeight)
                     // window.setTimeout(()=>{
-                        if(i<this.all_content.length){
+                        if(i<this.all_cnt){
                             drawone(i+1)
                         }
                     // },1000)
