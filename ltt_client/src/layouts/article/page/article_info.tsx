@@ -20,9 +20,13 @@ import {ArticleInfoView} from "@/layouts/article/page/article_info_view";
 type Props = {
 };
 export class ArticleInfo extends PureComponent<Props> {
-    componentDidMount() {
+    componentWillMount(){
         PaStateMan.regist_comp(this,(registval, state)=>{
-            registval(state.article_mode)
+            // registval(state.article_mode,)
+            console.log("regist_comp article info")
+            registval(state.article_mode,()=>{
+                console.warn("article state change!!!!!!!!!!")
+            })
         })
     }
     componentWillUnmount() {
@@ -31,6 +35,7 @@ export class ArticleInfo extends PureComponent<Props> {
 
     render() {
         const p=PaStateMan.getstate().proxy_article;
+        console.log("cur mode",p.get_cur_mode())
         if(p.get_cur_mode()=="edit"||p.get_cur_mode()=="create"){
             return <ArticleInfoEdit/>
         }

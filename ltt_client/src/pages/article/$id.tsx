@@ -30,6 +30,7 @@ export class ArticleEditRoot{
 export default class HomePage extends PureComponent{
     componentDidMount() {
         PaStateMan.getstate().proxy_article.sync_info_in_path()
+        console.log("curmode 1",PaStateMan.getstate().proxy_article.get_cur_mode())
     }
     componentWillUnmount() {
 

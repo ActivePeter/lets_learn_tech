@@ -23,7 +23,8 @@ type Props = {
 export class ArticleView extends PureComponent<Props> {
     componentDidMount() {
         PaStateMan.regist_comp(this,(registval,state)=>{
-            registval(state.log_gui_log_or_regi)
+
+
         })
     }
     componentWillUnmount() {

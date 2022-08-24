@@ -79,6 +79,9 @@ export class ArticleProxy{
         this.state.article_mode=curmode
         const id=RouteControl.get_article_id()
         this.state.article_id=id
+        if(this.state.article_id==-1){
+            this.state.article=Article.emptu()
+        }
     }
     get_cur_article(){
         if(this.state.article.id!=-1){
@@ -86,7 +89,7 @@ export class ArticleProxy{
         }
         return undefined
     }
-    get_cur_mode(){
+    get_cur_mode():"view"|""|"edit"|"create"{
         return this.state.article_mode
     }
     get_articles_with_selected_tags_for_preview(){
