@@ -46,6 +46,17 @@ export namespace RouteControl{
         }
         return "view"
     }
+    export function get_article_id():number{
+        const sp=window.location.pathname.split('/');
+        // console.log("get_article_id",sp)
+        if(sp.length==3&&sp[1]=='article'){
+            const v=parseInt(sp[2])
+            if(v){
+                return v
+            }
+        }
+        return -1;
+    }
     export function push_article_view(articleid:number){
         history.push("/article/"+articleid+"?mode=view")
     }

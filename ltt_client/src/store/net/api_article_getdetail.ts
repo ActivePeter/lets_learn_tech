@@ -18,7 +18,7 @@ export function api_article_getdetail(
     return axios.post(BaseUrl+"article_getdetail",{
         id
     }).then((res)=>{
-        return res.data.article
+        return res.data
     }).catch((e)=>{
         // "notfound"
         return undefined

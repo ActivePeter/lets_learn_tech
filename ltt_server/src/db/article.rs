@@ -34,14 +34,14 @@ impl DbHandler {
             Ok(vec) => {
                 if vec.len()>0{
                     let row=&vec[0];
-                    let tagstr:String=row.get(2);
+                    let tagstr:String=row.get(3);
                     return Some(Article{
                         id,
-                        title: row.get(3),
-                        content: row.get(1),
-                        author_id: row.get::<usize, i64>(0) as UserId,
-                        create_time: row.get(4),
-                        edit_time:row.get(5),
+                        title: row.get(4),
+                        content: row.get(2),
+                        author_id: row.get::<usize, i64>(1) as UserId,
+                        create_time: row.get(5),
+                        edit_time:row.get(6),
                         tag_ids: serde_json::from_str(&*tagstr).unwrap()
                     })
                 }

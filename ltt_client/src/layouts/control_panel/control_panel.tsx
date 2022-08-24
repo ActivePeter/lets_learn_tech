@@ -7,6 +7,7 @@ import {curstyle} from "@/theme/curtheme";
 import {TagSetsComp} from "@/layouts/tag/tagsets_in_controlpanel";
 import {Component} from "react";
 import {push_create_article, RouteControl} from "@/store/route_control";
+import {PaStateMan} from "@/util/pa_state_man";
 
 export default class ControlPanel extends Component<any, any>{
     render() {
@@ -40,6 +41,7 @@ export default class ControlPanel extends Component<any, any>{
                         variant="solid" color="primary"
                         onClick={()=>{
                             RouteControl.push_create_article()
+                            PaStateMan.getstate().proxy_article.sync_info_in_path()
                         }}
                     >
                         说点什么？

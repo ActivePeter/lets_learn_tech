@@ -31,7 +31,7 @@ class _PaStateMan{
             }
             this._valkey2compids[c][comp.___id___+""]=aftchange;
 
-            console.log("regist val",c,comp.___id___,)
+            // console.log("regist val",c,comp.___id___,)
         }
         cb(regist_val2comp,this._state);
     }
@@ -45,7 +45,7 @@ class _PaStateMan{
     private _val_ope(oldval:any,val:any){
         const id_2_afterchange:any={}
         const key=this.recentgetkeystackcombine();
-        console.log("_val_ope",key,val)
+        // console.log("_val_ope",key,val)
         if(key in this._valkey2compids){
             let delids:string[]=[]
             const ids=Object.keys(this._valkey2compids[key]);

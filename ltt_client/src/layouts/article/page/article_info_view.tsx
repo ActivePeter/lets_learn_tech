@@ -15,15 +15,49 @@ import {PaStateMan} from "@/util/pa_state_man";
 import {LogBarLog} from "@/layouts/login/logbar_log";
 import {TagSetsComp} from "@/layouts/tag/tagsets_in_controlpanel";
 import styled from "@emotion/styled";
+import {TagSetCompNoWrap} from "@/layouts/tag/tag_set_nowrap";
+import {UserBasicInfo} from "@/store/models/user";
 
 
 type Props = {
 };
 export class ArticleInfoView extends PureComponent<Props> {
+    componentDidMount() {
+        PaStateMan.regist_comp(this,(registval, state)=>{
+            registval(state.article)
+        })
+        const articlep=PaStateMan.getstate().proxy_article
+        articlep.sync_info_in_path();
+        articlep.fetch_article_if_id_ok()
+    }
+    componentWillUnmount() {
+        PaStateMan.unregist_comp(this)
+    }
+    state={
+        userinfo:undefined
+    }
     render() {
         const logp=PaStateMan.getstate().proxy_log;
         const SetWrapper=styled.div``
-        const editable=false
+        const article=PaStateMan.getstate().proxy_article.get_cur_article()
+        if(!article){
+            return undefined
+        }
+        const editable=article.author_id==logp.get_logged_basic().uid
+        let authorname:string|undefined
+        let userinfo=this.state.userinfo as UserBasicInfo|undefined;
+        if(userinfo!=undefined){
+            authorname=userinfo.username
+        }else{
+            PaStateMan.getstate().proxy_user.lazy_get_user_basic(article.author_id,
+                (res,)=>{
+                if(res){
+                    this.setState({
+                        userinfo:res
+                    })
+                }
+            })
+        }
         return (
             <Box
                 className={reuse.col_flexcontainer}
@@ -51,11 +85,56 @@ export class ArticleInfoView extends PureComponent<Props> {
                     >
                         标题
                     </Typography>
+                    <Box
+                        sx={{paddingLeft:curstyle().gap.common}}
+                    >
 
+                        {article.title}</Box>
                 </SetWrapper>
                 <SetWrapper>
-                    tags
+
+
+
+                    <Typography
+                        level="h6"
+                        sx={{
+                            fontWeight: curstyle().fontweight.bold,
+                            paddingBottom: curstyle().gap.common,
+
+                        }}
+                    >
+                        作者
+                    </Typography>
+                    <Box
+                        sx={{paddingLeft:curstyle().gap.common}}
+                    >
+                        {authorname}</Box>
                 </SetWrapper>
+                {article.tag_ids.length>0?<SetWrapper>
+                    <Typography
+                        level="h6"
+                        sx={{
+                            fontWeight: curstyle().fontweight.bold,
+                            paddingBottom: curstyle().gap.common,
+
+                        }}
+                    >
+                        标签
+                    </Typography>
+                    <Box
+                        sx={{paddingLeft:curstyle().gap.common}}
+                    >
+
+                        <TagSetCompNoWrap tags={article.tag_ids.map((id) => {
+                            const find = PaStateMan.getstate().proxy_tag.findtag(id)
+                            if (find) {
+                                return find
+                            } else {
+                                return undefined
+                            }
+                        })}/>
+                    </Box>
+                </SetWrapper>:undefined}
             </Box>
         );
     }

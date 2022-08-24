@@ -5,6 +5,7 @@ import {Article, ArticlePreview, ArticlePreviewMap} from "@/store/models/article
 import {Notify} from "@/util/notify";
 import {api_article_new} from "@/store/net/api_article_new";
 import {PaStateMan} from "@/util/pa_state_man";
+import {api_article_getdetail} from "@/store/net/api_article_getdetail";
 
 export class ArticleProxy{
     article_preview_map=new ArticlePreviewMap()
@@ -55,17 +56,35 @@ export class ArticleProxy{
             }
         })
     }
-    set_article_id_and_fetch(id:number){
+    fetch_article_if_id_ok(){
+        console.log("fetch_article_if_id_ok")
+        const id=this.state.article_id
+        if(id!=-1){
+            api_article_getdetail(id).then((res)=>{
+                console.log("article get",res)
+                if(res){
+                    this.state.article=res.article
+                }
+            })
+        }
+    }
+    set_article_id_and_fetchwhenchange(id:number){
         if(this.state.article_id!=id){
             this.state.article_id=id
-            if(id!=-1){
-
-            }
+            this.fetch_article_if_id_ok();
         }
     }
     sync_info_in_path(){
         const curmode=RouteControl.get_article_mode()
         this.state.article_mode=curmode
+        const id=RouteControl.get_article_id()
+        this.state.article_id=id
+    }
+    get_cur_article(){
+        if(this.state.article.id!=-1){
+            return this.state.article
+        }
+        return undefined
     }
     get_cur_mode(){
         return this.state.article_mode
