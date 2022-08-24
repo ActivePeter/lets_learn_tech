@@ -17,6 +17,7 @@ import {TagSetsComp} from "@/layouts/tag/tagsets_in_controlpanel";
 import styled from "@emotion/styled";
 import {TagSetCompNoWrap} from "@/layouts/tag/tag_set_nowrap";
 import {UserBasicInfo} from "@/store/models/user";
+import {RouteControl} from "@/store/route_control";
 
 
 type Props = {
@@ -40,6 +41,7 @@ export class ArticleInfoView extends PureComponent<Props> {
     render() {
         const logp=PaStateMan.getstate().proxy_log;
         const SetWrapper=styled.div``
+        const articlep=PaStateMan.getstate().proxy_article
         const article=PaStateMan.getstate().proxy_article.get_cur_article()
         if(!article){
             return undefined
@@ -71,6 +73,11 @@ export class ArticleInfoView extends PureComponent<Props> {
                         width: "100%"
                     }}
                     onClick={() => {
+                        const at=articlep.get_cur_article()
+                        if(at){
+                            RouteControl.replace_article_edit(at.id)
+                            articlep.sync_info_in_path()
+                        }
                     }}
                 >
                     编辑文章

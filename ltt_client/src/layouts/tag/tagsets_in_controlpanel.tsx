@@ -6,8 +6,10 @@ import {curstyle} from "@/theme/curtheme";
 import {PaStateMan} from "@/util/pa_state_man";
 
 
-
-export class TagSetsComp extends Component {
+interface Prop{
+    pretagids?:number[]
+}
+export class TagSetsComp extends Component <Prop>{
     componentDidMount() {
         PaStateMan.regist_comp(this, (registval, state) => {
             registval(state.tags.tagsets)
@@ -48,6 +50,7 @@ export class TagSetsComp extends Component {
                               marginBottom: curstyle().gap.common
                           }}>
                         <TagSetComp
+                            pretagids={this.props.pretagids}
                             key={i}
                             tagsetname={v.tagsetname}
                             tags={v.tags}

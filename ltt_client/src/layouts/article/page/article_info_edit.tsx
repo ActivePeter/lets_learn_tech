@@ -34,6 +34,17 @@ export class ArticleInfoEdit extends PureComponent<Props> {
           
         `
 
+        const article=PaStateMan.getstate().proxy_article.get_cur_article()
+        let pretitle=""
+        let pretags=[]
+        if(articlep.get_cur_mode()=="edit"){
+            if(!article){
+                return undefined
+            }else{
+                pretitle=article.title
+                pretags=article.tag_ids
+            }
+        }
         return (
             <Box
                 className={reuse.col_flexcontainer}
@@ -52,7 +63,7 @@ export class ArticleInfoEdit extends PureComponent<Props> {
                         )
                     }}
                 >
-                    提交并创建文章
+                    {articlep.get_cur_mode()=="edit"?"提交修改":"提交并创建文章"}
                 </Button>
                 <SetWrapper>
                     <Typography
@@ -68,6 +79,7 @@ export class ArticleInfoEdit extends PureComponent<Props> {
                     <Input1 placeholder={"输入标题"} sx={{
                         fontSize:curstyle().fontsize.l
                     }}
+                            precontent={pretitle}
                     onChange={(e)=>{
                         PaStateMan.getstate().proxy_article
                             .edit_article_change_title(e.target.value);
@@ -86,7 +98,9 @@ export class ArticleInfoEdit extends PureComponent<Props> {
                     >
                         选择标签
                     </Typography>
-                    <TagSetsComp ref="tag_select"/>
+                    <TagSetsComp
+                        pretagids={pretags}
+                        ref="tag_select"/>
                 </SetWrapper>
             </Box>
         );

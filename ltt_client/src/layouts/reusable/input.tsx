@@ -36,6 +36,7 @@ export function Input1(props:{
     placeholder: string,
     onChange?:({target:{value:string}})=>void,
     sx?: { fontSize:string },
+    precontent?:string
 }) {
     return (<Input
         bg={curstyle().colors.gray_common}
@@ -45,6 +46,7 @@ export function Input1(props:{
         placeholder={props.placeholder}
         onChange={props.onChange}
         sx={props.sx}
+        precontent={props.precontent}
         // vmodel={vmodel}
     />)
 }
@@ -59,6 +61,7 @@ interface InnerProp {
     // vmodel?:StringHolder
     onChange?:any,
     sx?:any
+    precontent?:string
 }
 
 export class InputInner extends Component<Props & InnerProp> {
@@ -94,6 +97,7 @@ export class InputInner extends Component<Props & InnerProp> {
         console.log("input",Input)
         return <Input
             placeholder={this.props.placeholder}
+            defaultValue={this.props.precontent}
             onFocus={
                 () => {
                     this.props.focus(true)
@@ -120,6 +124,7 @@ interface Props {
     vmodel?:StringHolder,
     onChange?:any,
     sx?:any
+    precontent?:string
 }
 export class Input extends PureComponent<Props, State> {
     constructor(props: Props) {
@@ -165,6 +170,7 @@ export class Input extends PureComponent<Props, State> {
                     placeholder={this.props.placeholder}
                     onChange={this.props.onChange}
                     sx={this.props.sx}
+                    precontent={this.props.precontent}
                 />
             </Box>
         )

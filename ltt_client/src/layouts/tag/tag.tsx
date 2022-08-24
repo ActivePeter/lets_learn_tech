@@ -8,10 +8,11 @@ type Props = {
     tagcolor: string;
     selectable?: boolean;
     onselect_change?: (select: boolean) => void
+    preselect?:boolean
 }
 export class TagComp extends PureComponent<Props> {
     state={
-        selected:false
+        selected:!!this.props.preselect
     }
     switchselect(){
         if(this.props.selectable){

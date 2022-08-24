@@ -60,6 +60,9 @@ export namespace RouteControl{
     export function push_article_view(articleid:number){
         history.push("/article/"+articleid+"?mode=view")
     }
+    export function replace_article_edit(articleid:number){
+        history.replace("/article/"+articleid+"?mode=edit")
+    }
     export function replace_article_view(articleid:number){
         history.replace("/article/"+articleid+"?mode=view")
     }
