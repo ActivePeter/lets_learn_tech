@@ -16,14 +16,17 @@ pub async fn article_update(
 
     match token::checktoken(payload.uid,payload.token).await{
         CheckTokenRes::Valid => {
-            let res=services::article::G_ARTICLE_MAN.update_article(
-                payload.aid,payload.tags,payload.content,payload.rawtext,payload.title
-            ).await;
-            if let Some(res)=res{
-                return (StatusCode::OK, "").into_response();
-            }else{
-                return (StatusCode::BAD_REQUEST, "token_invalid").into_response();
+            if services::article::G_ARTICLE_MAN.is_article_exist(payload.aid).await{
+                let res=services::article::G_ARTICLE_MAN.update_article(
+                    payload.aid,payload.tags,payload.content,payload.rawtext,payload.title
+                ).await;
+                if res{
+                    return (StatusCode::OK, "").into_response();
+                }else{
+                    return (StatusCode::BAD_REQUEST, "fail").into_response();
+                }
             }
+            return (StatusCode::BAD_REQUEST, "notexist").into_response();
         }
         v=>{
             return v.invalid().into_response();

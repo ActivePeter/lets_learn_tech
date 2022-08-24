@@ -5,6 +5,7 @@ use crate::models::tag::{TagInfo, TagId};
 use deadpool_postgres::tokio_postgres::{Error, Row};
 use crate::models::article::{Article, ArticleId, ArticlePreview};
 use crate::models::user::UserId;
+use std::alloc::Global;
 // use deadpool_postgres::tokio_postgres;
 // 表划分
 // article_info
@@ -49,6 +50,29 @@ impl DbHandler {
             }
             Err(_) => {
                 None
+            }
+        }
+    }
+    pub async fn db_update_article(
+        &self,
+        aid:ArticleId,
+        tags:&Vec<TagId>,
+        content: String,
+        rawtext: String,
+        title: String,
+    )->bool{
+        let res=self.get().await.query(&*format!("select update_article({},'{}','{}','{}',ARRAY{})"
+            ,aid,title,content,rawtext,serde_json::to_string(tags).unwrap()
+        ), &[]).await;
+        match res{
+            Ok(res) => {
+                if res.len()>0 &&res[0].get(0)==1 {
+                    return true;
+                }
+                return false;
+            }
+            Err(_) => {
+                false
             }
         }
     }
