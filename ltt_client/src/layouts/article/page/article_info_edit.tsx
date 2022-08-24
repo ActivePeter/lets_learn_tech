@@ -23,9 +23,15 @@ type Props = {
 };
 export class ArticleInfoEdit extends PureComponent<Props> {
     // title=""
-    componentDidMount() {
+    componentWillMount(){
         PaStateMan.getstate().proxy_article.edit_article_state_reset();
+        PaStateMan.regist_comp(this,(registval, state) => {
+            registval(state.article)
+        })
     }
+componentWillUnmount() {
+    PaStateMan.unregist_comp(this)
+}
 
     render() {
         const logp=PaStateMan.getstate().proxy_log;
