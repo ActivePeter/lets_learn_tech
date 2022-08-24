@@ -6,10 +6,12 @@ import {Notify} from "@/util/notify";
 import {api_article_new} from "@/store/net/api_article_new";
 import {PaStateMan} from "@/util/pa_state_man";
 import {api_article_getdetail} from "@/store/net/api_article_getdetail";
+import {api_article_update} from "@/store/net/api_article_update";
+import BraftEditor from "braft-editor";
 
 export class ArticleProxy{
     article_preview_map=new ArticlePreviewMap()
-
+    editor_state=BraftEditor.createEditorState("")
     private edit_article_state={
         rawtext:"",
         content:"",
@@ -30,7 +32,42 @@ export class ArticleProxy{
         this.edit_article_state.title=title;
     }
     edit_article_try_update(tagselected:any,aid:number){
-
+        if(PaStateMan.getstate().proxy_log.get_logged_uid()==-1){
+            Notify.warn("请先登录或注册","")
+            return;
+        }
+        if(this.state.article.id!=aid){
+            //状态不一致
+            return;
+        }
+        if(this.edit_article_state.title==""){
+            this.edit_article_state.title=this.state.article.title
+        }
+        if(this.editor_state.isEmpty()){
+            return;
+        }
+        if(this.edit_article_state.content==""){
+            this.edit_article_state.content=this.editor_state.toHTML()
+            this.edit_article_state.rawtext=this.editor_state.toText()
+        }
+        if(this.edit_article_state.rawtext==""){
+            Notify.warn("内容不能为空","")
+            return;
+        }
+        const tags=[]
+        for (const k in tagselected){
+            tags.push(tagselected[k])
+        }
+        const state=this.edit_article_state
+        api_article_update(aid,
+            tags,state.content, state.rawtext, state.title).then(
+        (res)=>{
+            if(res){
+                Notify.common("success","修改文章成功","")
+                RouteControl.replace_article_view(aid)
+                this.sync_info_in_path()
+            }
+        })
     }
     edit_article_try_upload(tagselected:any){
         if(PaStateMan.getstate().proxy_log.get_logged_uid()==-1){

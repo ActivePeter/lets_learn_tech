@@ -21,9 +21,7 @@ type Props = {
     root:ArticleViewRoot
 };
 export class ArticleBody extends PureComponent<Props> {
-    state = {
-        editorState: null
-    }
+
     async componentDidMount() {
         PaStateMan.regist_comp(this,(registval,state)=>{
             registval(state.article_mode)
@@ -32,9 +30,8 @@ export class ArticleBody extends PureComponent<Props> {
         // Assume here to get the editor content in html format from the server
         // const htmlContent = await fetchEditorContent()
         // Use BraftEditor.createEditorState to convert html strings to editorState data needed by the editor
-        this.setState({
-            editorState: BraftEditor.createEditorState("")
-        })
+
+
     }
     componentWillUnmount() {
         PaStateMan.unregist_comp(this)
@@ -44,24 +41,26 @@ export class ArticleBody extends PureComponent<Props> {
     render() {
         const logp=PaStateMan.getstate().proxy_log;
         const articlep=PaStateMan.getstate().proxy_article;
-        const { editorState } = this.state
+        // const { editorState } = this.state
         const article=articlep.get_cur_article()
 
         if(articlep.get_cur_mode()=="view"&&article==undefined){
             return undefined
         }
-        let state=undefined
+        let state=BraftEditor.createEditorState("")
         if(article){
 
             state=BraftEditor.createEditorState(article.content)
         }
+        PaStateMan.getstate().proxy_article.editor_state = state
         return (
             <Box
             >
                 <BraftEditor
+                    ref={"be"}
                     controls={articlep.get_cur_mode()=="view"?[]:undefined}
                     readOnly={articlep.get_cur_mode()=="view"}
-                    value={state? state:""}
+                    value={state}
                     onChange={(v)=>{
                         this.props.root.edit.article_content_change(
                             v.toHTML(),v.toText()

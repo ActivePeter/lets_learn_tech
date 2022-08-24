@@ -158,14 +158,18 @@ impl TagManager {
                 tags.get_mut(t).unwrap().articles.insert(aid);
             }
         }
-
-        for t in v{
+        let mut remove_=Vec::new();
+        for t in v.iter(){
             //旧的在新的里没有了，就要删除
             if newtags.binary_search(t).is_err(){
-                v.remove(t);
-                tags.get_mut(t).unwrap().articles.remove(&aid);
+                remove_.push(*t);
             }
         }
+        for t in remove_{
+            v.remove(&t);
+            tags.get_mut(&t).unwrap().articles.remove(&aid);
+        }
+
     }
     //memonly 非单独操作，
     // 一般是创建或修改文章后，sql改变文章tag关系,

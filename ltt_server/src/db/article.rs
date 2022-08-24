@@ -5,7 +5,6 @@ use crate::models::tag::{TagInfo, TagId};
 use deadpool_postgres::tokio_postgres::{Error, Row};
 use crate::models::article::{Article, ArticleId, ArticlePreview};
 use crate::models::user::UserId;
-use std::alloc::Global;
 // use deadpool_postgres::tokio_postgres;
 // 表划分
 // article_info
@@ -66,7 +65,7 @@ impl DbHandler {
         ), &[]).await;
         match res{
             Ok(res) => {
-                if res.len()>0 &&res[0].get(0)==1 {
+                if res.len()>0 &&res[0].get::<usize,i64>(0)==1 {
                     return true;
                 }
                 return false;

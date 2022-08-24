@@ -55,8 +55,8 @@ impl ArticleManager {
         ).await;
         if let Some(res)=res{
 
-            services::tag::G_TAG_MAN.memonly_add_articles_2_tags(
-                &*tags,&[res]
+            services::tag::G_TAG_MAN.memonly_article_tags_rebind(
+                res,&tags
             ).await;
         }
         res
