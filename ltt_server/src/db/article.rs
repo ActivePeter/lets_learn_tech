@@ -3,7 +3,7 @@
 use crate::db::sql::DbHandler;
 use crate::models::tag::{TagInfo, TagId};
 use deadpool_postgres::tokio_postgres::{Error, Row};
-use crate::models::article::{Article, ArticleId};
+use crate::models::article::{Article, ArticleId, ArticlePreview};
 use crate::models::user::UserId;
 
 // use deadpool_postgres::tokio_postgres;
@@ -46,10 +46,10 @@ impl DbHandler {
     pub async fn db_remove_article(&self) {}
     pub async fn db_edit_article(&self) {}
 
-    pub async fn db_article_search_bytags(&self, tags: &Vec<TagId>) -> Option<Vec<Article>> {
+    pub async fn db_articlepreview_search_bytags(&self, tags: &Vec<TagId>) -> Option<Vec<ArticlePreview>> {
         // 由user_manger调用
         let cmd = if tags.len() == 0 {
-            "SELECT articleid,author_uid,rawtext,tags,title, \
+            "SELECT articleid,author_uid,substring(rawtext,0,100),tags,title, \
                     to_char(createtime,'yyyy-mm-dd hh24:mi:ss'),\
                     to_char(edittime,'yyyy-mm-dd hh24:mi:ss') \
                 FROM public.article_info"
@@ -86,10 +86,10 @@ impl DbHandler {
             Ok(rows) => {
                 let mut vec = Vec::new();
                 for v in rows {
-                    let mut ar: Article = Default::default();
+                    let mut ar: ArticlePreview = Default::default();
                     ar.id = v.get::<usize, i64>(0) as ArticleId;
                     ar.author_id = v.get::<usize, i64>(1) as UserId;
-                    ar = v.get(2);
+                    ar.preview = v.get(2);
                     ar.title = v.get(4);
                     ar.create_time = v.get(5);
                     ar.edit_time = v.get(6);

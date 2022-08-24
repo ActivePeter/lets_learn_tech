@@ -16,7 +16,7 @@ use std::net::SocketAddr;
 use std::future::Future;
 use crate::models::tag::TagId;
 use crate::db::sql::get_dbhandler;
-use crate::models::article::Article;
+use crate::models::article::{Article, ArticlePreview};
 // use std::alloc::Global;
 
 
@@ -25,7 +25,7 @@ pub async fn articles_getwithtag(
     req: Json<RequestContent>,
 ) -> impl IntoResponse {
     let res=get_dbhandler().await
-        .db_article_search_bytags(&req.tags).await;
+        .db_articlepreview_search_bytags(&req.tags).await;
     match res{
         None => {
             return (StatusCode::BAD_REQUEST, "dbfail").into_response();
@@ -47,5 +47,5 @@ pub struct RequestContent {
 
 #[derive(Deserialize, Serialize)]
 pub struct ResponseContent{
-    articles:Vec<Article>
+    articles:Vec<ArticlePreview>
 }

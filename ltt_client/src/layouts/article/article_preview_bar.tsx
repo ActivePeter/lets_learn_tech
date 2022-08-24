@@ -29,7 +29,7 @@ export class ArticlePreviewBar extends PureComponent<Props> {
         const logp=PaStateMan.getstate().proxy_log;
         const articlep=PaStateMan.getstate().proxy_article;
         const tagp=PaStateMan.getstate().proxy_tag;
-        const articledetail=articlep.article_map.getbyid(
+        const articledetail=articlep.article_preview_map.getbyid(
             this.props.articleid)
         if(this.state.authorbasic==undefined&&articledetail
         ){
@@ -73,7 +73,7 @@ export class ArticlePreviewBar extends PureComponent<Props> {
                                 color:curstyle().colors.font_main2,
                                 fontSize:curstyle().fontsize.s
                             }}>
-                                {articledetail.content}
+                                {articledetail.preview}
                             </Box>
                             <Box
                                 className={reuse.row_flex2side_container}

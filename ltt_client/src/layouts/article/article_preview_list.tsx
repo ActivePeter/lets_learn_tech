@@ -12,7 +12,6 @@ import {TextBtn} from "@/layouts/reusable/textbtn";
 import {LogBarRegi} from "@/layouts/login/logbar_regi";
 import {PaState} from "@/store/pastate";
 import {PaStateMan} from "@/util/pa_state_man";
-import {PageOfArticle} from "@/store/models/article";
 import {ArticlePreviewBar} from "@/layouts/article/article_preview_bar";
 import {ArticlePreviewSideBar} from "@/layouts/article/article_preview_sidebar";
 
@@ -139,7 +138,6 @@ export class ArticlePreviewList extends PureComponent<Props,typeof state_instanc
 
     render() {
 
-        const page=PageOfArticle.testpre();
         const logp = PaStateMan.getstate().proxy_log;
         const colcnt=this.waterfall.cols.length;
         const colwidth='calc('+100.0/colcnt+'% - '+(12.0*(colcnt-1)/colcnt)+'px)';

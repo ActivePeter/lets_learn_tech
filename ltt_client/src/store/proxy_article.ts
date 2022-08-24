@@ -1,12 +1,12 @@
 import {PaState} from "@/store/pastate";
 import {RouteControl} from "@/store/route_control";
 import {api_articles_getwithtag} from "@/store/net/api_articles_getwithtag";
-import {Article, ArticleMap} from "@/store/models/article";
+import {Article, ArticlePreview, ArticlePreviewMap} from "@/store/models/article";
 import {Notify} from "@/util/notify";
 import {api_article_new} from "@/store/net/api_article_new";
 
 export class ArticleProxy{
-    article_map=new ArticleMap()
+    article_preview_map=new ArticlePreviewMap()
 
     private edit_article_state={
         rawtext:"",
@@ -32,7 +32,7 @@ export class ArticleProxy{
             Notify.warn("未填写文章标题","")
             return;
         }
-        if(this.edit_article_state.preview.length==0){
+        if(this.edit_article_state.rawtext.length==0){
             Notify.warn("未填写文章内容","")
             return;
         }
@@ -62,7 +62,7 @@ export class ArticleProxy{
                 if(res!=undefined){
                     const preview_arts: number[]=[]
                     res.articles.forEach((v)=>{
-                        this.article_map.insert(v)
+                        this.article_preview_map.insert(v)
                         preview_arts.push(v.id)
                     })
                     this.state.preview_articles=preview_arts

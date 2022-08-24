@@ -21,6 +21,7 @@ pub struct Article{
 }
 
 //列表内 文章预览内容
+#[derive(Default,Deserialize, Serialize)]
 pub struct ArticlePreview{
     pub id:ArticleId, // 文呼唤你u章id,用于在其他表里检索信息
     pub title:String,  // 文章标题

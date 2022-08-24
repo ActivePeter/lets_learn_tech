@@ -23,45 +23,48 @@ export class ArticlePreview{
     constructor(
         public id:number,
         public title:string,
-        public contentcut:string,
-        public authorinfo:UserBasicInfo
+        public preview:string,
+        public author_id:number,
+        public create_time:string,
+        public edit_time:string,
+        public tag_ids:number[]
     ) {
     }
 }
-export class PageOfArticle{
-    constructor(
-        public pageindex:number,
-        public articles:ArticlePreview[]
-    ) {
-    }
-    static testpre(){
-        let arr=[]
-        for(let i=0;i<10;i++){
-            arr.push(
-                new ArticlePreview(
-                    0,
-                    "title",
-                    "content",
-                    new UserBasicInfo(
-                        "hhh",
-                        "",""
-                    )
-                )
-            )
-        }
-        return new PageOfArticle(
-            0,
-            arr
-        )
-    }
-}
+// export class PageOfArticle{
+//     constructor(
+//         public pageindex:number,
+//         public articles:ArticlePreview[]
+//     ) {
+//     }
+//     static testpre(){
+//         let arr=[]
+//         for(let i=0;i<10;i++){
+//             arr.push(
+//                 new ArticlePreview(
+//                     0,
+//                     "title",
+//                     "content",
+//                     new UserBasicInfo(
+//                         "hhh",
+//                         "",""
+//                     )
+//                 )
+//             )
+//         }
+//         return new PageOfArticle(
+//             0,
+//             arr
+//         )
+//     }
+// }
 
-export class ArticleMap{
+export class ArticlePreviewMap{
     private _map:any={}
-    insert(article:Article){
+    insert(article:ArticlePreview){
         this._map["$"+article.id]=article
     }
-    getbyid(id:number):Article{
+    getbyid(id:number):ArticlePreview{
         return this._map["$"+id]
     }
     constructor() {

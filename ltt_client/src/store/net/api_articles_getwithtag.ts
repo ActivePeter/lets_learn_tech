@@ -2,10 +2,10 @@ import axios from "axios";
 import {BaseUrl} from "@/store/net/baseurl";
 import {Notify} from "@/util/notify";
 import {UserBasicInfo} from "@/store/models/user";
-import {Article} from "@/store/models/article";
+import {Article, ArticlePreview} from "@/store/models/article";
 
 export function api_articles_getwithtag(tags:number[]):
-    Promise<undefined>|Promise<{ articles:Article[] }>{
+    Promise<undefined>|Promise<{ articles:ArticlePreview[] }>{
     // console.log({
     //     uid
     // })
