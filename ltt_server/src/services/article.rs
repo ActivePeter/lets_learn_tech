@@ -13,6 +13,17 @@ impl ArticleManager {
     pub fn new() -> ArticleManager {
         return ArticleManager {};
     }
+
+    pub async fn update_article(
+        &self,
+        aid:ArticleId,
+        tags:Vec<TagId>,
+        content:String,
+        rawtext:String,
+        title:String,
+    )->bool{
+
+    }
     pub async fn new_article(
         &self,
         uid:UserId,

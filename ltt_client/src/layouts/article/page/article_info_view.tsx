@@ -28,8 +28,8 @@ export class ArticleInfoView extends PureComponent<Props> {
             registval(state.article)
         })
         const articlep=PaStateMan.getstate().proxy_article
-        articlep.clear_cur_article();
         articlep.sync_info_in_path();
+        articlep.clear_cur_article_if_id_not_match();
         articlep.fetch_article_if_id_ok()
     }
     componentWillUnmount() {

@@ -16,6 +16,7 @@ import {LogBarLog} from "@/layouts/login/logbar_log";
 import styled from "@emotion/styled";
 import {TagSetsComp} from "@/layouts/tag/tagsets_in_controlpanel";
 import {TagSet} from "@/store/models/tag";
+import {RouteControl} from "@/store/route_control";
 
 
 type Props = {
@@ -52,19 +53,51 @@ export class ArticleInfoEdit extends PureComponent<Props> {
                 padding:curstyle().gap.xxl,
                 gap:curstyle().gap.xxl
             }}>
-                <Button
-                    sx={{
-                        width:"100%"
-                    }}
-                    onClick={()=>{
-                        const ts_:TagSetsComp=this.refs.tag_select
-                        articlep.edit_article_try_upload(
-                            ts_.seltag_hashmap
-                        )
-                    }}
+                <Box className={reuse.row_flexcontainer}
+                    sx={{gap:curstyle().gap.common}}
                 >
-                    {articlep.get_cur_mode()=="edit"?"提交修改":"提交并创建文章"}
-                </Button>
+                    {articlep.get_cur_mode()=="edit"?
+                        <Button
+                            sx={{
+
+                                flex: "1"
+                                // width:"100%"
+                            }}
+                            onClick={()=>{
+                                const at=articlep.get_cur_article()
+                                if(at){
+                                    RouteControl.replace_article_view(at.id)
+                                    articlep.sync_info_in_path()
+                                }
+                            }}
+                        >
+                            {'<'} 取消编辑
+                        </Button>:undefined
+                    }
+
+                    <Button
+                        sx={{
+                            flex: "1"
+                            // width:"100%"
+                        }}
+                        onClick={()=>{
+                            const ts_:TagSetsComp=this.refs.tag_select
+                            if(articlep.get_cur_mode()=="edit"){
+                                if(article){
+                                    articlep.edit_article_try_update(
+                                        ts_.seltag_hashmap,article.id
+                                    )
+                                }
+                            }else{
+                                articlep.edit_article_try_upload(
+                                    ts_.seltag_hashmap
+                                )
+                            }
+                        }}
+                    >
+                        {articlep.get_cur_mode()=="edit"?"提交修改":"提交并创建文章"}
+                    </Button>
+                </Box>
                 <SetWrapper>
                     <Typography
                         level="h6"

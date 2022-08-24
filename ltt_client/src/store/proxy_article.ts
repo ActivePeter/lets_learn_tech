@@ -29,6 +29,9 @@ export class ArticleProxy{
     edit_article_change_title(title:string){
         this.edit_article_state.title=title;
     }
+    edit_article_try_update(tagselected:any,aid:number){
+
+    }
     edit_article_try_upload(tagselected:any){
         if(PaStateMan.getstate().proxy_log.get_logged_uid()==-1){
             Notify.warn("请先登录或注册","")
@@ -83,8 +86,10 @@ export class ArticleProxy{
             this.state.article=Article.emptu()
         }
     }
-    clear_cur_article(){
-        this.state.article=Article.emptu()
+    clear_cur_article_if_id_not_match(){
+        if(this.state.article.id!=this.state.article_id){
+            this.state.article=Article.emptu()
+        }
     }
     get_cur_article(){
         if(this.state.article.id!=-1){

@@ -1,28 +1,36 @@
 CREATE OR REPLACE FUNCTION
-    update_article(title_ text, content_ text, aid_ bigint, tagids bigint[])
+    update_article(aid_ bigint,title_ text,content_ text,rawtext_ text,tagids bigint[])
     RETURNS bigint
     LANGUAGE plpgsql
 AS
 $$
 declare
-    count bigint;
     id_
-          bigint;
+        bigint;
 begin
-    with jjj as (insert into article_info (author_uid, content,
-                                           createtime, edittime, title, tags)
-        values (uid_, content_, now(), now(), title_,
-                '[' || array_to_string(tagids, ',') || ']')
-        RETURNING articleid)
-    select *
-    from jjj
-    into count;
-    FOREACH id_ in ARRAY tagids
-        LOOP
+    if aid_ not in (select articleid from article_info) then
+--         文章不存在
+        return 0;
+    end if;
+    update article_info set content=content_,
+                            title=title_,
+                            rawtext=rawtext_,
+                            tags='['||array_to_string(tagids, ',')||']',
+                            edittime=now()
+    where articleid=aid_;
+--     删除没有了的
+    delete from article_tag_relation
+    where articleid=aid_ and not (tagid=any(tagids));
+--
+    FOREACH
+        id_ in  ARRAY tagids LOOP
+            --          新的插入
             insert into article_tag_relation(articleid, tagid)
-            values (count, id_);
+            select aid_,id_
+                   --     select tagid from article_tag_relation
+            where (aid_,id_) not in (select articleid,tagid from article_tag_relation);
         END LOOP;
-    return count;
-end;
+    return 1;
+end
 
 $$

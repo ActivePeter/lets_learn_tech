@@ -8,3 +8,4 @@ pub mod article_new;
 pub mod articles_getwithtag;
 pub mod tags_fetch;
 pub mod article_getdetail;
+pub mod article_update;

@@ -31,6 +31,11 @@ export class TagSetsComp extends Component <Prop>{
     }
 
     render() {
+        if(this.props.pretagids){
+            this.props.pretagids.forEach((v)=>{
+                this.on_select_change(v,true)
+            })
+        }
         // let arr: TagSet[] = []
         // let tags = []
         // for (let i = 0; i < 9; i++) {
