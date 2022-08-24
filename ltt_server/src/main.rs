@@ -46,6 +46,7 @@ async fn main() {
         .route("/articles_getwithtag",post(apis::articles_getwithtag::articles_getwithtag))
         .route("/tags_fetch",post(apis::tags_fetch::tags_fetch))
         .route("/article_new",post(apis::article_new::article_new))
+        .route("/article_getdetail",post(apis::article_getdetail::article_getdetail))
         ;
 
     let addr = SocketAddr::from(([127, 0, 0, 1], 3000));

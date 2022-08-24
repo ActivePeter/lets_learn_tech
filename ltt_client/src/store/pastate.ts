@@ -50,6 +50,7 @@ export class PaState{
     //article
     article=Article.emptu()
     article_mode=""
+    article_id=-1
     preview_articles:number[]=[]
     // article_map:{}={}
 

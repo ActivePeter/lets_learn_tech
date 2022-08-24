@@ -1,7 +1,7 @@
 use crate::db::sql::get_dbhandler;
 use crate::models::tag::TagId;
 use crate::models::user::UserId;
-use crate::models::article::ArticleId;
+use crate::models::article::{ArticleId, Article};
 use crate::services;
 pub struct ArticleManager {}
 
@@ -36,6 +36,11 @@ impl ArticleManager {
             ).await;
         }
         res
+    }
+
+    pub async fn get_article_by_id(&self, id:ArticleId) -> Option<Article> {
+        get_dbhandler().await
+            .db_get_article_by_id(id).await
     }
 }
 

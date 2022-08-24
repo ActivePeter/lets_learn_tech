@@ -55,7 +55,14 @@ export class ArticleProxy{
             }
         })
     }
+    set_article_id_and_fetch(id:number){
+        if(this.state.article_id!=id){
+            this.state.article_id=id
+            if(id!=-1){
 
+            }
+        }
+    }
     sync_info_in_path(){
         const curmode=RouteControl.get_article_mode()
         this.state.article_mode=curmode

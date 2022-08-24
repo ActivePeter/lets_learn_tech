@@ -5,7 +5,6 @@ use crate::models::tag::{TagInfo, TagId};
 use deadpool_postgres::tokio_postgres::{Error, Row};
 use crate::models::article::{Article, ArticleId, ArticlePreview};
 use crate::models::user::UserId;
-
 // use deadpool_postgres::tokio_postgres;
 // 表划分
 // article_info
@@ -19,7 +18,40 @@ use crate::models::user::UserId;
 impl DbHandler {
 
     async fn create_article_table(&self) {}
-
+    pub async fn db_get_article_by_id(&self,id:ArticleId)->Option<Article>{
+        let mut cmd=format!("SELECT articleid,
+       author_uid,
+       content,
+       tags,
+       title,
+       to_char(createtime, 'yyyy-mm-dd hh24:mi:ss'),
+       to_char(edittime, 'yyyy-mm-dd hh24:mi:ss')
+        FROM public.article_info
+        WHERE articleid = {}",id);
+        let res=self.get().await
+            .query(&*cmd,&[]).await;
+        match res{
+            Ok(vec) => {
+                if vec.len()>0{
+                    let row=&vec[0];
+                    let tagstr:String=row.get(2);
+                    return Some(Article{
+                        id,
+                        title: row.get(3),
+                        content: row.get(1),
+                        author_id: row.get::<usize, i64>(0) as UserId,
+                        create_time: row.get(4),
+                        edit_time:row.get(5),
+                        tag_ids: serde_json::from_str(&*tagstr).unwrap()
+                    })
+                }
+                None
+            }
+            Err(_) => {
+                None
+            }
+        }
+    }
     pub async fn db_create_article(
         &self,
         uid:UserId,
