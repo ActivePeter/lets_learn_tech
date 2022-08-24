@@ -46,6 +46,12 @@ export namespace RouteControl{
         }
         return "view"
     }
+    export function push_article_view(articleid:number){
+        history.push("/article/"+articleid+"?mode=view")
+    }
+    export function replace_article_view(articleid:number){
+        history.replace("/article/"+articleid+"?mode=view")
+    }
     export function push_create_article(){
         history.push("/article/_?mode=create")
     }

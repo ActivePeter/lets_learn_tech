@@ -55,19 +55,8 @@ pub enum CheckTokenRes{
     NotMatchUid
 }
 impl CheckTokenRes{
-    pub fn into_common_response(self)->impl IntoResponse{
-        match self{
-            CheckTokenRes::FailParse => {
-                return (StatusCode::BAD_REQUEST, "token_invalid").into_response()
-            }
-            CheckTokenRes::Expire => {
-                return (StatusCode::BAD_REQUEST, "token_invalid").into_response()
-            }
-            CheckTokenRes::NotMatchUid => {
-                return (StatusCode::BAD_REQUEST, "token_invalid").into_response()
-            }
-            _=>{unreachable!()}
-        }
+    pub fn invalid(self) -> (StatusCode, &'static str) {
+        (StatusCode::BAD_REQUEST, "token_invalid")
     }
 }
 

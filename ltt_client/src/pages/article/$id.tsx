@@ -29,7 +29,7 @@ export class ArticleEditRoot{
 
 export default class HomePage extends PureComponent{
     componentDidMount() {
-        PaStateMan.getstate().proxy_article.sync_info_in_title()
+        PaStateMan.getstate().proxy_article.sync_info_in_path()
     }
     componentWillUnmount() {
 

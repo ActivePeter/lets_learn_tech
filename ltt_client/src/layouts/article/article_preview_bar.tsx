@@ -16,6 +16,7 @@ import {LogBarLog} from "@/layouts/login/logbar_log";
 import {UserBasicInfo} from "@/store/models/user";
 import {TagSetComp} from "@/layouts/tag/tag_set";
 import {TagComp} from "@/layouts/tag/tag";
+import {RouteControl} from "@/store/route_control";
 
 type Props = {
     articleid:number
@@ -66,7 +67,12 @@ export class ArticlePreviewBar extends PureComponent<Props> {
                         }}>
                             <Typography
                                 className={reuse.cursorhand}
-                                level="h5">
+                                level="h5"
+                                onClick={()=>{
+                                    RouteControl
+                                        .push_article_view(articledetail.id)
+                                }}
+                            >
                                 {articledetail.title}
                             </Typography>
                             <Box sx={{

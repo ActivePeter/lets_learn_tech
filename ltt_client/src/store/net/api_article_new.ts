@@ -6,13 +6,17 @@ import {Article} from "@/store/models/article";
 import {PaState} from "@/store/pastate";
 import {PaStateMan} from "@/util/pa_state_man";
 
+interface ArticleNewResponse{
+    articleid:number
+}
+
 export function api_article_new(
     tags: number[],
     content: string,
     rawtext: string,
     title: string,
 ):
-    Promise<undefined>|Promise<{ articles:Article[] }>{
+    Promise<undefined>|Promise<ArticleNewResponse>{
     // console.log({
     //     uid
     // })
@@ -37,16 +41,17 @@ export function api_article_new(
         // const failtitle="文章获取失败"
         // console.log(e?.response)
         // // let var=
-        // let matches=[
-        //     ["notfound",""],
-        // ]
-        // for(const key in matches){
-        //     const v=matches[key]
-        //     if(e?.response?.data==v[0]){
-        //         // Notify.warn(failtitle,v[1])
-        //         return undefined
-        //     }
-        // }
+        let matches=[
+            ["token_invalid",""],
+        ]
+        for(const key in matches){
+            const v=matches[key]
+            if(e?.response?.data==v[0]){
+                Notify.warn("用户登录信息已过期","")
+                PaStateMan.getstate().proxy_log.log_out()
+                return undefined
+            }
+        }
         return undefined
     })
 }

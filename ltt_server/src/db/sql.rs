@@ -59,8 +59,8 @@ pub async fn sqlstart(config: &ServerConfig) -> Result<(), Error> {
                             println!("regist func {}",fname);
                             let mut file = File::open(&p).unwrap();
                             let mut s =String::new();
-                            file.read_to_string(&mut s);
-                            tx.blocking_send(s);
+                            file.read_to_string(&mut s).unwrap();
+                            tx.blocking_send(s).unwrap();
                         }
                     }
                 }
