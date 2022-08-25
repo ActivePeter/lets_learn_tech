@@ -149,8 +149,12 @@ impl TagManager {
         let mut a2t =self.aid_2_tags.write().await;
         let mut tags =self.tags.write().await;
         //旧的文章的tags
-        let v=a2t.get_mut(&aid).unwrap();
-
+        let mut v =a2t.get_mut(&aid);
+        if v.is_none(){
+            a2t.insert(aid,Default::default());
+            v =a2t.get_mut(&aid);
+        }
+        let v=v.unwrap();
         //旧的没有的关系，要新加入的
         for t in newtags{
             if v.get(t).is_none(){
