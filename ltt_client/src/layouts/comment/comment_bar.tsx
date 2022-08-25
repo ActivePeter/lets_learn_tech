@@ -18,100 +18,99 @@ import {TagSetComp} from "@/layouts/tag/tag_set";
 import {TagComp} from "@/layouts/tag/tag";
 import {RouteControl} from "@/store/route_control";
 import {TagSetCompNoWrap} from "@/layouts/tag/tag_set_nowrap";
+import {CommentListRoot} from "@/layouts/comment/comment_list";
+import BraftEditor from "braft-editor";
 
 type Props = {
-    articleid:number
+    articleid:number,
+    root:CommentListRoot,
+    addnew?:boolean,
 };
-export class ArticlePreviewBar extends PureComponent<Props> {
+export class CommentBar extends PureComponent<Props> {
 
     state={
-        authorbasic:undefined
+        authorbasic:undefined,
+        commenting:false
+    }
+    cancel_comment(){
+        this.setState({
+            commenting:false
+        })
+    }
+    start_comment(){
+        this.props.root.set_cur_editing(this);
+        this.setState({
+            commenting:true
+        })
     }
     render() {
-        const logp=PaStateMan.getstate().proxy_log;
-        const articlep=PaStateMan.getstate().proxy_article;
-        const tagp=PaStateMan.getstate().proxy_tag;
-        const articledetail=articlep.article_preview_map.getbyid(
-            this.props.articleid)
-        if(this.state.authorbasic==undefined&&articledetail
-        ){
-            PaStateMan.getstate().proxy_user
-                .lazy_get_user_basic(articledetail.author_id,
-                    (res)=>{
-                    if(res!=undefined){
-                        this.setState({
-                            authorbasic:res
-                        })
-                    }
-                })
+
+        if(!!this.props.addnew&&!this.state.commenting){
+            return (<Button
+            onClick={()=>{
+                this.start_comment()
+            }}
+            >评论</Button>);
         }
-        const authorbasic:undefined|UserBasicInfo=this.state.authorbasic
+
         return (
             <Box
                 sx={{
                     // fontSize:curstyle().fontsize.s,
                     background:curstyle().colors.gray_common,
                     borderRadius:curstyle().radius.common,
-                    width:"100%",
-                    height:"100%",
 
                     // marginTop:"-100px"
                 }}
             >
-                {articledetail!=undefined?
-                    (
-                        <Box
-                            className={reuse.col_flexcontainer}
+
+                {/*controls={articlep.get_cur_mode()=="view"?[]:undefined}*/}
+                {/*readOnly={articlep.get_cur_mode()=="view"}*/}
+                <BraftEditor
+                    contentStyle={{height: 'auto', minHeight: "100px"}}
+                    ref={"be"}
+                    controls={this.state.commenting?undefined:[]}
+                    readOnly={!this.state.commenting}
+                    // value={state}
+                    onChange={(v)=>{
+                        // this.props.root.edit.article_content_change(
+                        //     v.toHTML(),v.toText()
+                        // )
+                    }}
+                    onSave={()=>{}}
+                />
+                {this.state.commenting?
+                    <Box className={reuse.row_flexcontainer_reverse}
+                         sx={{gap:curstyle().gap.common,
+                            paddingRight:curstyle().gap.common,
+                             paddingBottom:curstyle().gap.common,
+                             marginTop:"-40px",
+                             zIndex:"1"
+                         }}
+                    >
+                        <Button
                             sx={{
-                            padding:curstyle().gap.common,
-                            gap:curstyle().gap.m,
-                        }}>
-                            <Typography
-                                className={reuse.cursorhand}
-                                level="h5"
-                                onClick={()=>{
-                                    RouteControl
-                                        .push_article_view(articledetail.id)
-                                }}
-                            >
-                                {articledetail.title}
-                            </Typography>
-                            <Box sx={{
-                                color:curstyle().colors.font_main2,
-                                fontSize:curstyle().fontsize.s
-                            }}>
-                                {articledetail.preview}
-                            </Box>
-                            <Box
-                                className={reuse.row_flex2side_container}
-                                sx={{color:curstyle().colors.gray_dd,
-                                fontSize:curstyle().fontsize.s
-                                }}
-                            >
-                                <Box>发布者 {authorbasic?
-                                    authorbasic.username
-                                    :articledetail.author_id} <br/>编辑于 {articledetail.edit_time}</Box>
-                            </Box>
-                            <TagSetCompNoWrap tags={articledetail.tag_ids.map((id)=>{
-                                const find=tagp.findtag(id)
-                                if(find){
-                                    return find
-                                }else{
-                                    return undefined
-                                }
-                            })}/>
-                                {/*<Box*/}
-                                {/*    className={reuse.row_flexcontainer}*/}
-                                {/*    sx={{*/}
-                                {/*        gap:curstyle().gap.common*/}
-                                {/*    }}*/}
-                                {/*>*/}
-                                
-                                {/*    {*/}
-                                {/*    }*/}
-                                {/*</Box>*/}
-                        </Box>
-                    )
+                                zIndex:"1"
+                            }}
+                            onClick={()=>{
+                            this.cancel_comment()
+                        }}>取消</Button>
+                        <Button sx={{
+                            zIndex:"1"
+                        }}>发表</Button>
+                    </Box>
+
+                    :undefined}
+
+                {!this.props.addnew?
+                    <Box
+                        className={reuse.row_flexcontainer_reverse}
+                        sx={{padding:curstyle().gap.common}}>
+                        <CommentBar
+                            addnew={true}
+                            articleid={this.props.articleid}
+                            root={this.props.root}/>
+                    </Box>
                     :undefined}
             </Box>
         );

@@ -18,101 +18,52 @@ import {TagSetComp} from "@/layouts/tag/tag_set";
 import {TagComp} from "@/layouts/tag/tag";
 import {RouteControl} from "@/store/route_control";
 import {TagSetCompNoWrap} from "@/layouts/tag/tag_set_nowrap";
+import {CommentBar} from "@/layouts/comment/comment_bar";
 
 type Props = {
-    articleid:number
+    articleid:number,
 };
-export class ArticlePreviewBar extends PureComponent<Props> {
-
-    state={
-        authorbasic:undefined
+export class CommentListRoot{
+    cur_comment:CommentBar|undefined=undefined
+    set_cur_editing(bar:CommentBar){
+        if(this.cur_comment){
+            this.cur_comment.cancel_comment()
+        }
+        this.cur_comment=bar
+    }
+    constructor(public listcomp:CommentList) {
+    }
+}
+export class CommentList extends PureComponent<Props> {
+    root
+    constructor(props:any) {
+        super(props);
+        this.root=new CommentListRoot(this);
     }
     render() {
-        const logp=PaStateMan.getstate().proxy_log;
-        const articlep=PaStateMan.getstate().proxy_article;
-        const tagp=PaStateMan.getstate().proxy_tag;
-        const articledetail=articlep.article_preview_map.getbyid(
-            this.props.articleid)
-        if(this.state.authorbasic==undefined&&articledetail
-        ){
-            PaStateMan.getstate().proxy_user
-                .lazy_get_user_basic(articledetail.author_id,
-                    (res)=>{
-                    if(res!=undefined){
-                        this.setState({
-                            authorbasic:res
-                        })
-                    }
-                })
-        }
-        const authorbasic:undefined|UserBasicInfo=this.state.authorbasic
+
         return (
             <Box
+                className={reuse.col_flexcontainer}
                 sx={{
                     // fontSize:curstyle().fontsize.s,
-                    background:curstyle().colors.gray_common,
                     borderRadius:curstyle().radius.common,
-                    width:"100%",
-                    height:"100%",
-
+                    gap:curstyle().gap.xl,
                     // marginTop:"-100px"
                 }}
             >
-                {articledetail!=undefined?
-                    (
-                        <Box
-                            className={reuse.col_flexcontainer}
-                            sx={{
-                            padding:curstyle().gap.common,
-                            gap:curstyle().gap.m,
-                        }}>
-                            <Typography
-                                className={reuse.cursorhand}
-                                level="h5"
-                                onClick={()=>{
-                                    RouteControl
-                                        .push_article_view(articledetail.id)
-                                }}
-                            >
-                                {articledetail.title}
-                            </Typography>
-                            <Box sx={{
-                                color:curstyle().colors.font_main2,
-                                fontSize:curstyle().fontsize.s
-                            }}>
-                                {articledetail.preview}
-                            </Box>
-                            <Box
-                                className={reuse.row_flex2side_container}
-                                sx={{color:curstyle().colors.gray_dd,
-                                fontSize:curstyle().fontsize.s
-                                }}
-                            >
-                                <Box>发布者 {authorbasic?
-                                    authorbasic.username
-                                    :articledetail.author_id} <br/>编辑于 {articledetail.edit_time}</Box>
-                            </Box>
-                            <TagSetCompNoWrap tags={articledetail.tag_ids.map((id)=>{
-                                const find=tagp.findtag(id)
-                                if(find){
-                                    return find
-                                }else{
-                                    return undefined
-                                }
-                            })}/>
-                                {/*<Box*/}
-                                {/*    className={reuse.row_flexcontainer}*/}
-                                {/*    sx={{*/}
-                                {/*        gap:curstyle().gap.common*/}
-                                {/*    }}*/}
-                                {/*>*/}
-                                
-                                {/*    {*/}
-                                {/*    }*/}
-                                {/*</Box>*/}
-                        </Box>
-                    )
-                    :undefined}
+                <CommentBar
+                    addnew={true}
+                    articleid={this.props.articleid}
+                            root={this.root}/>
+                <CommentBar articleid={this.props.articleid}
+                            root={this.root}/>
+                <CommentBar articleid={this.props.articleid}
+                            root={this.root}/>
+                <CommentBar articleid={this.props.articleid}
+                            root={this.root}/>
+                <CommentBar articleid={this.props.articleid}
+                            root={this.root}/>
             </Box>
         );
     }

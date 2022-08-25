@@ -1,6 +1,5 @@
 pub mod user_create;
 pub mod user_login;
-pub mod comment;
 pub mod verify_code_get;
 pub mod verify_token;
 pub mod user_basic_info;
@@ -9,3 +8,5 @@ pub mod articles_getwithtag;
 pub mod tags_fetch;
 pub mod article_getdetail;
 pub mod article_update;
+pub mod comment_to;
+pub mod comments_getofarticle;

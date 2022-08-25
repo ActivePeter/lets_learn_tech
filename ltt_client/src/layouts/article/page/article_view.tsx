@@ -16,6 +16,7 @@ import {LogBarLog} from "@/layouts/login/logbar_log";
 import {ArticleBody} from "@/layouts/article/page/article_body";
 import {CommentBody} from "@/layouts/article/page/comment_body";
 import {ArticleViewRoot} from "@/pages/article/$id";
+import {CommentList} from "@/layouts/comment/comment_list";
 
 type Props = {
     root:ArticleViewRoot
@@ -23,8 +24,8 @@ type Props = {
 export class ArticleView extends PureComponent<Props> {
     componentDidMount() {
         PaStateMan.regist_comp(this,(registval,state)=>{
-
-
+            registval(state.article_mode)
+            registval(state.article)
         })
     }
     componentWillUnmount() {
@@ -33,23 +34,44 @@ export class ArticleView extends PureComponent<Props> {
 
     render() {
         const logp=PaStateMan.getstate().proxy_log;
+        const articlep=PaStateMan.getstate().proxy_article;
+        const article=articlep.get_cur_article()
+        const aid=article?article.id:-1;
+        const mode=articlep.get_cur_mode();
         return (
             <Box
                 sx={{
-                    padding:curstyle().gap.xxl
+                    position:"absolute",
+                    left:"0",
+                    right:"0",
+                    bottom:"0",
+                    top:"0",
+                    overflowY:"scroll"
                 }}
             >
 
                 <Box
+                    className={reuse.col_flexcontainer}
                     sx={{
-                        border:"1px solid "+curstyle().colors.gray_common,
-                        borderRadius:curstyle().radius.common,
-                        background:curstyle().colors.gray_common,
+                        gap:curstyle().gap.xl,
+                        padding:curstyle().gap.xxl,
                     }}
                 >
-                    <ArticleBody root={this.props.root}/>
-                    {/*<CommentBody/>*/}
-                    {/*{this.props.tagname}*/}
+
+                    <Box
+                        sx={{
+                            border:"1px solid "+curstyle().colors.gray_common,
+                            borderRadius:curstyle().radius.common,
+                            background:curstyle().colors.gray_common,
+                        }}
+                    >
+                        <ArticleBody root={this.props.root}/>
+                        {/*<CommentBody/>*/}
+                        {/*{this.props.tagname}*/}
+
+                    </Box>
+                    {aid!=-1&&(mode=="edit"||mode=="view")?
+                        <CommentList articleid={aid}/>:undefined}
                 </Box>
             </Box>
         );

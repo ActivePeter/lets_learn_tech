@@ -55,11 +55,15 @@ export default class HomePage extends PureComponent{
                     >
                         <ArticleInfo></ArticleInfo>
                     </Box>
-                    <div className={index_styles.main + " " +
+                    <Box className={index_styles.main + " " +
                         reuse_styles.fillleft_flex
-                    }>
+                    }
+                        sx={{
+                            position:"relative"
+                        }}
+                    >
                         <ArticleView root={this.root}/>
-                    </div>
+                    </Box>
                     {/*</div>*/}
                 </Box>
             </Fragment>
