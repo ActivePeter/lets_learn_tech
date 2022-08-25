@@ -14,6 +14,9 @@ pub struct UserManager {
 }
 
 impl UserManager {
+    pub fn get()->&'static UserManager{
+        &G_USER_MANAGER
+    }
     pub fn new() -> UserManager {
         UserManager{
             users : RwLock::new(Vec::new()),

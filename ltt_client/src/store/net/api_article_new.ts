@@ -5,6 +5,8 @@ import {UserBasicInfo} from "@/store/models/user";
 import {Article} from "@/store/models/article";
 import {PaState} from "@/store/pastate";
 import {PaStateMan} from "@/util/pa_state_man";
+import {tokeninvalid} from "@/store/net/tokeninvalid";
+import {notloggedin} from "@/store/net/notloggedin";
 
 interface ArticleNewResponse{
     articleid:number
@@ -27,6 +29,7 @@ export function api_article_new(
 
     const token=PaStateMan.getstate().proxy_log.get_logged_token()
     if(token==""){
+        notloggedin();
         return _undefined()
     }
     const uid= PaStateMan.getstate().proxy_log.get_logged_basic().uid
@@ -41,17 +44,11 @@ export function api_article_new(
         // const failtitle="文章获取失败"
         // console.log(e?.response)
         // // let var=
-        let matches=[
-            ["token_invalid",""],
-        ]
-        for(const key in matches){
-            const v=matches[key]
-            if(e?.response?.data==v[0]){
-                Notify.warn("用户登录信息已过期","")
-                PaStateMan.getstate().proxy_log.log_out()
-                return undefined
-            }
+        if(e?.response?.data=="token_invalid"){
+            tokeninvalid();
+            return undefined;
         }
+
         return undefined
     })
 }

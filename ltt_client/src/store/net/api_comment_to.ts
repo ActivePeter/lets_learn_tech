@@ -5,22 +5,21 @@ import {UserBasicInfo} from "@/store/models/user";
 import {Article} from "@/store/models/article";
 import {PaState} from "@/store/pastate";
 import {PaStateMan} from "@/util/pa_state_man";
+import {Comment} from "@/store/models/comment";
 import {tokeninvalid} from "@/store/net/tokeninvalid";
 import {notloggedin} from "@/store/net/notloggedin";
+//
+// interface ArticleNewResponse{
+//     articleid:number
+// }
 
-
-export function api_article_update(
+export function api_comment_to(
+    content:string,
+    to_comment_or_article:boolean,
+    to_cid:number,
     aid:number,
-    tags: number[],
-    content: string,
-    rawtext: string,
-    title: string,
 ):
-    Promise<undefined|boolean>{
-    // console.log({
-    //     uid
-    // })
-// console.log(apiProxy)
+    Promise<undefined>|Promise<{cid:number}>{
     async function _undefined(){
         return undefined
     }
@@ -31,32 +30,17 @@ export function api_article_update(
         return _undefined()
     }
     const uid= PaStateMan.getstate().proxy_log.get_logged_basic().uid
-    console.log({
-        tags,content,rawtext,title,token,uid
-    })
-    return axios.post(BaseUrl+"article_update",{
-        tags,content,rawtext,title,token,uid,aid
+    return axios.post(BaseUrl+"comment_to",{
+        content,to_comment_or_article,to_cid,aid,uid,token
     }).then((res)=>{
-        return true
+        return res.data
     }).catch((e)=>{
-        // const failtitle="文章获取失败"
-        // console.log(e?.response)
         if(e?.response?.data=="token_invalid"){
             tokeninvalid();
             return undefined;
         }
-        // // let var=
-        let matches=[
-            ["notexist","文章不存在"],
-        ]
-        for(const key in matches){
-            const v=matches[key]
-            if(e?.response?.data==v[0]){
-                Notify.warn(v[1],"")
-                // PaStateMan.getstate().proxy_log.log_out()
-                return undefined
-            }
-        }
+        console.log(e)
+        // "notfound"
         return undefined
     })
 }

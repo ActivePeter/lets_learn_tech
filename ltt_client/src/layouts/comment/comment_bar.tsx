@@ -19,12 +19,18 @@ import {TagComp} from "@/layouts/tag/tag";
 import {RouteControl} from "@/store/route_control";
 import {TagSetCompNoWrap} from "@/layouts/tag/tag_set_nowrap";
 import {CommentListRoot} from "@/layouts/comment/comment_list";
-import BraftEditor from "braft-editor";
+import BraftEditor, {EditorState} from "braft-editor";
+import {api_comment_to} from "@/store/net/api_comment_to";
+import {Notify} from "@/util/notify";
+import {Comment} from "@/store/models/comment";
 
 type Props = {
     articleid:number,
     root:CommentListRoot,
     addnew?:boolean,
+    to_cmt_or_art:boolean,
+    to_cmt_id:number,
+    bind_comment_data?:Comment,
 };
 export class CommentBar extends PureComponent<Props> {
 
@@ -43,15 +49,42 @@ export class CommentBar extends PureComponent<Props> {
             commenting:true
         })
     }
+    comeent_editor_state:undefined|EditorState=undefined
+    upload_comment(){
+        if(!this.comeent_editor_state){
+            return
+        }
+        if(this.props.articleid==-1){
+            return;
+        }
+        api_comment_to(
+            this.comeent_editor_state.toHTML(),
+            this.props.to_cmt_or_art,
+            this.props.to_cmt_id,
+            this.props.articleid,
+        ).then((res)=>{
+            if(res){
+                this.props.root.listcomp.fetch_article_comments()
+                this.cancel_comment()
+            }else{
+                Notify.warn("评论提交失败","")
+            }
+        })
+    }
+
     render() {
 
         if(!!this.props.addnew&&!this.state.commenting){
             return (<Button
+                sx={{
+                    zIndex:"1",}}
             onClick={()=>{
                 this.start_comment()
             }}
-            >评论</Button>);
+            >回复</Button>);
         }
+        const defaultv=this.props.bind_comment_data?this.props.bind_comment_data.content:"";
+        let defaults= BraftEditor.createEditorState(defaultv)
 
         return (
             <Box
@@ -67,13 +100,14 @@ export class CommentBar extends PureComponent<Props> {
                 {/*controls={articlep.get_cur_mode()=="view"?[]:undefined}*/}
                 {/*readOnly={articlep.get_cur_mode()=="view"}*/}
                 <BraftEditor
-                    contentStyle={{height: 'auto', minHeight: "100px"}}
+                    contentStyle={{height: 'auto', minHeight: "100px",zIndex:"0"}}
                     ref={"be"}
                     controls={this.state.commenting?undefined:[]}
                     readOnly={!this.state.commenting}
+                    defaultValue={defaults}
                     // value={state}
                     onChange={(v)=>{
-                        // this.props.root.edit.article_content_change(
+                        this.comeent_editor_state=v// this.props.root.edit.article_content_change(
                         //     v.toHTML(),v.toText()
                         // )
                     }}
@@ -97,19 +131,40 @@ export class CommentBar extends PureComponent<Props> {
                         }}>取消</Button>
                         <Button sx={{
                             zIndex:"1"
-                        }}>发表</Button>
+                        }}
+                            onClick={()=>{
+                                this.upload_comment()
+                            }}
+                        >发表</Button>
                     </Box>
 
                     :undefined}
 
-                {!this.props.addnew?
+                {!this.props.addnew&&!this.state.commenting?
                     <Box
                         className={reuse.row_flexcontainer_reverse}
-                        sx={{padding:curstyle().gap.common}}>
+                        sx={{padding:curstyle().gap.common,
+
+                            gap:curstyle().gap.common,
+                            marginTop:"-40px",
+                            zIndex:"1",
+                    }}
+                    >  
+                        by {this.props.bind_comment_data?.uid}
                         <CommentBar
+                            to_cmt_id={0}
+                            to_cmt_or_art={false}
                             addnew={true}
                             articleid={this.props.articleid}
                             root={this.props.root}/>
+
+                        <Button
+                            sx={{
+                                zIndex:"1",}}
+                            onClick={()=>{
+                                this.start_comment()
+                            }}
+                        >修改</Button>
                     </Box>
                     :undefined}
             </Box>

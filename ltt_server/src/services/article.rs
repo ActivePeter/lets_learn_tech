@@ -15,6 +15,9 @@ impl ArticleManager {
     pub fn new() -> ArticleManager {
         return ArticleManager {};
     }
+    pub fn get() -> &'static G_ARTICLE_MAN {
+        &G_ARTICLE_MAN
+    }
     pub async fn first_load(&self){
 
     }

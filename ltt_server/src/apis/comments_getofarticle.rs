@@ -20,14 +20,19 @@ use crate::models::article::{Article, ArticlePreview, ArticleId};
 // use std::alloc::Global;
 use crate::services;
 use crate::models::comment::Comment;
+use crate::services::comment::CommentManager;
 
 pub async fn comments_getofarticle(
     ConnectInfo(_addr): ConnectInfo<SocketAddr>,
     req: Json<RequestContent>,
 ) -> impl IntoResponse {
-
-
-    (StatusCode::BAD_REQUEST, "notfound").into_response()
+    let res=CommentManager::get().get_comments_of_article(req.id).await;
+    
+    (StatusCode::OK, serde_json::to_string(
+        &ResponseContent{
+            comments: res
+        }
+    ).unwrap()).into_response()
 }
 
 // the input to our `create_user` handler

@@ -20,28 +20,48 @@ use crate::models::article::{Article, ArticlePreview, ArticleId};
 // use std::alloc::Global;
 use crate::services;
 use crate::models::comment::CommentId;
+use crate::services::comment::{CommentManager, AddCommentRes};
+use crate::services::token::CheckTokenRes;
 
-pub async fn comments_getofarticle(
+pub async fn comment_to(
     ConnectInfo(_addr): ConnectInfo<SocketAddr>,
-    req: Json<RequestContent>,
+    mut req: Json<RequestContent>,
 ) -> impl IntoResponse {
-    return match services::article::G_ARTICLE_MAN
-        .get_article_by_id(req.id).await {
-        None => {
-            (StatusCode::BAD_REQUEST, "notfound").into_response()
+    let mut t=String::new();
+    std::mem::swap(&mut t ,&mut req.token);
+    match token::checktoken(req.uid,t).await{
+        CheckTokenRes::Valid => {
         }
-        Some(ar) => {
-            (StatusCode::OK, serde_json::to_string(&ResponseContent {
-                article: ar
-            }).unwrap()).into_response()
+        v=>{
+            return v.invalid().into_response();
         }
     }
+    match CommentManager::get().add_comment(
+        req.uid,&req.content,req.to_comment_or_article,req.to_cid,req.aid
+    ).await{
+        // AddCommentRes::ArticleNotExist => {}
+        // AddCommentRes::UserNotExist => {}
+        // AddCommentRes::ToCommentNotOk => {}
+        AddCommentRes::Succ(id) => {
+            (StatusCode::OK, serde_json::to_string(
+                &ResponseContent{
+                    cid: id
+                }
+            ).unwrap()).into_response()
+        }
+        // AddCommentRes::DbFail => {}
+        _=>{
+            (StatusCode::BAD_REQUEST, "fail").into_response()
+        }
+    }
+
 }
 
 // the input to our `create_user` handler
 #[derive(Deserialize, Serialize)]
 pub struct RequestContent {
     pub uid:UserId,
+    pub token:String,
     pub content:String,
     pub to_comment_or_article:bool,
     pub to_cid:CommentId,
@@ -50,5 +70,5 @@ pub struct RequestContent {
 
 #[derive(Deserialize, Serialize)]
 pub struct ResponseContent{
-    pub article:Article
+    pub cid:CommentId
 }

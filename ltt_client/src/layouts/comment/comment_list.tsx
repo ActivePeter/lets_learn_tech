@@ -19,6 +19,8 @@ import {TagComp} from "@/layouts/tag/tag";
 import {RouteControl} from "@/store/route_control";
 import {TagSetCompNoWrap} from "@/layouts/tag/tag_set_nowrap";
 import {CommentBar} from "@/layouts/comment/comment_bar";
+import {Comment} from "@/store/models/comment";
+import {api_comments_getofarticle} from "@/store/net/api_comments_getofarticle";
 
 type Props = {
     articleid:number,
@@ -40,8 +42,27 @@ export class CommentList extends PureComponent<Props> {
         super(props);
         this.root=new CommentListRoot(this);
     }
+    // comments
+    state={
+        loaded_comments:[] as Comment[],
+        loaded_aid:-1
+    }
+    fetch_article_comments() {
+        api_comments_getofarticle(this.props.articleid).then((res)=>{
+            console.log("comments loaded",res)
+            if(res){
+                this.setState({
+                    loaded_comments:res.comments,
+                    loaded_aid:this.props.articleid
+                })
+            }
+        })
+    }
     render() {
-
+        if(this.state.loaded_aid!=this.props.articleid){
+            this.fetch_article_comments()
+            return undefined
+        }
         return (
             <Box
                 className={reuse.col_flexcontainer}
@@ -55,15 +76,19 @@ export class CommentList extends PureComponent<Props> {
                 <CommentBar
                     addnew={true}
                     articleid={this.props.articleid}
-                            root={this.root}/>
-                <CommentBar articleid={this.props.articleid}
-                            root={this.root}/>
-                <CommentBar articleid={this.props.articleid}
-                            root={this.root}/>
-                <CommentBar articleid={this.props.articleid}
-                            root={this.root}/>
-                <CommentBar articleid={this.props.articleid}
-                            root={this.root}/>
+                            root={this.root}
+                    to_cmt_or_art={false}
+                    to_cmt_id={0}
+                />
+                {this.state.loaded_comments.map((v)=>{
+                    return <CommentBar
+                        to_cmt_id={0}
+                        to_cmt_or_art={false}
+                        key={v.cid}
+                        articleid={this.props.articleid}
+                        bind_comment_data={v}
+                        root={this.root}/>
+                })}
             </Box>
         );
     }
