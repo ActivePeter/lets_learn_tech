@@ -23,6 +23,7 @@ import BraftEditor, {EditorState} from "braft-editor";
 import {api_comment_to} from "@/store/net/api_comment_to";
 import {Notify} from "@/util/notify";
 import {Comment} from "@/store/models/comment";
+import {UserInfoComp} from "@/layouts/user/user_info";
 
 type Props = {
     articleid:number,
@@ -142,29 +143,38 @@ export class CommentBar extends PureComponent<Props> {
 
                 {!this.props.addnew&&!this.state.commenting?
                     <Box
-                        className={reuse.row_flexcontainer_reverse}
+                        className={reuse.row_flex2side_container}
                         sx={{padding:curstyle().gap.common,
-
+                            borderTop:"solid 1px "+curstyle().colors.gray_d,
                             gap:curstyle().gap.common,
-                            marginTop:"-40px",
+                            marginTop:"-30px",
                             zIndex:"1",
+                            alignItems:"center"
                     }}
-                    >  
-                        by {this.props.bind_comment_data?.uid}
-                        <CommentBar
-                            to_cmt_id={0}
-                            to_cmt_or_art={false}
-                            addnew={true}
-                            articleid={this.props.articleid}
-                            root={this.props.root}/>
-
-                        <Button
+                    >
+                        <UserInfoComp uid={this.props.bind_comment_data?this.props.bind_comment_data.uid:-1}/>
+                        <Box
+                            className={reuse.row_flexcontainer_reverse}
                             sx={{
-                                zIndex:"1",}}
-                            onClick={()=>{
-                                this.start_comment()
-                            }}
-                        >修改</Button>
+                                    gap:curstyle().gap.common,
+                                    zIndex:"1",}}
+                        >
+
+                            <CommentBar
+                                to_cmt_id={0}
+                                to_cmt_or_art={false}
+                                addnew={true}
+                                articleid={this.props.articleid}
+                                root={this.props.root}/>
+
+                            <Button
+                                sx={{
+                                    zIndex:"1",}}
+                                onClick={()=>{
+                                    this.start_comment()
+                                }}
+                            >修改</Button>
+                        </Box>
                     </Box>
                     :undefined}
             </Box>
