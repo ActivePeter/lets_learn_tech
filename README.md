@@ -1,8 +1,13 @@
 # LearnTechTogether
+
+使用Rust和React开发的交流社区平台
+
+## 技术栈
+
 前端：`React`
 
 
-后端: `Rust`
+后端: `Rust` `axum` 
 
 数据库:`Postgrpesql`
 
