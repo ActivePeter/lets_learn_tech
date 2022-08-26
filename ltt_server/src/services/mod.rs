@@ -1,3 +1,5 @@
+use crate::services::comment::CommentManager;
+
 pub mod robot_service;
 pub mod token;
 pub mod user_manager;
@@ -10,4 +12,5 @@ pub mod comment;
 pub async fn init_all(){
     user_manager::G_USER_MANAGER.update_user_from_db().await;
     tag::G_TAG_MAN.loadfromdb().await;
+    CommentManager::get().load_all().await;
 }

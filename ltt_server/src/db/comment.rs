@@ -5,11 +5,21 @@ use crate::models::user::UserId;
 use crate::models::comment::{CommentId, Comment};
 use crate::models::article::ArticleId;
 use deadpool_postgres::tokio_postgres::{Error, Row};
+use crate::services::comment::CommentManager_Comment2Some;
 
 // 表划分
 impl DbHandler {
     pub async fn create_comment_table(&self) {}
-
+    pub async fn db_comment_loadall(&self) -> CommentManager_Comment2Some {
+        let res=self.get().await.query("select commentid,aid from comment_info",&[]).await.unwrap();
+        let mut map:CommentManager_Comment2Some=Default::default();
+        for r in res{
+            let cid:i64=r.get(0);
+            let aid:i64=r.get(1);
+            map.insert(cid,(aid as u32));
+        }
+        map
+    }
     pub async fn db_get_comments_of_article(&self,aid:ArticleId)->Vec<Comment>{
         let mut vec =Vec::new();
         let res=self.get().await.query(&*format!(

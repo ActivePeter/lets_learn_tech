@@ -6,10 +6,13 @@ use crate::services::user_manager::UserManager;
 use crate::services::article::ArticleManager;
 use std::collections::HashMap;
 use tokio::sync::RwLock;
+use std::ops::DerefMut;
 lazy_static::lazy_static! {
     pub static ref G_COMMENT_MAN : CommentManager = CommentManager::new();
 }
 
+
+pub type CommentManager_Comment2Some=HashMap<CommentId, (ArticleId)>;
 
 pub struct CommentManager {
     comment2some: RwLock<HashMap<CommentId, (ArticleId)>>,
@@ -35,6 +38,9 @@ impl CommentManager {
     }
     pub async fn load_all(&self) {
         //加载commentmap
+        let mut res =get_dbhandler().await.db_comment_loadall().await;
+        std::mem::swap(&mut res,
+                       self.comment2some.write().await.deref_mut());
     }
 
     pub async fn _add_comment_nocheck(
@@ -71,7 +77,8 @@ impl CommentManager {
         to_comment_or_article: bool,
         to_cid: CommentId,
         aid: ArticleId,
-    ) -> AddCommentRes {
+    )
+        -> AddCommentRes {
         //1.user
         if UserManager::get().search_user_by_id(uid).await.is_none() {
             return AddCommentRes::UserNotExist;
