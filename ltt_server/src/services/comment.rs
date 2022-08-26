@@ -86,7 +86,7 @@ impl CommentManager {
             let c2a = hold.get(&to_cid);
             match c2a {
                 None => {
-                    eprintln!("cmt not fount");
+                    eprintln!("cmt not fount {}",to_cid);
                     return AddCommentRes::ToCommentNotOk;
                 }
                 Some(c2a) => {
