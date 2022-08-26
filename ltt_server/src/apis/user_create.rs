@@ -30,7 +30,7 @@ pub async fn create_user(
 
     // 检查用户名和邮箱的唯一性
     let is_exist = G_USER_MANAGER
-        .check_both(&new_user.username,&new_user.email).await;
+        .check_both_exist(&new_user.username,&new_user.email).await;
 
     if is_exist {
         return (StatusCode::BAD_REQUEST,"Username or email already exist").into_response()
