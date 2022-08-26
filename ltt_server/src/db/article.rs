@@ -60,9 +60,9 @@ impl DbHandler {
         rawtext: String,
         title: String,
     )->bool{
-        let res=self.get().await.query(&*format!("select update_article({},'{}','{}','{}',ARRAY{})"
-            ,aid,title,content,rawtext,serde_json::to_string(tags).unwrap()
-        ), &[]).await;
+        let res=self.get().await.query(&*format!("select update_article({},$1::TEXT,$2::TEXT,$3::TEXT,ARRAY{})"
+            ,aid,serde_json::to_string(tags).unwrap()
+        ), &[&title,&content,&rawtext,]).await;
         match res{
             Ok(res) => {
                 if res.len()>0 &&res[0].get::<usize,i64>(0)==1 {
