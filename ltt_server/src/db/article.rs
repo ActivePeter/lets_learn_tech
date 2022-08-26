@@ -92,6 +92,7 @@ impl DbHandler {
                 Some(v as ArticleId)
             }
             Err(e) => {
+                eprintln!("db err cmd {:?}",cmd);
                 eprintln!("db err{:?}",e);
                 None
             }
