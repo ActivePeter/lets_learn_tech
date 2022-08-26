@@ -70,7 +70,8 @@ impl DbHandler {
                 }
                 return false;
             }
-            Err(_) => {
+            Err(e) => {
+                eprintln!("db error {:?}", e);
                 false
             }
         }
