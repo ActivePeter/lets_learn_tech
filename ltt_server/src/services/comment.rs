@@ -86,10 +86,12 @@ impl CommentManager {
             let c2a = hold.get(&to_cid);
             match c2a {
                 None => {
+                    eprintln!("cmt not fount");
                     return AddCommentRes::ToCommentNotOk;
                 }
                 Some(c2a) => {
                     if *c2a != aid {//指向的评论个文章id不匹配
+                        eprintln!("cmt not match art");
                         return AddCommentRes::ToCommentNotOk;
                     }
                 }
