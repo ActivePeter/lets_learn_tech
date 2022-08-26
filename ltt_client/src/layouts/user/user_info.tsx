@@ -3,6 +3,7 @@ import {Box} from "@mui/joy";
 import {curstyle} from "@/theme/curtheme";
 import {PaStateMan} from "@/util/pa_state_man";
 import {UserBasicInfo} from "@/store/models/user";
+import styled from "@emotion/styled";
 type Props = {
     uid:number
 };
@@ -11,31 +12,33 @@ export class UserInfoComp extends PureComponent<Props> {
     }
     componentWillUnmount() {
     }
-    props={
-        uid:-1
-    }
     state={
         userinfo:undefined as (UserBasicInfo|undefined)
     }
     render() {
-
-        PaStateMan.getstate().proxy_user
-            .lazy_get_user_basic(this.props.uid,(
-                res
-            )=>{
-            if(res){
-                this.setState({
-                    userinfo:res
-                })
-            }
-        })
+        if(this.props.uid==-1){
+            return;
+        }
         if(this.state.userinfo==undefined){
+            PaStateMan.getstate().proxy_user
+                .lazy_get_user_basic(this.props.uid,(
+                    res
+                )=>{
+                    if(res){
+                        this.setState({
+                            userinfo:res
+                        })
+                    }
+                })
             return undefined
         }
+        const Span=styled.span`
+          color: ${curstyle().colors.font_second};
+        `
         return (
-            <span>
+            <Span>
                 {this.state.userinfo.username}
-            </span>
+            </Span>
         );
     }
 }

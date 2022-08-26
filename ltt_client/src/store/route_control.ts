@@ -49,8 +49,8 @@ export namespace RouteControl{
     export function get_article_id():number{
         const sp=window.location.pathname.split('/');
         // console.log("get_article_id",sp)
-        if(sp.length==3&&sp[1]=='article'){
-            const v=parseInt(sp[2])
+        if(sp.length==4&&sp[2]=='article'){
+            const v=parseInt(sp[3])
             if(v){
                 return v
             }

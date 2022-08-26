@@ -39,9 +39,12 @@ pub async fn comment_to(
     match CommentManager::get().add_comment(
         req.uid,&req.content,req.to_comment_or_article,req.to_cid,req.aid
     ).await{
-        // AddCommentRes::ArticleNotExist => {}
-        // AddCommentRes::UserNotExist => {}
-        // AddCommentRes::ToCommentNotOk => {}
+        AddCommentRes::ArticleNotExist => {
+            (StatusCode::BAD_REQUEST, "ArticleNotExist").into_response()}
+        AddCommentRes::UserNotExist => {
+            (StatusCode::BAD_REQUEST, "UserNotExist").into_response()}
+        AddCommentRes::ToCommentNotOk => {
+            (StatusCode::BAD_REQUEST, "ToCommentNotOk").into_response()}
         AddCommentRes::Succ(id) => {
             (StatusCode::OK, serde_json::to_string(
                 &ResponseContent{
@@ -49,9 +52,8 @@ pub async fn comment_to(
                 }
             ).unwrap()).into_response()
         }
-        // AddCommentRes::DbFail => {}
-        _=>{
-            (StatusCode::BAD_REQUEST, "fail").into_response()
+        AddCommentRes::DbFail => {
+            (StatusCode::BAD_REQUEST, "dbfail").into_response()
         }
     }
 

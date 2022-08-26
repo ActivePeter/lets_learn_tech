@@ -24,6 +24,8 @@ import {api_comment_to} from "@/store/net/api_comment_to";
 import {Notify} from "@/util/notify";
 import {Comment} from "@/store/models/comment";
 import {UserInfoComp} from "@/layouts/user/user_info";
+import {CommentPreview} from "@/layouts/comment/comment_preview";
+import styled from "@emotion/styled";
 
 type Props = {
     articleid:number,
@@ -32,19 +34,36 @@ type Props = {
     to_cmt_or_art:boolean,
     to_cmt_id:number,
     bind_comment_data?:Comment,
+    on_start_commnet?:(comment:boolean)=>void
 };
+
 export class CommentBar extends PureComponent<Props> {
 
     state={
         authorbasic:undefined,
-        commenting:false
+        commenting:false,
+        commenting_to_this:false,
     }
+    old_editor_state=undefined
+
     cancel_comment(){
+        if(this.props.bind_comment_data!=undefined
+            && this.old_editor_state
+        ){
+            // @ts-ignore
+            this.refs.be.setValue(this.old_editor_state);
+        }
+        this.props.on_start_commnet?.(false)
         this.setState({
             commenting:false
         })
     }
     start_comment(){
+        // @ts-ignore
+        if(this.refs.be){
+            this.old_editor_state=this.refs.be.getValue();
+        }
+        this.props.on_start_commnet?.(true)
         this.props.root.set_cur_editing(this);
         this.setState({
             commenting:true
@@ -58,21 +77,23 @@ export class CommentBar extends PureComponent<Props> {
         if(this.props.articleid==-1){
             return;
         }
-        api_comment_to(
-            this.comeent_editor_state.toHTML(),
-            this.props.to_cmt_or_art,
-            this.props.to_cmt_id,
-            this.props.articleid,
-        ).then((res)=>{
-            if(res){
-                this.props.root.listcomp.fetch_article_comments()
-                this.cancel_comment()
-            }else{
-                Notify.warn("评论提交失败","")
-            }
-        })
+        //没绑定，是新评论
+        if(this.props.bind_comment_data==undefined){
+            api_comment_to(
+                this.comeent_editor_state.toHTML(),
+                this.props.to_cmt_or_art,
+                this.props.to_cmt_id,
+                this.props.articleid,
+            ).then((res)=>{
+                if(res){
+                    this.props.root.listcomp.fetch_article_comments()
+                    this.cancel_comment()
+                }else{
+                    Notify.warn("评论提交失败","")
+                }
+            })
+        }
     }
-
     render() {
 
         if(!!this.props.addnew&&!this.state.commenting){
@@ -87,6 +108,9 @@ export class CommentBar extends PureComponent<Props> {
         const defaultv=this.props.bind_comment_data?this.props.bind_comment_data.content:"";
         let defaults= BraftEditor.createEditorState(defaultv)
 
+        const GrayText=styled.span`
+          color: ${curstyle().colors.font_second};
+        `
         return (
             <Box
                 sx={{
@@ -97,11 +121,12 @@ export class CommentBar extends PureComponent<Props> {
                     // marginTop:"-100px"
                 }}
             >
-
                 {/*controls={articlep.get_cur_mode()=="view"?[]:undefined}*/}
                 {/*readOnly={articlep.get_cur_mode()=="view"}*/}
                 <BraftEditor
-                    contentStyle={{height: 'auto', minHeight: "100px",zIndex:"0"}}
+                    contentStyle={{height: 'auto', minHeight: "100px",zIndex:"0",
+                        maxHeight:"500px"
+                    }}
                     ref={"be"}
                     controls={this.state.commenting?undefined:[]}
                     readOnly={!this.state.commenting}
@@ -152,28 +177,55 @@ export class CommentBar extends PureComponent<Props> {
                             alignItems:"center"
                     }}
                     >
-                        <UserInfoComp uid={this.props.bind_comment_data?this.props.bind_comment_data.uid:-1}/>
+                        {this.state.commenting_to_this?undefined:(
+                            <Box className={reuse.row_flexcontainer}
+                                sx={{
+                                    alignItems:"center",
+                                    gap:curstyle().gap.common,
+                                }}
+                            >
+                                <UserInfoComp uid={this.props.bind_comment_data ? this.props.bind_comment_data.uid : -1}/>
+                                {this.props.to_cmt_or_art?
+                                    (
+                                        <Fragment>
+                                            <GrayText>回复评论</GrayText>
+                                            <CommentPreview cid={this.props.bind_comment_data?.to_cid} root={this.props.root}/>
+                                        </Fragment>)
+                                    :undefined}
+                            </Box>)}
                         <Box
                             className={reuse.row_flexcontainer_reverse}
                             sx={{
+                                border:"solid 1px "+curstyle().colors.gray_d,
                                     gap:curstyle().gap.common,
                                     zIndex:"1",}}
                         >
 
-                            <CommentBar
-                                to_cmt_id={0}
-                                to_cmt_or_art={false}
+                            {this.props.bind_comment_data!=undefined?<CommentBar
+                                to_cmt_id={this.props.bind_comment_data.cid}
+                                to_cmt_or_art={true}
                                 addnew={true}
                                 articleid={this.props.articleid}
-                                root={this.props.root}/>
+                                root={this.props.root}
+                                on_start_commnet={
+                                    (start) => {
+                                        console.log("on_start_commnet", start)
+                                        this.setState(
+                                            {
+                                                commenting_to_this: start
+                                            }
+                                        )
+                                    }}
+                            />:undefined}
 
-                            <Button
+                            {this.state.commenting_to_this?undefined:<Button
                                 sx={{
-                                    zIndex:"1",}}
-                                onClick={()=>{
+                                    zIndex: "1",
+                                }}
+                                onClick={() => {
                                     this.start_comment()
                                 }}
-                            >修改</Button>
+                            >修改</Button>}
                         </Box>
                     </Box>
                     :undefined}

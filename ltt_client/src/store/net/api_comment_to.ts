@@ -20,6 +20,8 @@ export function api_comment_to(
     aid:number,
 ):
     Promise<undefined>|Promise<{cid:number}>{
+
+    console.warn("api_comment_to")
     async function _undefined(){
         return undefined
     }
@@ -35,11 +37,12 @@ export function api_comment_to(
     }).then((res)=>{
         return res.data
     }).catch((e)=>{
+        console.warn(e)
         if(e?.response?.data=="token_invalid"){
             tokeninvalid();
             return undefined;
         }
-        console.log(e)
+
         // "notfound"
         return undefined
     })

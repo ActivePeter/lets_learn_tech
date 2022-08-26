@@ -1,10 +1,12 @@
 export default {
   npmClient: 'yarn',
   proxy: {
-    '/api': {
-      'target': 'http://127.0.0.1:3000/',
+    '/LearnTech_api': {
+      'target':'http://hanbaoaaa.xyz/LearnTech_api/',
       'changeOrigin': true,
-      'pathRewrite': { '^/api' : '' },
+      'pathRewrite': { '^/LearnTech_api' : '' },
     },
   },
+  base:"/LearnTech/",
+  publicPath:"/LearnTech/"
 };

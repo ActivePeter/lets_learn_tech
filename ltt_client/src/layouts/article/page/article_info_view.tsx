@@ -25,7 +25,9 @@ type Props = {
 export class ArticleInfoView extends PureComponent<Props> {
     componentWillMount()  {
         PaStateMan.regist_comp(this,(registval, state)=>{
-            registval(state.article)
+            registval(state.article,()=>{
+                console.warn("article load", state.article)
+            })
         })
         const articlep=PaStateMan.getstate().proxy_article
         articlep.sync_info_in_path();
@@ -39,11 +41,14 @@ export class ArticleInfoView extends PureComponent<Props> {
         userinfo:undefined
     }
     render() {
+        console.warn("ArticleInfoView render")
         const logp=PaStateMan.getstate().proxy_log;
         const SetWrapper=styled.div``
         const articlep=PaStateMan.getstate().proxy_article
         const article=PaStateMan.getstate().proxy_article.get_cur_article()
         if(!article){
+
+            console.warn("ArticleInfoView render undef")
             return undefined
         }
         const editable=article.author_id==logp.get_logged_basic().uid

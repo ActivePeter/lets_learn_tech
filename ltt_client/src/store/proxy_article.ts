@@ -97,8 +97,8 @@ export class ArticleProxy{
         })
     }
     fetch_article_if_id_ok(){
-        console.log("fetch_article_if_id_ok")
         const id=this.state.article_id
+        console.log("fetch_article_if_id_ok",id)
         if(id!=-1){
             api_article_getdetail(id).then((res)=>{
                 console.log("article get",res)

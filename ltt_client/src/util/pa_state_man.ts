@@ -58,16 +58,17 @@ class _PaStateMan{
                     id_2_afterchange[id]=()=>{
                         this._valkey2compids[key][id]();//执行afterchange
                         // console.log("comp",this._comps[id])
-                        if( this._comps[id].state==undefined){
-                            this._comps[id].state={}
-                        }
-                        let state= this._comps[id].state.$$$funy
+                        // if( this._comps[id].state==undefined){
+                        //     this._comps[id].state={}
+                        // }
+                        let state= this._comps[id].state?.$$$funy
                         if(state==undefined){
                             state=0
                         }
                         this._comps[id].setState({
                             $$$funy:state+1
                         });
+                        // this._comps[id].forceUpdate()
                     }
                 }else{
                     delids.push(id)

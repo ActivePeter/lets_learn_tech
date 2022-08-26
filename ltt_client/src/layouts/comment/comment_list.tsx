@@ -28,10 +28,19 @@ type Props = {
 export class CommentListRoot{
     cur_comment:CommentBar|undefined=undefined
     set_cur_editing(bar:CommentBar){
-        if(this.cur_comment){
+        if(this.cur_comment&&this.cur_comment!=bar){
             this.cur_comment.cancel_comment()
         }
         this.cur_comment=bar
+    }
+    find_cmt(cmtid:number){
+        for(let i=0;i<this.listcomp.state.loaded_comments.length;i++){
+            const v=this.listcomp.state.loaded_comments[i]
+            if(v.cid==cmtid){
+                return v
+            }
+        }
+        return undefined
     }
     constructor(public listcomp:CommentList) {
     }
@@ -82,8 +91,8 @@ export class CommentList extends PureComponent<Props> {
                 />
                 {this.state.loaded_comments.map((v)=>{
                     return <CommentBar
-                        to_cmt_id={0}
-                        to_cmt_or_art={false}
+                        to_cmt_id={v.to_cid}
+                        to_cmt_or_art={v.to_comment_or_article}
                         key={v.cid}
                         articleid={this.props.articleid}
                         bind_comment_data={v}
