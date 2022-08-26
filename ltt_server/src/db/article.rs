@@ -60,7 +60,8 @@ impl DbHandler {
         rawtext: String,
         title: String,
     )->bool{
-        let res=self.get().await.query(&*format!("select update_article({},$1::TEXT,$2::TEXT,$3::TEXT,ARRAY{})"
+        let res=self.get().await.query(
+            &*format!("select update_article({},$1::TEXT,$2::TEXT,$3::TEXT,ARRAY{}::integer[])"
             ,aid,serde_json::to_string(tags).unwrap()
         ), &[&title,&content,&rawtext,]).await;
         match res{
