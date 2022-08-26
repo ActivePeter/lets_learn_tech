@@ -1,0 +1,5 @@
+{
+  "email_username" : "邮箱用户名",
+  "email_password" : "邮箱密码",
+  "email_server" : "smtp服务器地址"
+}

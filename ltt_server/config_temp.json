@@ -1,0 +1,11 @@
+{
+  "addr": "数据库地址",
+  "port": 数据库端口号,
+  "dbname": "数据库名字",
+  "username": "数据库用户名",
+  "password": "数据库密码",
+  "token_secret": "自定义字符串(用于生成用户token",
+  "email_username" : "邮箱用户名",
+  "email_password" : "邮箱密码",
+  "email_server" : "smtp服务器地址"
+}
