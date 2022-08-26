@@ -9,6 +9,7 @@ pub mod article;
 pub mod email_service;
 pub mod tag;
 pub mod comment;
+pub mod password_md5;
 
 pub async fn init_all(){
     user_manager::G_USER_MANAGER.update_user_from_db().await;

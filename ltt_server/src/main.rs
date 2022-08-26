@@ -1,5 +1,3 @@
-extern crate core;
-
 pub mod apis;
 pub mod readconfig;
 pub mod memstate_lock;
