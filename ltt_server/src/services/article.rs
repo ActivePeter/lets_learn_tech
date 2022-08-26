@@ -3,8 +3,12 @@ use crate::models::tag::TagId;
 use crate::models::user::UserId;
 use crate::models::article::{ArticleId, Article};
 use crate::services;
-pub struct ArticleManager {
+use std::collections::HashMap;
+use tokio::sync::RwLock;
 
+pub type ArticleManagerMapSome=HashMap<ArticleId,UserId>;
+pub struct ArticleManager {
+    aid2some:RwLock<ArticleManagerMapSome>
 }
 
 lazy_static::lazy_static! {
@@ -13,13 +17,20 @@ lazy_static::lazy_static! {
 
 impl ArticleManager {
     pub fn new() -> ArticleManager {
-        return ArticleManager {};
+        return ArticleManager { aid2some: Default::default() };
     }
     pub fn get() -> &'static G_ARTICLE_MAN {
         &G_ARTICLE_MAN
     }
     pub async fn first_load(&self){
-
+        let res=get_dbhandler().await.get().await.query(
+            "select articleid,author_uid from article_info",&[]).await.unwrap();
+        let mut hold =self.aid2some.write().await;
+        for r in res{
+            let aid:i64=r.get(0);
+            let uid:i64=r.get(1);
+            hold.insert(aid as u32, uid as i32);
+        }
     }
     pub async fn is_article_exist(&self, aid:ArticleId) -> bool {
         services::tag::G_TAG_MAN.aid_2_tags.read().await.get(&aid).is_some()
@@ -61,6 +72,7 @@ impl ArticleManager {
             services::tag::G_TAG_MAN.memonly_article_tags_rebind(
                 res,&tags
             ).await;
+            self.aid2some.write().await.insert(res,uid);
         }
         res
     }
