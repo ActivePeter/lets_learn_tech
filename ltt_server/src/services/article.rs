@@ -33,7 +33,7 @@ impl ArticleManager {
         }
     }
     pub async fn is_article_exist(&self, aid:ArticleId) -> bool {
-        services::tag::G_TAG_MAN.aid_2_tags.read().await.get(&aid).is_some()
+        self.aid2some.read().await.get(&aid).is_some()
     }
     pub async fn update_article(
         &self,
