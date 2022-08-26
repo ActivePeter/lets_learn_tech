@@ -1,3 +1,5 @@
 ltt_server/target/
 ltt_server/.idea/dataSources.xml
 ltt_server/.idea/sqldialects.xml
+ltt_server/config.json
+ltt_server/email_config.json
