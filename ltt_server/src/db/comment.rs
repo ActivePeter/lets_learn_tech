@@ -60,11 +60,11 @@ impl DbHandler {
                                    to_cid: CommentId,
                                    aid: ArticleId, ) -> Option<CommentId> {
         let res=self.get().await
-            .query(&*format!("insert into comment_info(userid,content,to_art_or_com,time,aid,to_cid) \
-                values({},'{}',{},now(),{},{}) \
-                RETURNING commentid",uid,content,
-                             if to_comment_or_article{"false"}else { "true" },
-                             aid,to_cid),&[]).await;
+            .query("insert into comment_info(userid,content,to_art_or_com,time,aid,to_cid) \
+                values($1::bigint,$2::TEXT,$3::boolean,now(),$4::bigint,$5::bigint) \
+                RETURNING commentid",&[&uid,&content,
+                &if to_comment_or_article{"false"}else { "true" },
+                &aid,&to_cid]).await;
         if let Ok(res)=res{
             let cid_:i64=res[0].get(0);
             return Some(cid_ as CommentId)
