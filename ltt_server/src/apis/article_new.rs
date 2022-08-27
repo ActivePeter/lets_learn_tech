@@ -19,7 +19,7 @@ pub async fn article_new(
     match token::checktoken(payload.uid,payload.token).await{
         CheckTokenRes::Valid => {
             let res=services::article::G_ARTICLE_MAN.new_article(
-                payload.uid,payload.tags,payload.content,payload.rawtext,payload.title
+                payload.uid,payload.tags,payload.content,payload.rawtext,payload.title.clone()
             ).await;
             if let Some(res)=res{
                 services::robot_service::G_ROBOT_MAN.send_msg(
