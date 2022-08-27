@@ -11,6 +11,7 @@ use lazy_static::lazy_static;
 use crate::models::user::UserId;
 use axum::response::IntoResponse;
 use axum::http::StatusCode;
+use core::option::Option;
 
 // Our claims struct, it needs to derive `Serialize` and/or `Deserialize`
 #[derive(Debug, Serialize, Deserialize)]
@@ -85,6 +86,27 @@ pub async fn checktoken(uid:UserId,token:String)->CheckTokenRes{
             log::debug!("{}",e);
 
             CheckTokenRes::FailParse
+        }
+    }
+}
+
+// 解析token的id
+pub async fn get_uid_bytoken(token:String) ->Option<UserId> {
+    let token = decode::<Claims>(&token,
+                                 &DecodingKey::from_secret(TOKEN_SECRET.read().await.as_bytes()),
+                                 &Validation::default());
+    return match token {
+        Ok(data) => {
+            let second = chrono::Local::now().timestamp() as u64;
+            // 过期
+            if second > data.claims.exp {
+                return None
+            }
+            Some(data.claims.uid)
+        }
+        Err(e) => {
+            log::debug!("{}",e);
+            None
         }
     }
 }
