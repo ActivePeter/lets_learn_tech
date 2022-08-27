@@ -70,6 +70,9 @@ impl CommentManager {
         }
         return get_dbhandler().await.db_get_comments_of_article(aid).await;
     }
+    pub async fn update_comment(&self){
+
+    }
     pub async fn add_comment(
         &self,
         uid: UserId,

@@ -20,6 +20,20 @@ use std::hash::{Hash, Hasher};
 use std::ptr::hash;
 use rand::{random, Rng};
 
+//数据库只能存i64
+pub fn hash_u64_to_i64(hash:u64)->i64{
+    let num = unsafe {
+        std::mem::transmute::<u64, i64>(hash)
+    };
+    num
+}
+pub fn hash_i64_to_u64(hash_in_db:i64)->u64{
+    let num = unsafe {
+        std::mem::transmute::<i64, u64>(hash_in_db)
+    };
+    num
+}
+
 /*
   @参数: length : 获取随机字符串的长度
   @返回值： 一个随机字符串长度为length
