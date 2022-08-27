@@ -1,7 +1,7 @@
 use crate::models::user::{UserId, UserSimpleInfo};
 use serde::{Deserialize, Serialize};
 
-pub type ArticleId=u32;
+pub type ArticleId=i64;
 
 // article_info table in sql
 /*

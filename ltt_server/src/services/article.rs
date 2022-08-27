@@ -1,4 +1,4 @@
-use crate::db::sql::get_dbhandler;
+use crate::db::sql::{G_DB_POOL_HANDLE, get_dbhandler};
 use crate::models::tag::TagId;
 use crate::models::user::UserId;
 use crate::models::article::{ArticleId, Article};
@@ -30,7 +30,7 @@ impl ArticleManager {
         for r in res{
             let aid:i64=r.get(0);
             let uid:i64=r.get(1);
-            hold.insert(aid as u32, uid as i32);
+            hold.insert(aid, uid as i32);
         }
     }
 
@@ -95,9 +95,10 @@ impl ArticleManager {
         @参数 ： id 待删除文章的ArticleId
         @返回值 : 是否删除成功
      */
-    // pub async fn article_del(&self, id : ArticleId) -> bool {
-    //
-    // }
+    pub async fn article_del(&self, id : ArticleId) -> bool {
+        self.aid2some.write().await.remove(&id);
+        get_dbhandler().await.db_article_del(id).await
+    }
 }
 
 //
