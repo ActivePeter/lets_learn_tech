@@ -10,6 +10,8 @@ use crate::services::token::CheckTokenRes;
 use crate::models::tag::TagId;
 use crate::models::article::{Article, ArticleId};
 use crate::services;
+use crate::models::path::article_path;
+
 pub async fn article_update(
     Json(payload): Json<RequestContent>,
 ) -> impl IntoResponse {
@@ -22,9 +24,10 @@ pub async fn article_update(
                 ).await;
                 if res{
                     services::robot_service::G_ROBOT_MAN.send_msg(
-                        &format!("用户 {} 在社区更新了文章 {}, 快去看看吧！",
+                        &format!("{} 在社区更新了文章 《{}》, 快去看看吧！{}",
                             UserManager::get().search_user_by_id(payload.uid).await.unwrap().username,
-                            payload.title
+                            payload.title.trim_end(),
+                            article_path(payload.aid)
                         )
                     ).await;
                     return (StatusCode::OK, "").into_response();

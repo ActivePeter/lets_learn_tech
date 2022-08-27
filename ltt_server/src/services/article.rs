@@ -15,6 +15,7 @@ lazy_static::lazy_static! {
     pub static ref G_ARTICLE_MAN : ArticleManager = ArticleManager::new();
 }
 
+
 impl ArticleManager {
     pub fn new() -> ArticleManager {
         return ArticleManager { aid2some: Default::default() };
