@@ -56,13 +56,13 @@ pub async fn encrypt_password(password : &String) -> (u64,String) {
     let salt = get_random_string(SALT_LENGTH).await;
     let mut hash_value = password.clone();
 
-    return (get_hash_value(&salt,password).await,salt)
+    return (get_hash_value(&salt,password),salt)
 }
 
 /*
 使用盐值加密字符串返回结果
  */
-pub async fn get_hash_value(salt : &String, password :&String) -> u64 {
+pub fn get_hash_value(salt : &String, password :&String) -> u64 {
     let mut hash_value = password.clone();
     for char_of_salt in salt.chars() {
         hash_value.push(char_of_salt);

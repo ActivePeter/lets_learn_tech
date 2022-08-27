@@ -70,7 +70,7 @@ async fn memstate_hold_loop() -> MemStateHandler {
                         state.a=Some(v);
                     }
                     MemStateRequest::GetA { repl} => {
-                        repl.send(state.a);
+                        repl.send(state.a).unwrap();
                     }
                 }
             }else{

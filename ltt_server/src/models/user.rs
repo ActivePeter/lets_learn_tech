@@ -1,3 +1,5 @@
+use crate::services::password_md5::get_hash_value;
+
 pub type UserId=i32;
 
 #[derive(Clone)]
@@ -5,7 +7,8 @@ pub struct User{
     pub id:UserId,
     pub email:String,
     pub username:String,
-    pub password:String,
+    pub pw_salt:String,
+    pub pw_hash:u64
 }
 
 pub struct UserSimpleInfo{
@@ -30,18 +33,21 @@ fn space_in_string(check_value : &String) -> bool {
 impl User {
     pub(crate) fn check(&self) -> Option<&'static str> {
         if self.email.len() >= 30 ||
-            self.password.len() >= 20 || self.username.len() >= 20{
+            self.pw_salt.len() >= 20 || self.username.len() >= 20{
             return Some("wronglength")
         }
-        log::debug!("#{}# #{}# #{}#",self.email,self.username,self.password);
+        log::debug!("#{}# #{}# #{}#",self.email,self.username,self.pw_salt);
 
         if space_in_string(&self.email)
             || space_in_string(&self.username)
-            || space_in_string(&self.password)
+            || space_in_string(&self.pw_salt)
         {
             // log::debug!("")
             return Some("space in values")
         }
         None
+    }
+    pub fn check_pw_right(&self,pw:&String)->bool{
+        self.pw_hash==get_hash_value(&self.pw_salt,pw)
     }
 }

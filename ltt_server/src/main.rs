@@ -34,7 +34,7 @@ async fn main() {
     db::sql::sqlstart(&config).await.unwrap();
     services::init_all().await;
 
-    let mut app = Router::new()
+    let app = Router::new()
         .route("/", get(root))
         .route("/user_create", post(apis::user_create::create_user))
         .route("/user_login",post(apis::user_login::user_login))
