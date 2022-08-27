@@ -3,7 +3,7 @@ use axum::response::IntoResponse;
 use axum::http::StatusCode;
 use serde::{Deserialize, Serialize};
 use crate::services::token;
-use crate::services::user_manager::G_USER_MANAGER;
+use crate::services::user_manager::{G_USER_MANAGER, UserManager};
 use crate::models::user::{User, UserId};
 use std::future::Future;
 use crate::services::token::CheckTokenRes;
@@ -21,6 +21,12 @@ pub async fn article_update(
                     payload.aid,payload.tags,payload.content,payload.rawtext,payload.title
                 ).await;
                 if res{
+                    services::robot_service::G_ROBOT_MAN.send_msg(
+                        &format!("用户 {} 在社区更新了文章 {}, 快去看看吧！",
+                            UserManager::get().search_user_by_id(payload.uid).await.unwrap().username,
+                            payload.title
+                        )
+                    ).await;
                     return (StatusCode::OK, "").into_response();
                 }else{
                     return (StatusCode::BAD_REQUEST, "fail").into_response();

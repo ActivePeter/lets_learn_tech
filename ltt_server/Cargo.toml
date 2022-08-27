@@ -13,7 +13,10 @@ registry = "git://mirrors.ustc.edu.cn/crates.io-index"
 
 
 [dependencies]
-axum = "0.5.13"
+futures-channel="0.3.23"
+tokio-tungstenite = "*"
+futures-util="0.3.23"
+axum = {version= "0.5.13", features = ["ws", "headers"] }
 tokio = { version = "1.0", features = ["full"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"

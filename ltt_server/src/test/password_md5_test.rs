@@ -20,7 +20,7 @@ pub async fn encrypt_test() {
      */
     let check_result = get_hash_value(
         &salt,&password
-    ).await;
+    );
     if result == check_result {
         println!("Pass encrypt password test ! ");
     }else {
@@ -30,7 +30,7 @@ pub async fn encrypt_test() {
     不同盐值，相同密码，得出的hash值应不同，当然也有可能碰撞，但是概率太小太小
      */
     let wrong_salt = String::from("hhh123");
-    let wrong_result = get_hash_value(&wrong_salt,&password).await;
+    let wrong_result = get_hash_value(&wrong_salt,&password);
     if result == wrong_result {
         panic!("Wrong salt get right password ");
     }else {
