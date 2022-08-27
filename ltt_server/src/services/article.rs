@@ -6,7 +6,7 @@ use crate::services;
 use std::collections::HashMap;
 use tokio::sync::RwLock;
 
-pub type ArticleManagerMapSome=HashMap<ArticleId,UserId>;
+pub type ArticleManagerMapSome = HashMap<ArticleId,UserId>;
 pub struct ArticleManager {
     aid2some:RwLock<ArticleManagerMapSome>
 }
@@ -32,9 +32,11 @@ impl ArticleManager {
             hold.insert(aid as u32, uid as i32);
         }
     }
+
     pub async fn is_article_exist(&self, aid:ArticleId) -> bool {
         self.aid2some.read().await.get(&aid).is_some()
     }
+
     pub async fn update_article(
         &self,
         aid:ArticleId,
@@ -81,6 +83,20 @@ impl ArticleManager {
         get_dbhandler().await
             .db_get_article_by_id(id).await
     }
+
+    pub async fn get_author_id(&self, id : ArticleId) -> Option<UserId> {
+        self.aid2some.read().await.get(&id).cloned()
+    }
+
+
+    /*
+        用于删除文章接口调用,将文章从数据中删除，包括相关的标签
+        @参数 ： id 待删除文章的ArticleId
+        @返回值 : 是否删除成功
+     */
+    // pub async fn article_del(&self, id : ArticleId) -> bool {
+    //
+    // }
 }
 
 //

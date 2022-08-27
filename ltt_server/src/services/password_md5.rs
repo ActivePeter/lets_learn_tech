@@ -42,7 +42,7 @@ pub async fn get_random_string(length : u32) ->String {
     let mut result = String::new();
     let mut  rng = rand::thread_rng();
     for _ in 0..length {
-        result.push(char::from(rng.gen_range(0..255)));
+        result.push(char::from(rng.gen_range(0..127)));
     }
     return result;
 }
