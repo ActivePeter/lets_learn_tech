@@ -20,6 +20,20 @@ use std::hash::{Hash, Hasher};
 use std::ptr::hash;
 use rand::{random, Rng};
 
+//数据库只能存i64
+pub fn hash_u64_to_i64(hash:u64)->i64{
+    let num = unsafe {
+        std::mem::transmute::<u64, i64>(hash)
+    };
+    num
+}
+pub fn hash_i64_to_u64(hash_in_db:i64)->u64{
+    let num = unsafe {
+        std::mem::transmute::<i64, u64>(hash_in_db)
+    };
+    num
+}
+
 /*
   @参数: length : 获取随机字符串的长度
   @返回值： 一个随机字符串长度为length
@@ -42,13 +56,13 @@ pub async fn encrypt_password(password : &String) -> (u64,String) {
     let salt = get_random_string(SALT_LENGTH).await;
     let mut hash_value = password.clone();
 
-    return (get_hash_value(&salt,password).await,salt)
+    return (get_hash_value(&salt,password),salt)
 }
 
 /*
 使用盐值加密字符串返回结果
  */
-pub async fn get_hash_value(salt : &String, password :&String) -> u64 {
+pub fn get_hash_value(salt : &String, password :&String) -> u64 {
     let mut hash_value = password.clone();
     for char_of_salt in salt.chars() {
         hash_value.push(char_of_salt);

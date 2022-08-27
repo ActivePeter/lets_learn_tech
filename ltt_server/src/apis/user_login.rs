@@ -13,7 +13,7 @@ pub async fn user_login(
     let uid = match G_USER_MANAGER.search_user(&payload.name_or_email).await
     {
         Some(user) => {
-            if user.password != payload.password {
+            if !user.check_pw_right( &payload.password ){
                 return (StatusCode::BAD_REQUEST, "wronginfo").into_response();
             }
             user.id
