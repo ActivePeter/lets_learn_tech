@@ -18,7 +18,7 @@ pub async fn article_update(
         CheckTokenRes::Valid => {
             if services::article::G_ARTICLE_MAN.is_article_exist(payload.aid).await{
                 let res=services::article::G_ARTICLE_MAN.update_article(
-                    payload.aid,payload.tags,payload.content,payload.rawtext,payload.title
+                    payload.aid,payload.tags,payload.content,payload.rawtext,payload.title.clone()
                 ).await;
                 if res{
                     services::robot_service::G_ROBOT_MAN.send_msg(
