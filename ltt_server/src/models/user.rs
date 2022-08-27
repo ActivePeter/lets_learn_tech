@@ -48,6 +48,8 @@ impl User {
         None
     }
     pub fn check_pw_right(&self,pw:&String)->bool{
-        self.pw_hash==get_hash_value(&self.pw_salt,pw)
+        let hash=get_hash_value(&self.pw_salt,pw);
+        println!("user pw check {} {} {} {}",self.pw_salt,self.pw_hash,pw,hash);
+        self.pw_hash==hash
     }
 }
