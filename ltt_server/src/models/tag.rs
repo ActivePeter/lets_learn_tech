@@ -15,7 +15,7 @@ hash<TagId,Vec<ArticleId>> 现在暂时不考虑这个东西
 
 pub type TagId=u32;
 
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize,Clone)]
 pub struct TagInfo{
     pub tag_id:TagId,
     pub tag_name:String,

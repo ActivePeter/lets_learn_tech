@@ -11,6 +11,7 @@ use crate::models::tag::TagId;
 use crate::models::article::{Article, ArticleId};
 use crate::services;
 use crate::models::path::article_path;
+use crate::services::tag::{TagManager, tags_format_string};
 
 pub async fn article_update(
     Json(payload): Json<RequestContent>,
@@ -20,14 +21,16 @@ pub async fn article_update(
         CheckTokenRes::Valid => {
             if services::article::G_ARTICLE_MAN.is_article_exist(payload.aid).await{
                 let res=services::article::G_ARTICLE_MAN.update_article(
-                    payload.aid,payload.tags,payload.content,payload.rawtext,payload.title.clone()
+                    payload.aid,payload.tags.clone(),payload.content,payload.rawtext,payload.title.clone()
                 ).await;
                 if res{
+                    let ts=TagManager::get().get_tags_clone(&payload.tags).await;
                     services::robot_service::G_ROBOT_MAN.send_msg(
-                        &format!("{} 在社区更新了文章 《{}》, 快去看看吧！{}",
+                        &format!("{} 在社区更新了文章 《{}》, 快去看看吧！{}, {}",
                             UserManager::get().search_user_by_id(payload.uid).await.unwrap().username,
                             payload.title.trim_end(),
-                            article_path(payload.aid)
+                            article_path(payload.aid),
+                            tags_format_string(&ts)
                         )
                     ).await;
                     return (StatusCode::OK, "").into_response();

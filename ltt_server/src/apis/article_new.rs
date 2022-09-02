@@ -11,6 +11,7 @@ use crate::models::tag::TagId;
 use crate::models::article::{Article, ArticleId};
 use crate::services;
 use crate::models::path::article_path;
+use crate::services::tag::{TagManager, tags_format_string};
 
 pub async fn article_new(
     Json(payload): Json<ArticleNewRequest>,
@@ -19,14 +20,15 @@ pub async fn article_new(
     match token::checktoken(payload.uid,payload.token).await{
         CheckTokenRes::Valid => {
             let res=services::article::G_ARTICLE_MAN.new_article(
-                payload.uid,payload.tags,payload.content,payload.rawtext,payload.title.clone()
+                payload.uid,payload.tags.clone(),payload.content,payload.rawtext,payload.title.clone()
             ).await;
             if let Some(res)=res{
+                let ts=TagManager::get().get_tags_clone(&payload.tags).await;
                 services::robot_service::G_ROBOT_MAN.send_msg(
-                    &format!("{} 在社区发布了文章 《{}》, 快去看看吧！{}",
+                    &format!("{} 在社区发布了文章 《{}》, 快去看看吧！{}, {}",
                              UserManager::get().search_user_by_id(payload.uid).await.unwrap().username,
                              payload.title.trim_end(),
-                             article_path(res)
+                             article_path(res),tags_format_string(&ts)
                     )
                 ).await;
                 return (StatusCode::OK, serde_json::to_string(&ArticleNewResponse{

@@ -4,7 +4,6 @@ use crate::models::tag::{TagId, TagInfo, TagInfoWithoutArticles};
 use crate::models::article::ArticleId;
 use crate::db::sql::get_dbhandler;
 use std::ops::{DerefMut, Deref};
-
 pub struct TagManager {
     //setname->tagids
     tagsets: RwLock<HashMap<String, HashSet<TagId>>>,
@@ -34,6 +33,20 @@ pub enum RenameTagRes {
     Ok,
 }
 
+pub fn tags_format_string(tags:&Vec<TagInfo>) -> String {
+    let mut tagsstr ="[".to_string();
+    let mut first=true;
+    for t in tags{
+        if !first{
+            tagsstr+=","
+        }
+        first=false;
+        tagsstr+= &*t.tag_name
+    }
+    tagsstr+="]";
+    tagsstr
+}
+
 impl TagManager {
     pub fn new() -> TagManager {
         TagManager {
@@ -43,7 +56,19 @@ impl TagManager {
             aid_2_tags: Default::default()
         }
     }
-
+    pub fn get() -> &'static G_TAG_MAN {
+        &G_TAG_MAN
+    }
+    pub async fn get_tags_clone(&self, tags:&Vec<TagId>) -> Vec<TagInfo> {
+        let mut vec:Vec<TagInfo>=Vec::new();
+        let hold=self.tags.read().await;
+        for tid in tags{
+            if let Some(v)=hold.get(&tid){
+                vec.push((*v).clone())
+            }
+        }
+        vec
+    }
     pub async fn loadfromdb(&self){
         let (mut map,mut groups_)=get_dbhandler().await
             .db_get_all_taginfo().await.unwrap();

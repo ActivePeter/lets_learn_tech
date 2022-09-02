@@ -31,7 +31,7 @@ impl RobotMan {
         let mut sender = self.sender.write().await;
         let s =
             sender.as_mut().unwrap();
-        s.send(Message::from(
+        match s.send(Message::from(
             format!("{{\
                         \"action\": \"send_group_msg\", \
                         \"params\": {{ \
@@ -39,7 +39,10 @@ impl RobotMan {
                             \"message\": \"{}\" \
                         }}, \
                     }}",msg)
-        )).await;
+        )).await{
+            Ok(_) => {}
+            Err(_) => {}
+        }
     }
     pub async fn send_helloworld(&self) {
         let mut sender = self.sender.write().await;
