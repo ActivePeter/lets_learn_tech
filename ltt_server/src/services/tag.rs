@@ -41,7 +41,7 @@ pub fn tags_format_string(tags:&Vec<TagInfo>) -> String {
             tagsstr+=","
         }
         first=false;
-        tagsstr+= &*t.tag_name
+        tagsstr+= &*t.tag_name.trim_end();
     }
     tagsstr+="]";
     tagsstr
