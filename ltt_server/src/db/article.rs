@@ -1,8 +1,7 @@
 //操作article的表
 
 use crate::db::sql::DbHandler;
-use crate::models::tag::{TagInfo, TagId};
-use deadpool_postgres::tokio_postgres::{Error, Row};
+use crate::models::tag::{TagId};
 use crate::models::article::{Article, ArticleId, ArticlePreview};
 use crate::models::user::UserId;
 // use deadpool_postgres::tokio_postgres;
@@ -19,7 +18,7 @@ impl DbHandler {
 
     async fn create_article_table(&self) {}
     pub async fn db_get_article_by_id(&self,id:ArticleId)->Option<Article>{
-        let mut cmd=format!("SELECT articleid,
+        let cmd=format!("SELECT articleid,
        author_uid,
        content,
        tags,
@@ -85,7 +84,7 @@ impl DbHandler {
         rawtext: String,
         title: String, )->Option<ArticleId>{
         let tagsstr=serde_json::to_string(&tags).unwrap();
-        let mut cmd=format!("select create_article($1::TEXT,$2::TEXT,$3::TEXT,{},ARRAY{}::integer[]);",
+        let cmd=format!("select create_article($1::TEXT,$2::TEXT,$3::TEXT,{},ARRAY{}::integer[]);",
                          uid,tagsstr);
         let db=self.get().await;
         let ret=match db.query(&*cmd,&[
@@ -103,7 +102,22 @@ impl DbHandler {
         };
         ret
     }
-    pub async fn db_remove_article(&self) {}
+    pub async fn db_article_del(&self,id : ArticleId) ->bool {
+        let db = self.get().await;
+        let del_id = id as i64;
+        match db.query("select del_article($1);",
+                                 &[&del_id]).await{
+            Ok(_) => {
+                println!("Delete article done!");
+            }
+            Err(e) => {
+                eprintln!("delete from article_info where articleid {:?}",id);
+                eprintln!("db err {:?}",e);
+                return false
+            }
+        };
+        true
+    }
     pub async fn db_edit_article(&self) {}
 
     pub async fn db_articlepreview_search_bytags(&self, tags: &Vec<TagId>) -> Option<Vec<ArticlePreview>> {

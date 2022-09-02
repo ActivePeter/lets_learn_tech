@@ -41,6 +41,9 @@ pub async fn article_del(
     if uid != author_id  {
         return StatusCode::BAD_REQUEST
     }
+
+    // 用户是该文章的作者
+    G_ARTICLE_MAN.article_del(payload.article_id).await;
     return StatusCode::OK
 }
 

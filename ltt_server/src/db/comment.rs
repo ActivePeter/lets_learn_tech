@@ -16,7 +16,7 @@ impl DbHandler {
         for r in res{
             let cid:i64=r.get(0);
             let aid:i64=r.get(1);
-            map.insert(cid,(aid as u32));
+            map.insert(cid,aid);
         }
         map
     }

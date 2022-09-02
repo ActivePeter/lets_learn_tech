@@ -2,18 +2,14 @@
 // 然后将这样一个pair加入到一个哈希表中
 // 最后就是定时功能，超过一定时间这个验证码就失效。
 
-use axum::{Json, http};
+use axum::{Json};
 use axum::response::IntoResponse;
 use axum::http::StatusCode;
 use serde::{Deserialize, Serialize};
-use crate::services::token;
 use crate::services::verifycode::G_VERIFY_MANAGER;
 use crate::services::email_service::{G_EMAIL_MANAGER, EmailSendResult};
-use crate::models::user::UserId;
-use axum::body::{HttpBody, Body};
 use axum::extract::ConnectInfo;
 use std::net::SocketAddr;
-use std::future::Future;
 
 
 pub async fn verify_code_get(
