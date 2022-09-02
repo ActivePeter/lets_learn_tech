@@ -62,14 +62,20 @@ impl DbHandler {
         let res=self.get().await
             .query("insert into comment_info(userid,content,to_art_or_com,time,aid,to_cid) \
                 values($1::bigint,$2::TEXT,$3::boolean,now(),$4::bigint,$5::bigint) \
-                RETURNING commentid",&[&uid,&content,
-                &if to_comment_or_article{"false"}else { "true" },
-                &aid,&to_cid]).await;
-        if let Ok(res)=res{
-            let cid_:i64=res[0].get(0);
-            return Some(cid_ as CommentId)
+                RETURNING commentid",&[&(uid as i64),&content,
+                &(!to_comment_or_article),
+                &(aid as i64),&(to_cid as i64)]).await;
+        match res{
+            Ok(res) => {
+
+                let cid_:i64=res[0].get(0);
+                return Some(cid_ as CommentId)
+            }
+            Err(e) => {
+                eprintln!("{:?}",e);
+                None
+            }
         }
-        None
     }
     pub async fn db_remove_comment(&self) {}
     pub async fn db_edit_comment(&self) {}
