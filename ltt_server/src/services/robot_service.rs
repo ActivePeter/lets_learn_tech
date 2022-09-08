@@ -12,9 +12,93 @@ use tokio::time::Duration;
 use std::borrow::BorrowMut;
 use std::ops::DerefMut;
 use axum::http::Response;
+use serde_json::Value;
 
 lazy_static::lazy_static! {
     pub static ref G_ROBOT_MAN : RobotMan = RobotMan::new();
+}
+
+enum MsgTarget{
+    Group(i64),
+    Person(i64),
+}
+impl MsgTarget{
+    pub fn parse_from_value(v:&serde_json::Value)->Option<MsgTarget>{
+        if v.is_object(){
+            match v.as_object().unwrap().get("message_type"){
+                None => {return None;}
+                Some(v_) => {
+                    if v_.is_string()&&v_.as_str().unwrap()=="group"{
+                        return Some(MsgTarget::Group(
+                            v.as_object().unwrap().get("group_id").unwrap().as_i64().unwrap()
+                        ));
+                    }
+                    if v_.is_string()&&v_.as_str().unwrap()=="private"{
+                        return Some(MsgTarget::Person(
+                            v.as_object().unwrap().get("user_id").unwrap().as_i64().unwrap()
+                        ));
+                    }
+                }
+            }
+        }
+        None
+    }
+}
+
+struct MsgBuilder{
+    targets:Vec<MsgTarget>,
+    msg:String
+}
+impl MsgBuilder{
+    pub fn new() -> MsgBuilder {
+        MsgBuilder{
+            targets: vec![],
+            msg: "".to_string()
+        }
+    }
+    pub fn add_target(&mut self, tar:MsgTarget) -> &mut MsgBuilder {
+        self.targets.push(tar);
+
+        self
+    }
+    pub fn set_msg(&mut self, msg:String) -> &mut MsgBuilder {
+        self.msg=msg;
+
+        self
+    }
+    pub async fn send(&mut self){
+        for t in &self.targets{
+            if let MsgTarget::Group(id)=t{
+                let mut sender=G_ROBOT_MAN.sender.write().await;
+                match sender.as_mut().unwrap().send(Message::from(
+                    format!("{{\
+                        \"action\": \"send_group_msg\", \
+                        \"params\": {{ \
+                            \"group_id\": \"{}\", \
+                            \"message\": \"{}\" \
+                        }}, \
+                    }}",id,self.msg)
+                )).await{
+                    Ok(_) => {}
+                    Err(_) => {}
+                }
+            }else if let MsgTarget::Person(id)=t{
+                let mut sender=G_ROBOT_MAN.sender.write().await;
+                match sender.as_mut().unwrap().send(Message::from(
+                    format!("{{\
+                        \"action\": \"send_private_msg\", \
+                        \"params\": {{ \
+                            \"user_id\": \"{}\", \
+                            \"message\": \"{}\" \
+                        }}, \
+                    }}",id,self.msg)
+                )).await{
+                    Ok(_) => {}
+                    Err(_) => {}
+                }
+            }
+        }
+    }
 }
 
 pub struct RobotMan {
@@ -26,6 +110,9 @@ impl RobotMan {
         RobotMan {
             sender: Default::default()
         }
+    }
+    pub async fn send_str(&self){
+
     }
     pub async fn send_msg(&self,msg:&String){
         let mut sender = self.sender.write().await;
@@ -110,7 +197,44 @@ pub async fn start_robot() {
     }
     // }
 }
+mod prints{
+    use crate::services::robot_service::{MsgTarget, MsgBuilder};
 
+    pub async fn help_list(v:serde_json::Value)->Option<()>{
+        MsgBuilder::new()
+            .set_msg("current cmds:\n\
+            - list_tags\n\
+            - ".to_string())
+            .add_target(MsgTarget::parse_from_value(&v)?)
+            .send().await
+        ;
+
+        Some(())
+    }
+    pub async fn list_tags(v:serde_json::Value)->Option<()>{
+        MsgBuilder::new()
+            .set_msg("current cmds:\n\
+            list_tags".to_string())
+            .add_target(MsgTarget::parse_from_value(&v)?)
+            .send().await
+        ;
+
+        Some(())
+    }
+}
+
+pub async fn handle_manager_msg(v:serde_json::Value){
+    let cmd=v.as_object().unwrap().get("message").unwrap().as_str().unwrap();
+    let iter=cmd.split_whitespace();
+    let (len,_)=iter.size_hint();
+
+    println!("msg4 {}",len);
+    if len==0 &&cmd=="小汉堡"{
+        prints::help_list(v).await;
+    }else{
+
+    }
+}
 
 pub async fn read_loop(read: SplitStream<WebSocketStream<MaybeTlsStream<TcpStream>>>,
                        sender: Sender<()>,
@@ -118,9 +242,20 @@ pub async fn read_loop(read: SplitStream<WebSocketStream<MaybeTlsStream<TcpStrea
     tokio::spawn(async move {
         read.for_each(|message| async {
             match message {
-                Ok(message) => {
-                    let data = message.into_data();
-                    // tokio::io::stdout().write_all(&data).await.unwrap();
+                Ok(message) =>{
+                    println!("msg {}",message.to_string());
+                    let v:serde_json::Value=serde_json::from_str(&*message.to_string()).unwrap();
+                    if v.is_object(){
+                        if let Some(id)=v.as_object().unwrap().get("user_id")
+                        {
+                            println!("msg2 {}",id);
+                            if id.is_number()&&id.as_i64().unwrap()==1020401660{
+                                println!("msg3");
+                                handle_manager_msg(v).await;
+                            }
+                        }
+                    }
+                    // tokio::io::stdout().write_all(message).await.unwrap();
                 }
                 Err(_) => {
                     return;
