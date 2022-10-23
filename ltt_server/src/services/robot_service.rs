@@ -213,8 +213,7 @@ mod prints{
     }
     pub async fn list_tags(v:serde_json::Value)->Option<()>{
         MsgBuilder::new()
-            .set_msg("current cmds:\n\
-            list_tags".to_string())
+            .set_msg("haha".to_string())
             .add_target(MsgTarget::parse_from_value(&v)?)
             .send().await
         ;
@@ -229,8 +228,16 @@ pub async fn handle_manager_msg(v:serde_json::Value){
     let (len,_)=iter.size_hint();
 
     println!("msg4 {}",len);
-    if len==0 &&cmd=="小汉堡"{
-        prints::help_list(v).await;
+    if len==0{
+        match cmd{
+            "小汉堡"=>{
+                prints::help_list(v).await;
+            }
+            "list_tags"=>{
+                prints::list_tags(v).await;
+            }
+            &_ => {}
+        }
     }else{
 
     }

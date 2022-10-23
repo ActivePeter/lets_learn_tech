@@ -49,6 +49,7 @@ async fn main() {
         .route("/article_update",post(apis::article_update::article_update))
         .route("/comments_getofarticle",post(apis::comments_getofarticle::comments_getofarticle))
         .route("/comment_to",post(apis::comment_to::comment_to))
+        .route("/print",post(apis::print::print))
         ;
 
     let addr = SocketAddr::from(([127, 0, 0, 1], 3000));

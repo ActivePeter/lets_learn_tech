@@ -47,6 +47,10 @@ pub fn tags_format_string(tags:&Vec<TagInfo>) -> String {
     tagsstr
 }
 
+// pub async fn tagsall_format_string(with_dir:bool) -> String {
+//
+// }
+
 impl TagManager {
     pub fn new() -> TagManager {
         TagManager {
