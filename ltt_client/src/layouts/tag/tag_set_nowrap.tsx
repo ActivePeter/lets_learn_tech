@@ -22,9 +22,13 @@ export class TagSetCompNoWrap extends PureComponent<Props> {
                      gap: curstyle().gap.m
                  }}
             >
-                {this.props.tags.map(
-                    (value, index) =>
-                        (
+                {(this.props.tags&&
+                    this.props.tags.length>0&&
+                    this.props.tags[0]
+                )?this.props.tags.map(
+                    (value, index) =>{
+                        console.log("TagSetCompNoWrap map value",value,this.props.tags)
+                        return (
                             <TagComp
                                 onselect_change={(select)=>{
                                     this.props.on_select?.(
@@ -34,9 +38,10 @@ export class TagSetCompNoWrap extends PureComponent<Props> {
                                 selectable={false}
                                 key={value.tag_id}
                                 tagname={
-                                this.props.showcnt?value.tag_name+"("+value.artcnt+")":value.tag_name} tagcolor={""}/>
+                                    this.props.showcnt?value.tag_name+"("+value.artcnt+")":value.tag_name} tagcolor={""}/>
 
-                        ))
+                        )
+                    }):undefined
                 }
             </Box>
         );

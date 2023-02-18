@@ -1,0 +1,31 @@
+name: deploy_to_server
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: deploy_to_server
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: yarn
+      - name: Install dependencies
+          run: |
+            cd ./ltt_client
+            yarn install --frozen-lockfile
+      - name: Build website
+        run: |
+          cd ./ltt_client
+          yarn build
+      - name: ssh_update
+        uses: garygrossgarten/github-action-ssh@release
+        with:
+          command: ls -a
+          host: ${{ secrets.HOST }}
+          username: root
+          port: 9969
+          privateKey: ${{ secrets.PRIVATE_KEY}}
