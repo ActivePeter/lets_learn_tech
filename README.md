@@ -9,7 +9,7 @@
 前端：`React`
 
 
-后端: `Rust` `axum` 
+后端: `Rust`、`axum` 
 
 数据库:`Postgrpesql`
 

@@ -38,14 +38,19 @@ pub fn hash_i64_to_u64(hash_in_db:i64)->u64{
   @参数: length : 获取随机字符串的长度
   @返回值： 一个随机字符串长度为length
  */
-pub async fn get_random_string(length : u32) ->String {
-    let mut result = String::new();
+ pub fn get_random_string(length : u32) ->String {
+    let mut result = String::with_capacity(length as usize);
     let mut  rng = rand::thread_rng();
+    //use visible string
+    let chars = "ABCDEFGHIJKLMNOPQRSZUVWXYZabcdefghijklmnopqrstuvwxyz1234567890_=+-*/".as_bytes();
     for _ in 0..length {
-        result.push(char::from(rng.gen_range(0..127)));
+        let pos=rng.next_u32() % chars.len() as u32;
+        let a=chars[pos as usize];
+        result.push(a as char);
     }
     return result;
 }
+ 
 
 /*
     @参数 : password : 待加密字符串
@@ -64,9 +69,15 @@ pub async fn encrypt_password(password : &String) -> (u64,String) {
  */
 pub fn get_hash_value(salt : &String, password :&String) -> u64 {
     let mut hash_value = password.clone();
+    hash_value.reserve(hash_value.len() + salt.len());
     for char_of_salt in salt.chars() {
         hash_value.push(char_of_salt);
     }
+    //FIXME:use sha256
+    //https://docs.rs/sha256/latest/sha256/
+    //use sha256::{digest, try_digest};
+    //let input = String::from("hello");
+    //let val = digest(input);
     let mut hasher = DefaultHasher::default();
     hash_value.hash(&mut hasher);
     hasher.finish()
