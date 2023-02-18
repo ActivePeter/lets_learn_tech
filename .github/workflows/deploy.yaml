@@ -37,7 +37,7 @@ jobs:
         with:
           command: |
             cd /www/wwwroot/127.0.0.1
-            ls -a
+            sh ./redeploy_learntech.sh
           host: ${{ secrets.HOST }}
           username: root
           port: ${{ secrets.PORT }}
