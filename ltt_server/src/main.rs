@@ -47,6 +47,7 @@ async fn main() {
         .route("/article_new",post(apis::article_new::article_new))
         .route("/article_getdetail",post(apis::article_getdetail::article_getdetail))
         .route("/article_update",post(apis::article_update::article_update))
+        .route("/article_delete",post(apis::article_del::article_del))
         .route("/comments_getofarticle",post(apis::comments_getofarticle::comments_getofarticle))
         .route("/comment_to",post(apis::comment_to::comment_to))
         .route("/print",post(apis::print::print))

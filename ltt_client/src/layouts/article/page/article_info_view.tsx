@@ -51,6 +51,7 @@ export class ArticleInfoView extends PureComponent<Props> {
             console.warn("ArticleInfoView render undef")
             return undefined
         }
+        // @ts-ignore
         const editable=article.author_id==logp.get_logged_basic().uid
         let authorname:string|undefined
         let userinfo=this.state.userinfo as UserBasicInfo|undefined;
@@ -66,6 +67,7 @@ export class ArticleInfoView extends PureComponent<Props> {
                 }
             })
         }
+        // @ts-ignore
         return (
             <Box
                 className={reuse.col_flexcontainer}
@@ -73,20 +75,41 @@ export class ArticleInfoView extends PureComponent<Props> {
                     padding:curstyle().gap.xxl,
                     gap:curstyle().gap.xxl
                 }}>
-                {editable?<Button
-                    sx={{
-                        width: "100%"
-                    }}
-                    onClick={() => {
-                        const at=articlep.get_cur_article()
-                        if(at){
-                            RouteControl.replace_article_edit(at.id)
-                            articlep.sync_info_in_path()
-                        }
-                    }}
-                >
-                    编辑文章
-                </Button>:undefined}
+                {/*编辑和删除文章按钮*/}
+                {editable? <Box className={reuse.row_flex2side_container}>
+                    <Button
+                        sx={{
+                            width: "calc(100% - 60px - "+curstyle().gap.common+")"
+                        }}
+                        onClick={() => {
+                            const at=articlep.get_cur_article()
+                            if(at){
+                                RouteControl.replace_article_edit(at.id)
+                                articlep.sync_info_in_path()
+                            }
+                        }}
+                    >
+                        编辑文章
+                    </Button>
+                    <Button
+                        sx={{
+                            width: "60px"
+                        }}
+                        onClick={() => {
+                            if(confirm("删除文章不可恢复，请确认操作")){
+                                PaStateMan.getstate().proxy_article
+                                    .delete_article(article.id)
+                                    .then((res)=>{
+                                        if (res=="succ"){
+                                            RouteControl.replace_index()
+                                        }
+                                    })
+                            }
+                        }}
+                    >
+                        删除
+                    </Button>
+                </Box>:undefined}
                 <SetWrapper>
                     <Typography
                         level="h6"

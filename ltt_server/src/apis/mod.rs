@@ -12,3 +12,4 @@ pub mod comment_to;
 pub mod comments_getofarticle;
 pub mod article_del;
 pub mod print;
+mod api_generated;

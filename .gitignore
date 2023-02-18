@@ -4,3 +4,4 @@ ltt_server/.idea/sqldialects.xml
 ltt_server/config.json
 ltt_server/email_config.json
 ltt_client/yarn.lock
+ltt_server/Cargo.lock

@@ -8,6 +8,7 @@ import {PaStateMan} from "@/util/pa_state_man";
 import {api_article_getdetail} from "@/store/net/api_article_getdetail";
 import {api_article_update} from "@/store/net/api_article_update";
 import BraftEditor from "braft-editor";
+import {api_article_delete, ArticleDeleteReq} from "@/store/net/api_generated";
 
 export class ArticleProxy{
     article_preview_map=new ArticlePreviewMap()
@@ -107,6 +108,22 @@ export class ArticleProxy{
                 }
             })
         }
+    }
+    async delete_article(id:number):Promise<"needlogin" | "fail" | "succ">{
+        if(PaStateMan.getstate().proxy_log.get_logged_uid()==-1){
+            Notify.warn("请先登录或注册","")
+            return "needlogin";
+        }
+
+        let res=await api_article_delete(new ArticleDeleteReq(
+            PaStateMan.getstate().proxy_log.get_logged_token(),
+            id
+        ))
+        if(!res||res.succ1_fail0==0){
+            Notify.warn("删除失败",res?res.info:"")
+            return "fail";
+        }
+        return "succ"
     }
     set_article_id_and_fetchwhenchange(id:number){
         if(this.state.article_id!=id){

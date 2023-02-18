@@ -57,6 +57,9 @@ export namespace RouteControl{
         }
         return -1;
     }
+    export function replace_index(){
+        history.replace("/")
+    }
     export function push_article_view(articleid:number){
         history.push("/article/"+articleid+"?mode=view")
     }
