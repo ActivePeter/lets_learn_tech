@@ -18,7 +18,7 @@ const SALT_LENGTH: u32 = 6;
 use std::collections::hash_map::DefaultHasher;
 use std::hash::{Hash, Hasher};
 use std::ptr::hash;
-use rand::{random, Rng};
+use rand::{random, Rng, RngCore};
 
 //数据库只能存i64
 pub fn hash_u64_to_i64(hash:u64)->i64{
@@ -58,7 +58,7 @@ pub fn hash_i64_to_u64(hash_in_db:i64)->u64{
  */
 
 pub async fn encrypt_password(password : &String) -> (u64,String) {
-    let salt = get_random_string(SALT_LENGTH).await;
+    let salt = get_random_string(SALT_LENGTH);
     let mut hash_value = password.clone();
 
     return (get_hash_value(&salt,password),salt)
