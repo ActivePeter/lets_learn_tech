@@ -1,6 +1,6 @@
 {
   "addr": "数据库地址",
-  "port": 数据库端口号,
+  "port": 5432,
   "dbname": "数据库名字",
   "username": "数据库用户名",
   "password": "数据库密码",
