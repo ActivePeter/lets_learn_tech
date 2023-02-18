@@ -53,7 +53,7 @@ export default class HomePage extends PureComponent{
                              overflowY:"scroll"
                          }}
                     >
-                        <ArticleInfo></ArticleInfo>
+                        {/*<ArticleInfo></ArticleInfo>*/}
                     </Box>
                     <Box className={index_styles.main + " " +
                         reuse_styles.fillleft_flex
@@ -62,7 +62,7 @@ export default class HomePage extends PureComponent{
                             position:"relative"
                         }}
                     >
-                        <ArticleView root={this.root}/>
+                        {/*<ArticleView root={this.root}/>*/}
                     </Box>
                     {/*</div>*/}
                 </Box>
