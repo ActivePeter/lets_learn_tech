@@ -27,7 +27,6 @@
 
 ## Todo
 
-- 删除文章(目前只操作了表，关联信息没分析)
 - 删除评论
 - 置顶文章
 - 置顶评论
@@ -40,7 +39,7 @@
 - 点击logo跳回主页
 
 ## Done
-
+- [删除文章](https://bojagybyoq.feishu.cn/docx/H1mxdq3B4oDnyTxXYWecHMF7nvc#DC2GdUwasoimqkxqI1Ic90Brneg)
 - 机器人消息提示：文章带上tag
 
 
