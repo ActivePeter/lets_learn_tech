@@ -21,10 +21,23 @@ jobs:
         run: |
           cd ./ltt_client
           yarn build
-      - name: ssh_update
+      - name: Scp to server
+        uses: garygrossgarten/github-action-scp@release
+        with:
+          local: ltt_client/dist
+          remote: /www/wwwroot/127.0.0.1/dist2
+          # 涉及偏安全隐私的信息，不要明文暴露在此文件中，因为repo很可能是公开的，会被所有人看见
+          # ${{ ... }} 会应用你在对应项目设置中，配置的对应serets的键值信息，从而保护私密信息不被看到
+          host: ${{ secrets.HOST }}
+          port: ${{secrets.PORT}}
+          username: root
+          privateKey: ${{ secrets.PRIVATE_KEY }}
+      - name: SSH update
         uses: garygrossgarten/github-action-ssh@release
         with:
-          command: ls -a
+          command: |
+            cd /www/wwwroot/127.0.0.1
+            ls -a
           host: ${{ secrets.HOST }}
           username: root
           port: ${{ secrets.PORT }}
