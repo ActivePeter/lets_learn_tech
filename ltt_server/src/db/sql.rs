@@ -55,7 +55,7 @@ pub async fn sqlstart(config: &ServerConfig) -> Result<(), Error> {
                     let p = dir.path();
                     if p.is_file(){
                         let fname=String::from(p.file_name().unwrap().to_str().unwrap());
-                        if fname.find("func_")==Some(0){
+                        if (fname.find("func_")==Some(0) && !fname.contains("del")){
                             println!("regist func {}",fname);
                             let mut file = File::open(&p).unwrap();
                             let mut s =String::new();
