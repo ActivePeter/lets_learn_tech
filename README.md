@@ -39,7 +39,8 @@
 - 点击logo跳回主页
 
 ## Done
-- [删除文章](https://bojagybyoq.feishu.cn/docx/H1mxdq3B4oDnyTxXYWecHMF7nvc#DC2GdUwasoimqkxqI1Ic90Brneg)
+- 2022.2.19 [删除文章](https://bojagybyoq.feishu.cn/docx/H1mxdq3B4oDnyTxXYWecHMF7nvc#DC2GdUwasoimqkxqI1Ic90Brneg)
+- 2022.2.18 修复白屏bug，github action 自动集成
 - 机器人消息提示：文章带上tag
 
 
