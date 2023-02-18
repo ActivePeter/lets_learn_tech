@@ -114,7 +114,7 @@ impl RobotMan {
     pub async fn send_str(&self){
 
     }
-    pub async fn send_msg(&self,msg:&String){
+    async fn send_msg_2_group(&self,group_id:&str,msg:&str){
         let mut sender = self.sender.write().await;
         let s =
             sender.as_mut().unwrap();
@@ -122,14 +122,18 @@ impl RobotMan {
             format!("{{\
                         \"action\": \"send_group_msg\", \
                         \"params\": {{ \
-                            \"group_id\": \"1070262019\", \
+                            \"group_id\": \"{}\", \
                             \"message\": \"{}\" \
                         }}, \
-                    }}",msg)
+                    }}",group_id,msg)
         )).await{
             Ok(_) => {}
             Err(_) => {}
         }
+    }
+    pub async fn send_msg(&self,msg:&String){
+        self.send_msg_2_group("1070262019",msg.as_str()).await;
+        self.send_msg_2_group("194941889",msg.as_str()).await;
     }
     pub async fn send_helloworld(&self) {
         let mut sender = self.sender.write().await;
@@ -167,7 +171,7 @@ pub async fn start_robot() {
     loop{
         println!("begin connect");
         // loop{
-        let c=connect_async("ws://s5.nsloop.com:4439").await;
+        let c=connect_async("ws://127.0.0.1:8082").await;
         match c{
             Ok(c) => {
                 let (ws_stream, _) =c;
