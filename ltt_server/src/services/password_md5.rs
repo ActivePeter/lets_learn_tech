@@ -39,7 +39,7 @@ pub fn hash_i64_to_u64(hash_in_db:i64)->u64{
   @返回值： 一个随机字符串长度为length
  */
 pub async fn get_random_string(length : u32) ->String {
-    let mut result = String::with_capacity(length);
+    let mut result = String::with_capacity(length as usize);
     let mut  rng = rand::thread_rng();
     //use visible string
     let chars = String::from("ABCDEFGHIJKLMNOPQRSZUVWXYZabcdefghijklmnopqrstuvwxyz1234567890_=+-*/");
