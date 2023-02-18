@@ -38,16 +38,19 @@ pub fn hash_i64_to_u64(hash_in_db:i64)->u64{
   @参数: length : 获取随机字符串的长度
   @返回值： 一个随机字符串长度为length
  */
-pub async fn get_random_string(length : u32) ->String {
+ pub fn get_random_string(length : u32) ->String {
     let mut result = String::with_capacity(length as usize);
     let mut  rng = rand::thread_rng();
     //use visible string
-    let chars = String::from("ABCDEFGHIJKLMNOPQRSZUVWXYZabcdefghijklmnopqrstuvwxyz1234567890_=+-*/");
+    let chars = "ABCDEFGHIJKLMNOPQRSZUVWXYZabcdefghijklmnopqrstuvwxyz1234567890_=+-*/".as_bytes();
     for _ in 0..length {
-        result.push(chars.get(rng.next_u32() % chars.len()).unwrap());
+        let pos=rng.next_u32() % chars.len() as u32;
+        let a=chars[pos as usize];
+        result.push(a as char);
     }
     return result;
 }
+ 
 
 /*
     @参数 : password : 待加密字符串
