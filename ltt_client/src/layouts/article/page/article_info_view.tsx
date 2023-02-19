@@ -28,6 +28,7 @@ export class ArticleInfoView extends PureComponent<Props> {
             registval(state.article,()=>{
                 console.warn("article load", state.article)
             })
+            registval(state.logged_basicinfo)
         })
         const articlep=PaStateMan.getstate().proxy_article
         articlep.sync_info_in_path();

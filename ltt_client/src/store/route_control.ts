@@ -1,4 +1,5 @@
 import {history} from "umi";
+import {BaseUrl, BaseUrlBrowser} from "@/store/net/baseurl";
 function getUrlParams (query:string) {
     let urlParam:any = {};
     if(query){
@@ -59,6 +60,14 @@ export namespace RouteControl{
     }
     export function replace_index(){
         history.replace("/")
+    }
+    export function push_index(){
+        if(window.location.pathname==BaseUrlBrowser+"/"||
+            window.location.pathname==BaseUrlBrowser
+        ){
+            return
+        }
+        history.push("/")
     }
     export function push_article_view(articleid:number){
         history.push("/article/"+articleid+"?mode=view")

@@ -67,6 +67,7 @@ export class ArticlePreviewBar extends PureComponent<Props> {
                             gap:curstyle().gap.m,
                         }}>
                             <Typography
+                                sx={{width:"100%"}}
                                 className={reuse.cursorhand}
                                 level="h5"
                                 onClick={()=>{
@@ -77,6 +78,7 @@ export class ArticlePreviewBar extends PureComponent<Props> {
                                 {articledetail.title}
                             </Typography>
                             <Box sx={{
+                                width:"100%",
                                 color:curstyle().colors.font_main2,
                                 fontSize:curstyle().fontsize.s
                             }}>
@@ -84,7 +86,9 @@ export class ArticlePreviewBar extends PureComponent<Props> {
                             </Box>
                             <Box
                                 className={reuse.row_flex2side_container}
-                                sx={{color:curstyle().colors.gray_dd,
+                                sx={{
+                                    width:"100%",
+                                    color:curstyle().colors.gray_dd,
                                 fontSize:curstyle().fontsize.s
                                 }}
                             >
