@@ -126,7 +126,7 @@ impl DbHandler {
             "SELECT articleid,author_uid,substring(rawtext,0,100),tags,title, \
                     to_char(createtime,'yyyy-mm-dd hh24:mi:ss'),\
                     to_char(edittime,'yyyy-mm-dd hh24:mi:ss') \
-                FROM public.article_info ORDER BY edittime DESC"
+                FROM public.article_info ORDER BY ontop DESC, edittime DESC"
                 .to_string()
         } else {
             let mut cmdmake =
@@ -147,7 +147,7 @@ impl DbHandler {
                 }
                 first = false
             }
-            cmdmake += ")) ORDER BY edittime DESC";
+            cmdmake += ")) ORDER BY ontop DESC, edittime DESC";
 
             cmdmake
         };
