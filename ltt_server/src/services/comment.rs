@@ -7,6 +7,11 @@ use crate::services::article::ArticleManager;
 use std::collections::HashMap;
 use tokio::sync::RwLock;
 use std::ops::DerefMut;
+use serde::__private::de::TagContentOtherField::Tag;
+use crate::models::path::article_path;
+use crate::models::tag::TagId;
+use crate::services;
+use crate::services::tag::{TagManager, tags_format_string, tags_format_string2};
 lazy_static::lazy_static! {
     pub static ref G_COMMENT_MAN : CommentManager = CommentManager::new();
 }
@@ -91,6 +96,7 @@ impl CommentManager {
         if a.is_none() {
             return AddCommentRes::ArticleNotExist;
         }
+        let a=a.unwrap();
         if to_comment_or_article {
             let hold=self.comment2some.read().await;
             let c2a = hold.get(&to_cid);
@@ -114,6 +120,16 @@ impl CommentManager {
             to_cid,
             aid,
         ).await {
+            let tagids=a.tag_ids.iter().map(|v|{*v as TagId}).collect::<Vec<TagId>>();
+            let tags=TagManager::get().get_tags_clone(
+                &tagids).await;
+            services::robot_service::G_ROBOT_MAN.send_msg(
+                &format!("{} 在文章《{}》下发表了评论, 快去围观围观～{}, {}",
+                         UserManager::get().search_user_by_id(uid).await.unwrap().username,
+                         a.title.trim_end(),
+                         article_path(aid),tags_format_string2(tags.iter())
+                )
+            ).await;
             return AddCommentRes::Succ(id);
         }
         AddCommentRes::DbFail

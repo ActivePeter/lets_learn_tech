@@ -47,6 +47,21 @@ pub fn tags_format_string(tags:&Vec<TagInfo>) -> String {
     tagsstr
 }
 
+pub fn tags_format_string2<'a>(tags:impl Iterator<Item = &'a TagInfo>) -> String
+{
+    let mut tagsstr ="[".to_string();
+    let mut first=true;
+    for t in tags{
+        if !first{
+            tagsstr+=","
+        }
+        first=false;
+        tagsstr+= &*t.tag_name.trim_end();
+    }
+    tagsstr+="]";
+    tagsstr
+}
+
 // pub async fn tagsall_format_string(with_dir:bool) -> String {
 //
 // }
