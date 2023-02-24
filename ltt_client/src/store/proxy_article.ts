@@ -155,7 +155,7 @@ export class ArticleProxy{
         return this.state.article_mode
     }
     get_articles_with_selected_tags_for_preview(tags:number[]=[]){
-        api_articles_getwithtag([]).then(
+        api_articles_getwithtag(tags).then(
             res=>{
                 if(res!=undefined){
                     const preview_arts: number[]=[]
