@@ -27,7 +27,7 @@ export class TagSetCompNoWrap extends PureComponent<Props> {
                     this.props.tags[0]
                 )?this.props.tags.map(
                     (value, index) =>{
-                        console.log("TagSetCompNoWrap map value",value,this.props.tags)
+                        // console.log("TagSetCompNoWrap map value",value,this.props.tags)
                         return (
                             <TagComp
                                 onselect_change={(select)=>{

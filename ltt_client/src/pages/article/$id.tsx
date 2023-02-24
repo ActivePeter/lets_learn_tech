@@ -16,6 +16,7 @@ import {UserNavi} from "@/layouts/user/user_navi";
 import {ArticleInfo} from "@/layouts/article/page/article_info";
 import {ArticleView} from "@/layouts/article/page/article_view";
 import {PaStateMan} from "@/util/pa_state_man";
+import {RouteControl} from "@/store/route_control";
 
 export class ArticleViewRoot{
     edit=new ArticleEditRoot()
@@ -37,6 +38,7 @@ export default class HomePage extends PureComponent{
     }
     root=new ArticleViewRoot()
     render() {
+        RouteControl.update_current_position("article")
         const headheight=curstyle().headheight
         return (
             <Fragment>

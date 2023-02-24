@@ -13,6 +13,7 @@ import {Fragment, PureComponent} from "react";
 import {LogFloat} from "@/layouts/login/logfloat";
 import {ArticlePreviewList} from "@/layouts/article/article_preview_list";
 import {PaStateMan} from "@/util/pa_state_man";
+import {RouteControl} from "@/store/route_control";
 
 export default class HomePage extends PureComponent{
     componentDidMount() {
@@ -22,6 +23,7 @@ export default class HomePage extends PureComponent{
 
     render() {
         const headheight=curstyle().headheight
+        RouteControl.update_current_position("index")
         return (
             <Fragment>
                 <Box className={
