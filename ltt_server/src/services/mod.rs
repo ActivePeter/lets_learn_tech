@@ -21,4 +21,7 @@ pub async fn init_all(){
     tokio::spawn(async move{
         services::robot_service::start_robot().await;
     });
+    tokio::spawn(async move{
+        services::robot_service::start_robot_wx().await;
+    });
 }

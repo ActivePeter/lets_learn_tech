@@ -103,12 +103,14 @@ impl MsgBuilder{
 
 pub struct RobotMan {
     sender: RwLock<Option<SplitSink<WebSocketStream<MaybeTlsStream<TcpStream>>, Message>>>,
+    sender2: RwLock<Option<SplitSink<WebSocketStream<MaybeTlsStream<TcpStream>>, Message>>>,
 }
 
 impl RobotMan {
     pub fn new() -> RobotMan {
         RobotMan {
-            sender: Default::default()
+            sender: Default::default(),
+            sender2: Default::default(),
         }
     }
     pub async fn send_str(&self){
@@ -131,9 +133,21 @@ impl RobotMan {
             Err(_) => {}
         }
     }
+    async fn send_msg_2_wx(&self,msg:&str){
+        let mut sender = self.sender2.write().await;
+        let s =
+            sender.as_mut().unwrap();
+        match s.send(Message::from(
+            msg
+        )).await{
+            Ok(_) => {}
+            Err(_) => {}
+        }
+    }
     pub async fn send_msg(&self,msg:&String){
         self.send_msg_2_group("1070262019",msg.as_str()).await;
         self.send_msg_2_group("194941889",msg.as_str()).await;
+        self.send_msg_2_wx(msg.as_str()).await;
     }
     pub async fn send_helloworld(&self) {
         let mut sender = self.sender.write().await;
@@ -167,6 +181,40 @@ impl RobotMan {
 
 
 // #[tokio::test(flavor = "multi_thread", worker_threads = 1)]
+pub async fn start_robot_wx() {
+    loop{
+        println!("begin connect");
+        // loop{
+        let c=connect_async("ws://192.168.31.185:9002").await;
+        match c{
+            Ok(c) => {
+                let (ws_stream, _) =c;
+                println!("WebSocket handshake has been successfully completed");
+
+                let (write, read) =
+                    ws_stream.split();
+
+
+                G_ROBOT_MAN.sender2.write().await.replace(write);
+
+                let (t, r) = tokio::sync::oneshot::channel();
+                read_loop(read, t).await;
+
+                // tokio::time::sleep(Duration::from_millis(3000));
+                // G_ROBOT_MAN.send_msg(&"hello".to_string()).await;
+                //等待websocket循环终止
+                r.await.unwrap();
+                println!("robot end");
+                tokio::time::sleep(Duration::from_secs(10)).await;
+            }
+            Err(_) => {
+                println!("co to robot fail");
+                tokio::time::sleep(Duration::from_secs(10)).await;
+            }
+        }
+    }
+    // }
+}
 pub async fn start_robot() {
     loop{
         println!("begin connect");
