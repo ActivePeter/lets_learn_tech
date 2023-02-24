@@ -4,6 +4,7 @@ import {TagInfo, TagSet} from "@/store/models/tag";
 import {TagSetComp} from "@/layouts/tag/tag_set";
 import {curstyle} from "@/theme/curtheme";
 import {PaStateMan} from "@/util/pa_state_man";
+import {RouteControl} from "@/store/route_control";
 
 
 interface Prop{
@@ -28,6 +29,9 @@ export class TagSetsComp extends Component <Prop>{
         } else {
             delete this.seltag_hashmap["$" + tagid]
         }
+
+        PaStateMan.getstate().proxy_tag.tag_selection_changed(
+            this.seltag_hashmap,RouteControl.current_position()=="index"?"mainpage":"other")
     }
 
     render() {

@@ -154,7 +154,7 @@ export class ArticleProxy{
     get_cur_mode():"view"|""|"edit"|"create"{
         return this.state.article_mode
     }
-    get_articles_with_selected_tags_for_preview(){
+    get_articles_with_selected_tags_for_preview(tags:number[]=[]){
         api_articles_getwithtag([]).then(
             res=>{
                 if(res!=undefined){

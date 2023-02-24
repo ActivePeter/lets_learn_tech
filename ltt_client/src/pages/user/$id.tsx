@@ -13,9 +13,11 @@ import {Fragment} from "react";
 import {LogFloat} from "@/layouts/login/logfloat";
 import {ArticlePreviewList} from "@/layouts/article/article_preview_list";
 import {UserNavi} from "@/layouts/user/user_navi";
+import {RouteControl} from "@/store/route_control";
 
 export default function HomePage() {
     const headheight=curstyle().headheight
+    RouteControl.update_current_position("user")
     return (
         <Fragment>
             <Box className={

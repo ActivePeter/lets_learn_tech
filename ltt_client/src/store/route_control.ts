@@ -29,6 +29,13 @@ function UrlParams2Suffix(params:any){
     return make
 }
 export namespace RouteControl{
+    var current_postion:"index"|"article"|"user"="index";
+    export function current_position(){
+        return current_postion
+    }
+    export function update_current_position(pos:"index"|"article"|"user"){
+        current_postion=pos
+    }
     export function open_user(uid:number){
         if(window.location.pathname=="/user/"+uid||
             window.location.pathname=="/user/"+uid+'/'
