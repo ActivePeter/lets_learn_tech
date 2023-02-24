@@ -135,13 +135,13 @@ impl RobotMan {
     }
     async fn send_msg_2_wx(&self,msg:&str){
         let mut sender = self.sender2.write().await;
-        let s =
-            sender.as_mut().unwrap();
-        match s.send(Message::from(
-            msg
-        )).await{
-            Ok(_) => {}
-            Err(_) => {}
+        if let Some(sender)=sender.as_mut(){
+            match sender.send(Message::from(
+                msg
+            )).await{
+                Ok(_) => {}
+                Err(_) => {}
+            }
         }
     }
     pub async fn send_msg(&self,msg:&String){
