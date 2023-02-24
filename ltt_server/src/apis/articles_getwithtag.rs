@@ -5,12 +5,8 @@
 use axum::{Json, http};
 use axum::response::IntoResponse;
 use axum::http::StatusCode;
+use log::debug;
 use serde::{Deserialize, Serialize};
-use crate::services::token;
-use crate::services::verifycode::G_VERIFY_MANAGER;
-use crate::services::email_service::{G_EMAIL_MANAGER, EmailSendResult};
-use crate::models::user::UserId;
-use axum::body::{HttpBody, Body};
 use axum::extract::ConnectInfo;
 use std::net::SocketAddr;
 use std::future::Future;
@@ -31,7 +27,7 @@ pub async fn articles_getwithtag(
             return (StatusCode::BAD_REQUEST, "dbfail").into_response();
         }
         Some(ar) => {
-
+            // println!("articles_getwithtag tags {:?}",req.tags);
             return (StatusCode::OK, serde_json::to_string(&ResponseContent{
                 articles: ar
             }).unwrap()).into_response();
