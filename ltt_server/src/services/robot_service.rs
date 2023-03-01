@@ -302,12 +302,12 @@ pub async fn read_loop(read: SplitStream<WebSocketStream<MaybeTlsStream<TcpStrea
         read.for_each(|message| async {
             match message {
                 Ok(message) =>{
-                    println!("msg {}",message.to_string());
+                    // println!("msg {}",message.to_string());
                     let v:serde_json::Value=serde_json::from_str(&*message.to_string()).unwrap();
                     if v.is_object(){
                         if let Some(id)=v.as_object().unwrap().get("user_id")
                         {
-                            println!("msg2 {}",id);
+                            // println!("msg2 {}",id);
                             if id.is_number()&&id.as_i64().unwrap()==1020401660{
                                 println!("msg3");
                                 handle_manager_msg(v).await;

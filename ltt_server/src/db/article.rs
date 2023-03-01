@@ -130,7 +130,7 @@ impl DbHandler {
                 .to_string()
         } else {
             let mut cmdmake =
-                "SELECT articleid,author_uid,rawtext,tags,title, \
+                "SELECT articleid,author_uid,substring(rawtext,0,100),tags,title, \
                     to_char(createtime,'yyyy-mm-dd hh24:mi:ss'),\
                     to_char(edittime,'yyyy-mm-dd hh24:mi:ss')\
                  FROM public.article_info \
