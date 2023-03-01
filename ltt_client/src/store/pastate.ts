@@ -54,6 +54,9 @@ export class PaState{
     preview_articles:number[]=[]
     // article_map:{}={}
 
+    //msg
+    msg_small_view_show=false
+    msg_list=[]
     constructor() {
     }
 }

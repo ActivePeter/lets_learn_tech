@@ -1,6 +1,6 @@
 use crate::models::article::ArticleId;
 
-pub const WEB_SITE_BASE_ADDR:&'static str="https://hanbaoaaa.xyz/LearnTech/";
+pub const WEB_SITE_BASE_ADDR:&'static str="http://learntech.zone/";
 
 
 pub fn article_path(aid:ArticleId) -> String {

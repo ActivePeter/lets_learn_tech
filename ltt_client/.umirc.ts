@@ -8,6 +8,9 @@ export default {
       'pathRewrite': { '^/LearnTech_api' : '' },
     },
   },
-  base:"/LearnTech/",
-  publicPath:"/LearnTech/"
+  base:"/",
+      // "/LearnTech/",
+  publicPath:
+      "/"
+      // "/LearnTech/"
 };

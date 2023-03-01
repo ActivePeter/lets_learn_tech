@@ -1,2 +1,2 @@
-export const BaseUrl="/LearnTech_api/"
-export const BaseUrlBrowser="/LearnTech"
+export const BaseUrl="/"
+export const BaseUrlBrowser="/"
